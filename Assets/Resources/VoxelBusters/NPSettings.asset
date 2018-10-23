@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: NPSettings
+  m_EditorClassIdentifier: Assembly-CSharp-firstpass:VoxelBusters.NativePlugins:NPSettings
+  m_lastOpenedDateString: 
+  m_applicationSettings:
+    m_supportedFeatures:
+      m_usesAddressBook: 1
+      m_usesNetworkConnectivity: 1
+      m_usesSharing: 1
+    m_iOS:
+      m_storeIdentifier: 
+      m_addressBookUsagePermissionDescription: $(PRODUCT_NAME) uses contacts
+      m_cameraUsagePermissionDescription: $(PRODUCT_NAME) uses camera
+      m_photoAlbumUsagePermissionDescription: $(PRODUCT_NAME) uses photo library
+      m_photoAlbumModifyUsagePermissionDescription: $(PRODUCT_NAME) saves images to
+        photo library
+    m_android:
+      m_storeIdentifier: 
+  m_networkConnectivitySettings:
+    m_hostAddressIPV4: 8.8.8.8
+    m_hostAddressIPV6: 0:0:0:0:0:FFFF:0808:0808
+    m_timeOutPeriod: 60
+    m_maxRetryCount: 2
+    m_timeGapBetweenPolling: 2
+    m_android:
+      m_port: 53
+  m_utilitySettings:
+    m_rateMyApp:
+      m_isEnabled: 0
+      m_title: Rate My App
+      m_message: If you enjoy using Native Plugin would you mind taking a moment to
+        rate it? It wont take more than a minute. Thanks for your support
+      m_showFirstPromptAfterHours: 2
+      m_successivePromptAfterHours: 6
+      m_successivePromptAfterLaunches: 5
+      m_rateItButtonText: Rate It Now
+      m_remindMeLaterButtonText: Remind Me Later
+      m_dontAskButtonText: No, Thanks
+    m_android:
+      m_modifiesApplicationBadge: 1

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/ShoeList.unity
+    guid: 9e419b35c191047bb945dc91636ca67c
+  - enabled: 1
+    path: Assets/Scenes/WatchingShoes.unity
+    guid: 3151807591542436f9ddfbf021a1545d
+  - enabled: 0
+    path: Assets/UniWebView/Demo/UniWebViewDemo.unity
+    guid: 938c077f40a814d4584ce2ad17947cf3
+  - enabled: 1
+    path: Assets/Scenes/AttachingShoes.unity
+    guid: a767462fbfd93ae4aa09fddf42e94482
+  - enabled: 1
+    path: Assets/Scenes/MarkerAR.unity
+    guid: 1692a7f9e10b74e2caba6959e77ca564
+  m_configObjects: {}

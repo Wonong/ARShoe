@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,10 +20,11 @@ public class DetectorController : MonoBehaviour
     public static bool isDebug = false;
     public RawImage testImage;
     public Text angleText;
+    public float shoeScale = 1f;
     #endregion // PUBLIC_MEMBERS
 
     #region PRIVATE_MEMBERS
-    private int capturedImageWidth = 200;
+    private int capturedImageWidth = 256;
     private static int CNN_INPUT_SIZE = 256;
 
     private AngleDetector angleDetector;
@@ -69,6 +70,11 @@ public class DetectorController : MonoBehaviour
 
     private void Awake()
     {
+        InitializeShoe();
+    }
+
+    private void InitializeShoe()
+    {
         CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = false;
         CurrentCustomShoe.shoe.GetComponent<Spin>().enabled = false;
         copyShoe = Instantiate(CurrentCustomShoe.shoe);
@@ -76,11 +82,17 @@ public class DetectorController : MonoBehaviour
         copyShoe.transform.position = new Vector3(0, 0, 0);
         copyShoe.GetComponentsInChildren<Transform>()[1].localRotation = Quaternion.Euler(0, -90, 15);
         copyShoe.SetActive(false);
-        copyShoe.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        SetShoeScale();
         transparentShader = Instantiate(Resources.Load("Prefabs/AttachingAR/TransparentShader") as GameObject);
         transparentShader.transform.SetParent(copyShoe.GetComponentsInChildren<Transform>()[1]);
         transparentShader.transform.localPosition = new Vector3(0.027f, 0.053f, 0.003f);
         transparentShader.transform.localRotation = Quaternion.Euler(-7.48f, 84.37f, -2.88f);
+    }
+
+    public void SetShoeScale()
+    {
+        copyShoe.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
+        Debug.Log(shoeScale);
     }
 
     void Start()

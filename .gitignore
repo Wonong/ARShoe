@@ -38,4 +38,6 @@ sysinfo.txt
 # Custom
 Assets/ML-Agents
 ProjectSettings/ProjectVersion.txt
-QCAR
+QCAR/
+Assets/ML-Agents.meta
+

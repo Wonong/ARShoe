@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class PanelList : MonoBehaviour {
+public class ListCam : MonoBehaviour {
+
+    public Vector3 originPos;
 
 	// Use this for initialization
 	void Start () {
-        //GetComponent<ScrollRect>().OnScroll(OnScrollChanged);
+        originPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -15,7 +16,4 @@ public class PanelList : MonoBehaviour {
 		
 	}
 
-    void OnScrollChanged(){
-        Debug.Log("");
-    }
 }

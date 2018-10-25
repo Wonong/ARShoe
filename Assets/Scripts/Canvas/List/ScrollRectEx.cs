@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
 
-// parent의 scrollRect까지 스크롤 효과 적용하는 클래
+// parent의 scrollRect까지 스크롤 효과 적용하는 클래스a
 public class ScrollRectEx : ScrollRect
 {
 

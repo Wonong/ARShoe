@@ -111,10 +111,17 @@ public class ARController : MonoBehaviour
 
         // If the player has not touched the screen, we are done with this update.
         Touch[] touches = Input.touches;
-        if (Input.touchCount < 1 || (touches[0] = Input.GetTouch(0)).phase == TouchPhase.Ended || isPlaced)
+        if (Input.touchCount < 1 || (touches[0] = Input.GetTouch(0)).phase == TouchPhase.Ended)
         {
             return;
         }
+
+        if(isPlaced && !EventSystem.current.IsPointerOverGameObject(0))
+        {
+            isPlaced = false;
+            m_GroundPlaneUI.SetShoeMovable();
+        }
+
         // Raycast against the location the player touched to search for planes.
         TrackableHit hit;
         TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon |

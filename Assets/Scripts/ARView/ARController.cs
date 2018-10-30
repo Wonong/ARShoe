@@ -46,6 +46,8 @@ public class ARController : MonoBehaviour
     public GameObject rotationIndicator;
     public GameObject translationIndicator;
     public GameObject defaultIndicator;
+    public GameObject planeGenerator;
+    public GameObject pointCloud;
     #endregion
 
     # region PRIVATE_MEMBERS
@@ -102,12 +104,11 @@ public class ARController : MonoBehaviour
     void Update()
     {
         _UpdateApplicationLifecycle();
-
-        // Hide snackbar when currently tracking at least one plane.
         Session.GetTrackables<DetectedPlane>(m_AllPlanes);
+        SetIndicators(); // Set indicators children of shoe.
+        shadowPlaneIndicator.SetActive(shoe.activeSelf); // Change shadow activity by shoe's activity.
+        ChangePlanesVisualizer(); // Change visualizing of planes by status of shoe placed. 
 
-        SetIndicator();
-        shadowPlaneIndicator.SetActive(shoe.activeSelf);
         // If the player has not touched the screen, we are done with this update.
         Touch[] touches = Input.touches;
         if (Input.touchCount < 1 || (touches[0] = Input.GetTouch(0)).phase == TouchPhase.Ended || isPlaced)
@@ -133,7 +134,7 @@ public class ARController : MonoBehaviour
             TouchHandler.InteractDoubleFinger(shoe, touches);
         }
     }
-    
+
     #region public methods
     public void FixShoe()
     {
@@ -147,7 +148,6 @@ public class ARController : MonoBehaviour
         shadowPlaneIndicator.transform.position -= Vector3.up * shadowFixedHeight;
         #endif
         GameObject.Find("PuttingSound").GetComponent<AudioSource>().Play();
-
     }
 
     public void MoveShoe()
@@ -186,7 +186,7 @@ public class ARController : MonoBehaviour
         indicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, indicatorScale);
     }
 
-    void SetIndicator()
+    void SetIndicators()
     {
         rotationIndicator.SetActive(Input.touchCount == 2 && !isPlaced);
         if (rotationIndicator.activeSelf)
@@ -209,6 +209,19 @@ public class ARController : MonoBehaviour
             defaultIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
     }
+
+    private void ChangePlanesVisualizer()
+    {
+        Transform[] planes = planeGenerator.GetComponentsInChildren<Transform>();
+        if (planes.Length < 1) return;
+        for (int i = 1; i < planes.Length; i++)
+        {
+            planes[i].gameObject.SetActive(!isPlaced);
+        }
+
+        pointCloud.SetActive(!isPlaced);
+    }
+
 
     /// <summary>
     /// Check and update the application lifecycle.

@@ -1450,6 +1450,8 @@ MonoBehaviour:
   rotationIndicator: {fileID: 1716645648}
   translationIndicator: {fileID: 344281453}
   defaultIndicator: {fileID: 255899187}
+  planeGenerator: {fileID: 1848038102}
+  pointCloud: {fileID: 1423389113}
 --- !u!114 &627916104
 MonoBehaviour:
   m_ObjectHideFlags: 0

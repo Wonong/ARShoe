@@ -15,9 +15,12 @@ public class GroundPlaneUI : MonoBehaviour
     #region PUBLIC_MEMBERS
     [Header("UI Buttons")]
     public Button m_ResetButton;
-    public Button m_LockButton;
+    public Button m_ConfirmButton;
     public Button m_BackButton;
     public Button m_CaptureButton;
+    public Button m_ListUpDown;
+    public Button m_ShoeLeftRightTextButton;
+    public Button m_SceneChangeButton;
     #endregion // PUBLIC_MEMBERS
 
 
@@ -56,11 +59,11 @@ public class GroundPlaneUI : MonoBehaviour
     void InitializeButtons()
     {
         m_BackButton.onClick.AddListener(ClickBackButton);
-        m_LockButton.onClick.AddListener(ClickLockButton);
+        m_ConfirmButton.onClick.AddListener(ClickConfirmButton);
         m_ResetButton.onClick.AddListener(ClickResetButton);
         m_CaptureButton.onClick.AddListener(ClickCaptureButton);
-        m_ResetButton.interactable = m_LockButton.interactable = false;
-        m_ResetButton.image.enabled = m_LockButton.image.enabled = true;
+        m_ResetButton.interactable = m_ConfirmButton.interactable = false;
+        m_ResetButton.image.enabled = m_ConfirmButton.image.enabled = true;
     }
 
     void ClickBackButton()
@@ -69,31 +72,20 @@ public class GroundPlaneUI : MonoBehaviour
         SceneChanger.ChangeToShoeListScene();
     }
 
-    void ClickLockButton()
+    void ClickConfirmButton()
     {
-        if (m_LockButton.GetComponent<Image>().sprite.name.Equals("UI_Icon_LockUnlocked"))
+        if (m_ConfirmButton.image.enabled)
         {
             SetShoeStopped();
         }
-        else
-        {
-            SetShoeMovable();
-        }
-        ChangeButtonStatus();
     }
 
     private void SetShoeStopped()
     {
         m_ARController.IsPlaced = true;
         m_ARController.FixShoe();
-        m_LockButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_LockLocked");
-    }
-
-    private void SetShoeMovable()
-    {
-        m_ARController.IsPlaced = false;
-        m_ARController.MoveShoe();
-        m_LockButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_LockUnlocked");
+        m_ConfirmButton.enabled = false;
+        ChangeButtonStatus();
     }
 
     void ClickResetButton()
@@ -107,11 +99,41 @@ public class GroundPlaneUI : MonoBehaviour
         StartCoroutine(ScreenshotPreview.CaptureAndShowPreviewImage()); // Start coroutine for screenshot function.
     }
 
-    // Change button's clickability.
+    void ClickListUpDownButton() {
+        if(m_ListUpDown.image.name.Equals("up-arrow")) {
+            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/down-arrow");
+        }
+        else {
+            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/up-arrow");
+        }
+    }
+
+    void ClickShoeLeftRightTextButton() {
+        if(m_ShoeLeftRightTextButton.GetComponent<Text>().Equals("R")) {
+            m_ShoeLeftRightTextButton.GetComponent<Text>().text = "L";
+        }
+        else {
+            m_ShoeLeftRightTextButton.GetComponent<Text>().text = "R";
+        }
+    }
+
+    void ClickSceneChangeButton() {
+        SceneChanger.ChangeToAttachShoes();
+    }
+
+    public void SetShoeMovable()
+    {
+        m_ARController.IsPlaced = false;
+        m_ARController.MoveShoe();
+        m_ConfirmButton.enabled = true;
+        ChangeButtonStatus();
+    }
+
+    // Change button's clickability and visualization.
     // Return true: If shoe object does not placed and vuforia detect floor, or shoe object placed.
     public void ChangeButtonStatus() {
-        m_ResetButton.interactable = m_LockButton.interactable
-            = m_CaptureButton.interactable = m_ARController.DoesShoeActive;
+        m_ResetButton.interactable = m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ARController.DoesShoeActive;
+        m_ConfirmButton.image.enabled = m_ARController.DoesShoeActive && !m_ARController.IsPlaced;
     }
 #endregion // MONOBEHAVIOUR_METHODS
 }

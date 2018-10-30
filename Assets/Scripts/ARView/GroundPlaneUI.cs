@@ -53,6 +53,10 @@ public class GroundPlaneUI : MonoBehaviour
             {
                 ClickBackButton();
             }
+            else if(ScreenshotPreview.previewGameObject.activeSelf)
+            {
+                ScreenshotPreview.previewGameObject.SetActive(false);
+            }
         }
     }
 

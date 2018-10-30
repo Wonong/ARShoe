@@ -84,7 +84,7 @@ public class GroundPlaneUI : MonoBehaviour
     {
         m_ARController.IsPlaced = true;
         m_ARController.FixShoe();
-        m_ConfirmButton.enabled = false;
+        m_ConfirmButton.image.enabled = false;
         ChangeButtonStatus();
     }
 
@@ -125,7 +125,7 @@ public class GroundPlaneUI : MonoBehaviour
     {
         m_ARController.IsPlaced = false;
         m_ARController.MoveShoe();
-        m_ConfirmButton.enabled = true;
+        m_ConfirmButton.image.enabled = true;
         ChangeButtonStatus();
     }
 

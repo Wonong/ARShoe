@@ -175,6 +175,7 @@ public class ARController : MonoBehaviour
         Destroy(FindObjectOfType<Anchor>());
         shoe.SetActive(false);
         isPlaced = false;
+        MoveShoe();
     }
     #endregion
 

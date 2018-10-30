@@ -9,7 +9,7 @@ public class ARLight : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         // Normalize pixel intensity by middle gray in gamma space.
-        const float middleGray = 0.466f;
+        const float middleGray = 0.566f;
         float normalizedIntensity = Frame.LightEstimate.PixelIntensity / middleGray;
 
         // Apply color correction along with normalized pixel intensity in gamma space.

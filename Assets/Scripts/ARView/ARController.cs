@@ -174,6 +174,7 @@ public class ARController : MonoBehaviour
     {
         Destroy(FindObjectOfType<Anchor>());
         shoe.SetActive(false);
+        isPlaced = false;
     }
     #endregion
 
@@ -223,10 +224,10 @@ public class ARController : MonoBehaviour
         if (planes.Length < 1) return;
         for (int i = 1; i < planes.Length; i++)
         {
-            planes[i].gameObject.SetActive(!isPlaced);
+            planes[i].gameObject.SetActive(!isPlaced || !isActiveAndEnabled);
         }
 
-        pointCloud.SetActive(!isPlaced);
+        pointCloud.SetActive(!isPlaced || !isActiveAndEnabled);
     }
 
 

@@ -24,6 +24,10 @@ public class GroundPlaneUI : MonoBehaviour
     public Button m_HeartButton;
     public Button m_SocialShareButton;
     public Button m_BuyButton;
+
+    [Header("UI Panels")]
+    public RectTransform m_CustomListRectTransform;
+    public RectTransform m_MidToolbarTectTrnasform;
     #endregion // PUBLIC_MEMBERS
 
 
@@ -115,15 +119,39 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickListUpDownButton()
     {
+        Vector2 originalPanelVector = m_CustomListRectTransform.sizeDelta;
+        Vector2 goalPanelVector;
+        Vector2 originalToolbarVector = m_MidToolbarTectTrnasform.anchoredPosition;
+        Vector2 goalToolbarVector;
         if (m_ListUpDown.image.sprite.name.Equals("up-arrow"))
         {
             m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/down-arrow");
-            // ToDo: Show custom list.
+            goalPanelVector = new Vector2(m_CustomListRectTransform.sizeDelta.x, 300f);
+            goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y + 300f);
+            StartCoroutine(ExtendOrShrinkHeight(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
         }
         else
         {
             m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/up-arrow");
-            // ToDo: Hide custom list.
+            goalPanelVector = new Vector2(m_CustomListRectTransform.sizeDelta.x, 0f);
+            goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y - 300f);
+            StartCoroutine(ExtendOrShrinkHeight(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
+        }
+    }
+
+    IEnumerator<RectTransform> ExtendOrShrinkHeight(Vector2 originalPanelVector, Vector2 goalVector, Vector2 originalToolbarVector, Vector2 goalToolbarVector)
+    {
+        float currentTime = 0f;
+        float timeOver = 0.3f;
+
+        while (currentTime < timeOver)
+        {
+            currentTime += Time.deltaTime;
+            float normalizedValue = currentTime / timeOver; // we normalize our time 
+
+            m_CustomListRectTransform.sizeDelta = Vector2.Lerp(originalPanelVector, goalVector, normalizedValue);
+            m_MidToolbarTectTrnasform.anchoredPosition = Vector2.Lerp(originalToolbarVector, goalToolbarVector, normalizedValue);
+            yield return null;
         }
     }
 

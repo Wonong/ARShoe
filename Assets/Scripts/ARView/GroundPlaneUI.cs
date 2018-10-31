@@ -21,6 +21,9 @@ public class GroundPlaneUI : MonoBehaviour
     public Button m_ListUpDown;
     public Button m_ShoeLeftRightTextButton;
     public Button m_SceneChangeButton;
+    public Button m_HeartButton;
+    public Button m_SocialShareButton;
+    public Button m_BuyButton;
     #endregion // PUBLIC_MEMBERS
 
 
@@ -41,6 +44,7 @@ public class GroundPlaneUI : MonoBehaviour
         m_EventSystem = FindObjectOfType<EventSystem>();
         InitializeButtons();
         ChangeButtonStatus();
+        // ToDo: If the shoe can custom, then show list up/down button, else hide list up/down button.
     }
 
     void Update()
@@ -53,7 +57,7 @@ public class GroundPlaneUI : MonoBehaviour
             {
                 ClickBackButton();
             }
-            else if(ScreenshotPreview.previewGameObject.activeSelf)
+            else if (ScreenshotPreview.previewGameObject.activeSelf && Input.GetKey(KeyCode.Escape))
             {
                 ScreenshotPreview.previewGameObject.SetActive(false);
             }
@@ -66,6 +70,12 @@ public class GroundPlaneUI : MonoBehaviour
         m_ConfirmButton.onClick.AddListener(ClickConfirmButton);
         m_ResetButton.onClick.AddListener(ClickResetButton);
         m_CaptureButton.onClick.AddListener(ClickCaptureButton);
+        m_ListUpDown.onClick.AddListener(ClickListUpDownButton);
+        m_ShoeLeftRightTextButton.onClick.AddListener(ClickShoeLeftRightTextButton);
+        m_SceneChangeButton.onClick.AddListener(ClickSceneChangeButton);
+        m_HeartButton.onClick.AddListener(ClickHeartButton);
+        m_SocialShareButton.onClick.AddListener(ClickSocialShareButton);
+        m_BuyButton.onClick.AddListener(ClickBuyButton);
         m_ResetButton.interactable = m_ConfirmButton.interactable = false;
         m_ResetButton.image.enabled = m_ConfirmButton.image.enabled = true;
     }
@@ -103,26 +113,71 @@ public class GroundPlaneUI : MonoBehaviour
         StartCoroutine(ScreenshotPreview.CaptureAndShowPreviewImage()); // Start coroutine for screenshot function.
     }
 
-    void ClickListUpDownButton() {
-        if(m_ListUpDown.image.name.Equals("up-arrow")) {
+    void ClickListUpDownButton()
+    {
+        if (m_ListUpDown.image.sprite.name.Equals("up-arrow"))
+        {
             m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/down-arrow");
+            // ToDo: Show custom list.
         }
-        else {
+        else
+        {
             m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/up-arrow");
+            // ToDo: Hide custom list.
         }
     }
 
-    void ClickShoeLeftRightTextButton() {
-        if(m_ShoeLeftRightTextButton.GetComponent<Text>().Equals("R")) {
+    void ClickShoeLeftRightTextButton()
+    {
+        if (m_ShoeLeftRightTextButton.GetComponent<Text>().text.Equals("R"))
+        {
             m_ShoeLeftRightTextButton.GetComponent<Text>().text = "L";
+            // ToDo: Change shoe right to left.
         }
-        else {
+        else
+        {
             m_ShoeLeftRightTextButton.GetComponent<Text>().text = "R";
+            // ToDo: Change shoe left to right.
         }
     }
 
-    void ClickSceneChangeButton() {
+    void ClickSceneChangeButton()
+    {
         SceneChanger.ChangeToAttachShoes();
+    }
+
+    void ClickHeartButton()
+    {
+        if (m_HeartButton.image.sprite.name.Equals("UI_Icon_HeartEmpty"))
+        {
+            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_Heart");
+            ColorBlock colorBlock = m_HeartButton.colors;
+            colorBlock.highlightedColor = new Color32(0, 164, 255, 255);
+            m_HeartButton.colors = colorBlock;
+            // ToDo: Save Changed info.
+        }
+        else
+        {
+            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_HeartEmpty");
+            ColorBlock colorBlock = m_HeartButton.colors;
+            colorBlock.highlightedColor = new Color32(255, 255, 255, 255);
+            m_HeartButton.colors = colorBlock;
+            // ToDo: Save Changed info.
+        }
+    }
+
+    void ClickSocialShareButton()
+    {
+        // ToDo: Get url of shop.
+        #if UNITY_ANDROID
+        new NativeShare().SetTitle("Title").SetText("text").Share();
+        #elif UNITY_IOS
+        new NativeShare().SetTitle("Title").SetText("text").Share();
+        #endif
+    }
+
+    void ClickBuyButton() {
+        // ToDo: Shoe webview.
     }
 
     public void SetShoeMovable()

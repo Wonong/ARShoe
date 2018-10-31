@@ -53,9 +53,9 @@ public class NavigationViewController : ViewController {
 
         // set new view to current view & activate back button
         UIManager.Instance.currentView = newView;
-        UIManager.Instance.toolbar.back.gameObject.SetActive(true);
+        //UIManager.Instance.toolbar.back.gameObject.SetActive(true);
 
-        UIManager.Instance.toolbar.ChangeActivation(UIManager.Instance.currentView.name);
+        //UIManager.Instance.toolbar.ChangeActivation(UIManager.Instance.currentView.name);
 
     }
 
@@ -95,10 +95,10 @@ public class NavigationViewController : ViewController {
         // set view from stack to currentView
         UIManager.Instance.currentView = poppedView;
 
-        if (UIManager.Instance.viewStack.Count >= 1) UIManager.Instance.toolbar.back.gameObject.SetActive(true);
-        else UIManager.Instance.toolbar.back.gameObject.SetActive(false);
+        //if (UIManager.Instance.viewStack.Count >= 1) UIManager.Instance.toolbar.back.gameObject.SetActive(true);
+        //else UIManager.Instance.toolbar.back.gameObject.SetActive(false);
 
-        UIManager.Instance.toolbar.ChangeActivation(UIManager.Instance.currentView.name);
+        //UIManager.Instance.toolbar.ChangeActivation(UIManager.Instance.currentView.name);
 
     }
 

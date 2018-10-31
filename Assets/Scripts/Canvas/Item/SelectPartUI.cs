@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class SelectPartUI : ViewController {
 
     public Text nameLabel;
-    public SelectOptionUI selectOptionUI;
+    //public SelectOptionUI selectOptionUI;
+    public Transform optionContents;
 
     // Use this for initialization
     void Start () {
@@ -36,7 +37,7 @@ public class SelectPartUI : ViewController {
             });
 
             optionUI.GetComponent<Image>().color = option.GetColorByRGB();
-            optionUI.transform.SetParent(selectOptionUI.content, false);
+            optionUI.transform.SetParent(optionContents, false);
 
             // 각 파트별로 첫번쨰 옵션으로 초기화.
             if (option == options[0]){

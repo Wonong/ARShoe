@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SelectOptionUI : ViewController {
 
-    public Transform content;
+    private bool selected;
 
 	// Use this for initialization
 	void Start () {
@@ -15,4 +15,8 @@ public class SelectOptionUI : ViewController {
 	void Update () {
 		
 	}
+
+    void OnClickFunc(){
+
+    }
 }

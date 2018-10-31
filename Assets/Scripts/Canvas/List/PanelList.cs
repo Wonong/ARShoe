@@ -3,14 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelList : MonoBehaviour {
+public class PanelList : ViewController {
 
+    private NavigationViewController navigationView;
     public Camera cam;
     public Vector2 minPos, maxPos;
 
 	// Use this for initialization
 	void Start () {
+
+        navigationView = UIManager.Instance.navigationView;
         GetComponent<ScrollRect>().onValueChanged.AddListener(OnScrollChanged);
+
+        // navigation view의 첫번째 뷰로 설정
+        if (navigationView != null && UIManager.Instance.viewStack.Count == 0)
+        {
+            navigationView.Push(this);
+        }
 	}
 	
 	// Update is called once per frame
@@ -19,7 +28,6 @@ public class PanelList : MonoBehaviour {
 	}
 
     void OnScrollChanged(Vector2 scrollPos){
-        //Debug.Log(scrollPos.ToString("F4"));
         cam.transform.position = Vector2.Lerp(minPos, maxPos, scrollPos.y);
     }
 }

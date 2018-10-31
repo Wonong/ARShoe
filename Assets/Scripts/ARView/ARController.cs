@@ -9,7 +9,7 @@ using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
 /// <summary>
-/// Controls the HelloAR example.
+/// Control ar view class.
 /// </summary>
 public class ARController : MonoBehaviour
 {
@@ -68,8 +68,10 @@ public class ARController : MonoBehaviour
     /// </summary>
     bool m_IsQuitting = false;
 
+    // For checking shoe object is placed.
     bool isPlaced = false;
 
+    // Size values.
     float shoeHeight = 0.15f;
     float shoeScale = 1.4f;
     float indicatorHeight = 0.2f;
@@ -94,7 +96,7 @@ public class ARController : MonoBehaviour
     {
         m_GroundPlaneUI = FindObjectOfType<GroundPlaneUI>();
         InitializeIndicators();
-        MoveShoe();
+        MoveShoe(); // Shoe object is movable at very first.
         shoe.SetActive(false);
     }
 
@@ -111,10 +113,17 @@ public class ARController : MonoBehaviour
 
         // If the player has not touched the screen, we are done with this update.
         Touch[] touches = Input.touches;
-        if (Input.touchCount < 1 || (touches[0] = Input.GetTouch(0)).phase == TouchPhase.Ended || isPlaced)
+        if (Input.touchCount < 1 || (touches[0] = Input.GetTouch(0)).phase == TouchPhase.Ended)
         {
             return;
         }
+
+        if(isPlaced && !EventSystem.current.IsPointerOverGameObject(0))
+        {
+            isPlaced = false;
+            m_GroundPlaneUI.SetShoeMovable();
+        }
+
         // Raycast against the location the player touched to search for planes.
         TrackableHit hit;
         TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon |
@@ -136,7 +145,10 @@ public class ARController : MonoBehaviour
     }
 
     #region public methods
-    public void FixShoe()
+    /// <summary>
+    /// Place shoe to the plane.
+    /// </summary>
+    public void PlaceShoe()
     {
         shoe.transform.position -= Vector3.up * shoeHeight;
         shadowPlaneIndicator.transform.localPosition = new Vector3(0, 0, 0);
@@ -150,6 +162,9 @@ public class ARController : MonoBehaviour
         GameObject.Find("PuttingSound").GetComponent<AudioSource>().Play();
     }
 
+    /// <summary>
+    /// Move shoe on the plane.
+    /// </summary>
     public void MoveShoe()
     {
         shoe.transform.position += Vector3.up * shoeHeight;
@@ -163,13 +178,21 @@ public class ARController : MonoBehaviour
         #endif
     }
 
+    /// <summary>
+    /// Reset object, anchor, and make shoe object movable.
+    /// </summary>
     public void ResetAR()
     {
         Destroy(FindObjectOfType<Anchor>());
         shoe.SetActive(false);
+        isPlaced = false;
+        MoveShoe();
     }
     #endregion
 
+    /// <summary>
+    /// Initialize indicator's'
+    /// </summary>
     void InitializeIndicators()
     {
         shadowPlaneIndicator.transform.SetParent(shoe.transform);
@@ -179,6 +202,9 @@ public class ARController : MonoBehaviour
         InitializeIndicator(defaultIndicator);
     }
 
+    /// <summary>
+    /// Initialize each indicator.
+    /// </summary>
     void InitializeIndicator(GameObject indicator)
     {
         indicator.transform.SetParent(shoe.transform);
@@ -186,6 +212,9 @@ public class ARController : MonoBehaviour
         indicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, indicatorScale);
     }
 
+    /// <summary>
+    /// Set indicators hierachy under shoe object's transform.
+    /// </summary>
     void SetIndicators()
     {
         rotationIndicator.SetActive(Input.touchCount == 2 && !isPlaced);
@@ -210,16 +239,19 @@ public class ARController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    // If shoe object is placed, then hide plane visualizer. Else, show plane visualizer.
+    /// </summary>
     private void ChangePlanesVisualizer()
     {
         Transform[] planes = planeGenerator.GetComponentsInChildren<Transform>();
         if (planes.Length < 1) return;
         for (int i = 1; i < planes.Length; i++)
         {
-            planes[i].gameObject.SetActive(!isPlaced);
+            planes[i].gameObject.SetActive(!isPlaced || !isActiveAndEnabled);
         }
 
-        pointCloud.SetActive(!isPlaced);
+        pointCloud.SetActive(!isPlaced || !isActiveAndEnabled);
     }
 
 

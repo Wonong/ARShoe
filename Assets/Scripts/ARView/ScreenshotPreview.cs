@@ -52,10 +52,10 @@ public class ScreenshotPreview : MonoBehaviour
         previewGameObject.SetActive(true);
         ShowPreview(path + imageName);
 #elif UNITY_IOS
-                path = Application.persistentDataPath+"/";
-                NativeGallery.SaveImageToGallery(bytes, galleryFolderName, imageName); // User plugin.
-                previewGameObject.SetActive(true);
-                ShowPreview(path + imageName);
+        path = Application.persistentDataPath+"/";
+        NativeGallery.SaveImageToGallery(bytes, galleryFolderName, imageName); // User plugin.
+        previewGameObject.SetActive(true);
+        ShowPreview(path + imageName);
 #elif UNITY_EDITOR
         path = windowsImageSavePath;
         if (!Directory.Exists(path))

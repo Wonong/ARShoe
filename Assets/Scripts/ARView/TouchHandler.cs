@@ -1,134 +1,98 @@
-﻿/*============================================================================== 
-Copyright (c) 2018 PTC Inc. All Rights Reserved.
-
-Vuforia is a trademark of PTC Inc., registered in the United States and other 
-countries.   
-==============================================================================*/
-
+﻿using System.Collections.Generic;
+using GoogleARCore;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class TouchHandler : MonoBehaviour
+static class TouchHandler
 {
-    #region PUBLIC_MEMBERS
+    # region public members
+    public static bool isFirstFrameWithTwoTouches;
+    /// <summary>
+    ///   The delta of the angle between two touch points
+    /// </summary>
+    public static float turnAngleDelta;
+    /// <summary>
+    ///   The angle between two touch points
+    /// </summary>
+    public static float turnAngle;
+    #endregion
 
-    Transform m_AugmentationObject;
-    ProductPlacement m_ProductPlacement;
+    #region private members
+    static float speed = 5f;
+    #endregion
 
-    [HideInInspector]
-    public bool enableRotation = false;
-    public bool enablePinchScaling = false;
-
-    public static bool DoubleTap
+    public static void InteractSingleFinger(GameObject shoe, TrackableHit hit, Touch[] touches)
     {
-        get { return (Input.touchSupported) && Input.touches[0].tapCount == 2; }
-    }
-
-    public static bool IsSingleFingerStationary
-    {
-        get { return IsSingleFingerDown() && (Input.touches[0].phase == TouchPhase.Stationary); }
-    }
-
-    public static bool IsSingleFingerDragging
-    {
-        get { return IsSingleFingerDown() && (Input.touches[0].phase == TouchPhase.Moved); }
-    }
-
-    #endregion // PUBLIC MEMBERS
-
-
-    #region PRIVATE_MEMBERS
-    const float scaleRangeMin = 0.0025f;
-    const float scaleRangeMax = 2.0f;
-
-    Touch[] touches;
-    static int lastTouchCount;
-    bool isFirstFrameWithTwoTouches;
-    float cachedTouchAngle;
-    float cachedTouchDistance;
-    float cachedAugmentationScale;
-    Vector3 cachedAugmentationRotation;
-    #endregion // PRIVATE_MEMBERS
-
-
-    #region MONOBEHAVIOUR_METHODS
-
-    void Start()
-    {
-        m_AugmentationObject = GameObject.Find("CopyShoe").transform;
-        cachedAugmentationScale = m_AugmentationObject.localScale.x;
-        cachedAugmentationRotation = m_AugmentationObject.localEulerAngles;
-        m_ProductPlacement = FindObjectOfType<ProductPlacement>();
-    }
-
-    void Update()
-    {
-        touches = Input.touches;
-
-        if (Input.touchCount == 2 && !m_ProductPlacement.IsPlaced)
+        if (!shoe.activeSelf) // Initialize shoe.
         {
-            float currentTouchDistance = Vector2.Distance(touches[0].position, touches[1].position);
-            float diff_y = touches[0].position.y - touches[1].position.y;
-            float diff_x = touches[0].position.x - touches[1].position.x;
-            float currentTouchAngle = Mathf.Atan2(diff_y, diff_x) * Mathf.Rad2Deg;
-
-            if (isFirstFrameWithTwoTouches)
-            {
-                cachedTouchDistance = currentTouchDistance;
-                cachedTouchAngle = currentTouchAngle;
-                isFirstFrameWithTwoTouches = false;
-            }
-
-            float angleDelta = currentTouchAngle - cachedTouchAngle;
-            float scaleMultiplier = (currentTouchDistance / cachedTouchDistance);
-            float scaleAmount = cachedAugmentationScale * scaleMultiplier;
-            float scaleAmountClamped = Mathf.Clamp(scaleAmount, scaleRangeMin, scaleRangeMax);
-
-            if (enableRotation)
-            {
-                m_AugmentationObject.localEulerAngles = cachedAugmentationRotation - new Vector3(0f, angleDelta * 3, 0f);
-            }
-            if (enableRotation && enablePinchScaling)
-            {
-                // Optional Pinch Scaling can be enabled via Inspector for this Script Component
-                m_AugmentationObject.localScale = new Vector3(scaleAmountClamped, scaleAmountClamped, scaleAmountClamped);
-            }
-
-        }
-        else if (Input.touchCount < 2)
-        {
-            cachedAugmentationScale = m_AugmentationObject.localScale.x;
-            cachedAugmentationRotation = m_AugmentationObject.localEulerAngles;
+            shoe.SetActive(true);
+            shoe.transform.position = hit.Pose.position;
+            shoe.transform.position += Vector3.up * 0.2f;
+            var anchor = hit.Trackable.CreateAnchor(hit.Pose);
+            shoe.transform.parent = anchor.transform;
             isFirstFrameWithTwoTouches = true;
         }
-        else if (Input.touchCount == 6)
+        else if (isFirstFrameWithTwoTouches && (touches[0].phase == TouchPhase.Moved)) // Drag and make shoe move.
         {
-            // enable runtime testing of pinch scaling
-            //enablePinchScaling = true;
+            if(!EventSystem.current.IsPointerOverGameObject(touches[0].fingerId))
+            {
+                shoe.transform.position = hit.Pose.position;
+                shoe.transform.position += Vector3.up * 0.2f;
+                isFirstFrameWithTwoTouches = true;
+            }
         }
-        else if (Input.touchCount == 5)
+        else if (!isFirstFrameWithTwoTouches && touches[0].phase == TouchPhase.Began) // Set the bool value true for moving shoe.
         {
-            // disable runtime testing of pinch scaling
-            enablePinchScaling = false;
+            isFirstFrameWithTwoTouches = true;
         }
     }
 
-    #endregion // MONOBEHAVIOUR_METHODS
-
-
-    #region PRIVATE_METHODS
-
-    static bool IsSingleFingerDown()
+    public static void InteractDoubleFinger(GameObject shoe, Touch[] touches)
     {
-        if (Input.touchCount == 0 || Input.touchCount >= 2)
-            lastTouchCount = Input.touchCount;
+        Vector3 rotationDeg = Vector3.zero;
+        rotationDeg.y = -turnAngleDelta;
+        shoe.transform.rotation *= Quaternion.Euler(rotationDeg);
 
-        return (
-            Input.touchCount == 1 &&
-            Input.touches[0].fingerId == 0 &&
-            lastTouchCount == 0);
+        // Initialize angle, angleDelta, and touch boolean.
+        if (isFirstFrameWithTwoTouches) 
+        {
+            turnAngle = turnAngleDelta = 0;
+            isFirstFrameWithTwoTouches = false;
+        }
+        // If at least one of them moved, than user can rotate the shoe.
+        if (touches[0].phase == TouchPhase.Moved || touches[1].phase == TouchPhase.Moved)
+        {
+            // Check the delta angle between touches.
+            turnAngle = Angle(touches[0].position, touches[1].position);
+            float prevTurn = Angle(touches[0].position - touches[0].deltaPosition,
+                                   touches[1].position - touches[1].deltaPosition);
+            turnAngleDelta = Mathf.DeltaAngle(prevTurn, turnAngle);
+
+            // If it's greater than zero, it's a turn!
+            if (Mathf.Abs(turnAngleDelta) > 0)
+            {
+                turnAngleDelta *= speed;
+            }
+            else
+            {
+                turnAngle = turnAngleDelta = 0;
+            }
+        }
     }
 
-    #endregion // PRIVATE_METHODS
+    static float Angle(Vector2 pos1, Vector2 pos2)
+    {
+        Vector2 from = pos2 - pos1;
+        Vector2 to = new Vector2(1, 0);
 
+        float result = Vector2.Angle(from, to);
+        Vector3 cross = Vector3.Cross(from, to);
+
+        if (cross.z > 0)
+        {
+            result = 360f - result;
+        }
+
+        return result;
+    }
 }

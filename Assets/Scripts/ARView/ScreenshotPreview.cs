@@ -13,7 +13,9 @@ public class ScreenshotPreview : MonoBehaviour
     public const string windowsImageSavePath = "/ARShoe/";
     public const string galleryFolderName = "ARShoe";
     static string screenshotImagePath;
+#if UNITY_IOS
     static Texture2D iosShareImage;
+#endif
     public Button backButton;
     public Button shareButton;
 
@@ -34,6 +36,12 @@ public class ScreenshotPreview : MonoBehaviour
         string imageName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png"; // Set image name.
 
 #if UNITY_ANDROID
+        if (!GoogleARCore.AndroidPermissionsManager.IsPermissionGranted("android.permission.WRITE_EXTERNAL_STORAGE"))
+        {
+            var task = GoogleARCore.AndroidPermissionsManager.RequestPermission("android.permission.WRITE_EXTERNAL_STORAGE");
+            yield return task.WaitForCompletion();
+        }
+
         path = androidGalleryPath;
         if (!Directory.Exists(path))
         {
@@ -134,13 +142,10 @@ public class ScreenshotPreview : MonoBehaviour
 
     void ClickShareButton() // Share screenshot image.
     {
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            new NativeShare().AddFile(screenshotImagePath).Share();
-        }
-        else
-        {
-            NatShare.ShareImage(iosShareImage);
-        }
+#if UNITY_ANDROID
+        new NativeShare().AddFile(screenshotImagePath).Share();
+#elif UNITY_IOS
+        NatShare.ShareImage(iosShareImage);
+#endif
     }
 }

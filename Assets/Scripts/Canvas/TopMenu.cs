@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class SelectOptionUI : ViewController {
+public class TopMenu : MonoBehaviour {
 
-    public Transform content;
+    public Button cart;
+    public Button search;
 
 	// Use this for initialization
 	void Start () {

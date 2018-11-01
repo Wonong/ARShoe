@@ -10,7 +10,7 @@ public class Shoe
     new public string name;
     public string company;
     public int price;
-    public bool isCustomizable;
+    public bool isCustomizable, isNew, isBest;
     public string link;
     public string objPath, imgPath;      // 커스터마이징,AR에 사용되는 obj의 위치 / 리스트에 보여지는 이미지의 위치
 

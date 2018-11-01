@@ -34,7 +34,7 @@ public class JSONHandler : MonoBehaviour {
 
         //LogContent();
 
-        Debug.Log(shoesList[0].imgPath);
+        //Debug.Log(shoesList[0].imgPath);
 
     }
 

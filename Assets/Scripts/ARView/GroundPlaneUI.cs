@@ -33,7 +33,7 @@ public class GroundPlaneUI : MonoBehaviour
 
 
     #region PRIVATE_MEMBERS
-    ARController m_ARController;
+    ShoeController m_ShoeController;
     AudioSource shoePuttingSound;
     GraphicRaycaster[] m_GraphicRayCasters;
     PointerEventData m_PointerEventData;
@@ -44,7 +44,7 @@ public class GroundPlaneUI : MonoBehaviour
     #region MONOBEHAVIOUR_METHODS
     void Start()
     {
-        m_ARController = FindObjectOfType<ARController>();
+        m_ShoeController = FindObjectOfType<ShoeController>();
         m_GraphicRayCasters = FindObjectsOfType<GraphicRaycaster>();
         m_EventSystem = FindObjectOfType<EventSystem>();
         InitializeButtons();
@@ -105,15 +105,15 @@ public class GroundPlaneUI : MonoBehaviour
 
     private void SetShoeStopped()
     {
-        m_ARController.IsPlaced = true;
-        m_ARController.PlaceShoe();
+        m_ShoeController.IsPlaced = true;
+        m_ShoeController.PlaceShoe();
         m_ConfirmButton.image.enabled = false;
         ChangeButtonStatus();
     }
 
     void ClickResetButton()
     {
-        m_ARController.ResetAR();
+        m_ShoeController.ResetAR();
         ChangeButtonStatus();
     }
 
@@ -242,8 +242,8 @@ public class GroundPlaneUI : MonoBehaviour
 
     public void SetShoeMovable()
     {
-        m_ARController.IsPlaced = false;
-        m_ARController.MoveShoe();
+        m_ShoeController.IsPlaced = false;
+        m_ShoeController.MoveShoe();
         m_ConfirmButton.image.enabled = true;
         ChangeButtonStatus();
     }
@@ -251,8 +251,8 @@ public class GroundPlaneUI : MonoBehaviour
     // Change button's clickability and visualization.
     // Return true: If shoe object does not placed and vuforia detect floor, or shoe object placed.
     public void ChangeButtonStatus() {
-        m_ResetButton.interactable = m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ARController.DoesShoeActive;
-        m_ConfirmButton.image.enabled = m_ARController.DoesShoeActive && !m_ARController.IsPlaced;
+        m_ResetButton.interactable = m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ShoeController.DoesShoeActive;
+        m_ConfirmButton.image.enabled = m_ShoeController.DoesShoeActive && !m_ShoeController.IsPlaced;
     }
 #endregion // MONOBEHAVIOUR_METHODS
 }

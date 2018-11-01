@@ -22,27 +22,6 @@ public class ARController : MonoBehaviour
     /// A prefab for tracking and visualizing detected planes.
     /// </summary>
     public GameObject detectedPlanePrefab;
-
-    public bool IsPlaced
-    {
-        get
-        {
-            return isPlaced;
-        }
-        set
-        {
-            isPlaced = value;
-        }
-    }
-
-    public bool DoesShoeActive
-    {
-        get
-        {
-            return shoe != null && shoe.activeSelf;
-        }
-    }
-
     public GameObject shadowPlaneIndicator;
     public GameObject rotationIndicator;
     public GameObject translationIndicator;
@@ -52,54 +31,31 @@ public class ARController : MonoBehaviour
     #endregion
 
     #region PRIVATE_MEMBERS
+    GameObject shoe;
     /// <summary>
     /// A list to hold all planes ARCore is tracking in the current frame. This object is used across
     /// the application to avoid per-frame allocations.
     /// </summary>
     List<DetectedPlane> m_AllPlanes = new List<DetectedPlane>();
-
-    /// <summary>
-    /// A model to place when a raycast from a user touch hits a plane.
-    /// </summary>
-    GameObject shoe;
-
     GroundPlaneUI m_GroundPlaneUI;
+    ShoeController m_ShoeController;
     /// <summary>
     /// True if the app is in the process of quitting due to an ARCore connection error, otherwise false.
     /// </summary>
     bool m_IsQuitting = false;
-
-    // For checking shoe object is placed.
-    bool isPlaced = false;
-
-    // Size values.
-    float shoeHeight = 0.15f;
-    float shoeScale = 1.4f;
     float indicatorHeight = 0.2f;
+    float indicatorScale = 0.25f;
     float shadowMovedHeight = 0.15f;
     float shadowFixedHeight = 0.05f;
-    float indicatorScale = 0.25f;
     float shadowMovedScale = 0.2f;
     float shadowFixedScaled = 0.18f;
     #endregion
 
-    void Awake()
-    {
-        CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = false;
-        shoe = Instantiate(CurrentCustomShoe.shoe);
-        shoe.GetComponent<Spin>().enabled = false;
-        shoe.name = "CopyShoe";
-        shoe.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
-        shoe.GetComponentsInChildren<Transform>()[1].localRotation = Quaternion.Euler(0, 0, 0);
-    }
-
     void Start()
     {
         m_GroundPlaneUI = FindObjectOfType<GroundPlaneUI>();
+        m_ShoeController = FindObjectOfType<ShoeController>();
         InitializeIndicators();
-        MoveShoe(); // Shoe object is movable at very first.
-        shoe.SetActive(false);
-
     }
 
     /// <summary>
@@ -109,7 +65,6 @@ public class ARController : MonoBehaviour
     {
         _UpdateApplicationLifecycle();
         Session.GetTrackables<DetectedPlane>(m_AllPlanes);
-        shadowPlaneIndicator.SetActive(shoe.activeSelf); // Change shadow activity by shoe's activity.
         ChangePlanesVisualizer(); // Change visualizing of planes by status of shoe placed. 
 
         if (m_GroundPlaneUI.m_ListUpDown.image.sprite.name.Equals("up-arrow"))
@@ -123,9 +78,9 @@ public class ARController : MonoBehaviour
                 return;
             }
 
-            if (isPlaced && !EventSystem.current.IsPointerOverGameObject(0))
+            if (m_ShoeController.IsPlaced && !EventSystem.current.IsPointerOverGameObject(0))
             {
-                isPlaced = false;
+                m_ShoeController.IsPlaced = false;
                 m_GroundPlaneUI.SetShoeMovable();
             }
 
@@ -150,54 +105,6 @@ public class ARController : MonoBehaviour
             }
         }
     }
-
-    #region public methods
-    /// <summary>
-    /// Place shoe to the plane.
-    /// </summary>
-    public void PlaceShoe()
-    {
-        shoe.transform.position -= Vector3.up * shoeHeight;
-        shadowPlaneIndicator.transform.localPosition = new Vector3(0, 0, 0);
-#if (UNITY_IOS || !UNITY_ANDROID)
-            shadowPlaneIndicator.transform.localScale = new Vector3(0.18f, 0.18f, 0.18f);
-            shadowPlaneIndicator.transform.position -= Vector3.up * 0.1f;
-#elif UNITY_ANDROID
-        shadowPlaneIndicator.transform.localScale = new Vector3(shadowFixedScaled, shadowFixedScaled, shadowFixedScaled);
-        shadowPlaneIndicator.transform.position -= Vector3.up * shadowFixedHeight;
-#endif
-        GameObject.Find("PuttingSound").GetComponent<AudioSource>().Play();
-        isPlaced = true;
-    }
-
-    /// <summary>
-    /// Move shoe on the plane.
-    /// </summary>
-    public void MoveShoe()
-    {
-        shoe.transform.position += Vector3.up * shoeHeight;
-        shadowPlaneIndicator.transform.localPosition = new Vector3(0, 0, 0);
-#if (UNITY_IOS || !UNITY_ANDROID)
-            shadowPlaneIndicator.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            shadowPlaneIndicator.transform.position -= Vector3.up * 0.2f;
-#elif UNITY_ANDROID
-        shadowPlaneIndicator.transform.localScale = new Vector3(shadowMovedScale, shadowMovedScale, shadowMovedScale);
-        shadowPlaneIndicator.transform.position -= Vector3.up * shadowMovedHeight;
-        isPlaced = false;
-#endif
-    }
-
-    /// <summary>
-    /// Reset object, anchor, and make shoe object movable.
-    /// </summary>
-    public void ResetAR()
-    {
-        Destroy(FindObjectOfType<Anchor>());
-        shoe.SetActive(false);
-        isPlaced = false;
-        MoveShoe();
-    }
-    #endregion
 
     /// <summary>
     /// Initialize indicator's'
@@ -226,14 +133,40 @@ public class ARController : MonoBehaviour
     /// </summary>
     void SetIndicators()
     {
-        rotationIndicator.SetActive(Input.touchCount == 2 && !isPlaced && !EventSystem.current.IsPointerOverGameObject(0));
+        shadowPlaneIndicator.SetActive(shoe.activeSelf); // Change shadow activity by shoe's activity.
+
+        if(m_ShoeController.IsPlaced)
+        {
+            shadowPlaneIndicator.transform.localPosition = new Vector3(0, 0, 0);
+#if (UNITY_IOS || !UNITY_ANDROID)
+            shadowPlaneIndicator.transform.localScale = new Vector3(0.18f, 0.18f, 0.18f);
+            shadowPlaneIndicator.transform.position -= Vector3.up * 0.1f;
+#elif UNITY_ANDROID
+            shadowPlaneIndicator.transform.localScale = new Vector3(shadowFixedScaled, shadowFixedScaled, shadowFixedScaled);
+            shadowPlaneIndicator.transform.position -= Vector3.up * shadowFixedHeight;
+#endif
+        }
+        else 
+        {
+            shadowPlaneIndicator.transform.localPosition = new Vector3(0, 0, 0);
+#if (UNITY_IOS || !UNITY_ANDROID)
+            shadowPlaneIndicator.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            shadowPlaneIndicator.transform.position -= Vector3.up * 0.2f;
+#elif UNITY_ANDROID
+            shadowPlaneIndicator.transform.localScale = new Vector3(shadowMovedScale, shadowMovedScale, shadowMovedScale);
+            shadowPlaneIndicator.transform.position -= Vector3.up * shadowMovedHeight;
+#endif
+        }
+
+
+        rotationIndicator.SetActive(Input.touchCount == 2 && !m_ShoeController.IsPlaced && !EventSystem.current.IsPointerOverGameObject(0));
         if (rotationIndicator.activeSelf)
         {
             rotationIndicator.transform.position = shoe.transform.position;
             rotationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
-        translationIndicator.SetActive(Input.touchCount == 1 && !isPlaced
+        translationIndicator.SetActive(Input.touchCount == 1 && !m_ShoeController.IsPlaced
                                        && !EventSystem.current.IsPointerOverGameObject(0) && !defaultIndicator.activeSelf);
         if (translationIndicator.activeSelf)
         {
@@ -241,7 +174,7 @@ public class ARController : MonoBehaviour
             translationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
-        defaultIndicator.SetActive((!EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount == 0 && shoe.activeSelf) && !isPlaced);
+        defaultIndicator.SetActive((!EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount == 0 && shoe.activeSelf) && !m_ShoeController.IsPlaced);
         if (defaultIndicator.activeSelf)
         {
             defaultIndicator.transform.position = shoe.transform.position;
@@ -258,10 +191,10 @@ public class ARController : MonoBehaviour
         if (planes.Length < 1) return;
         for (int i = 1; i < planes.Length; i++)
         {
-            planes[i].gameObject.SetActive(!isPlaced || !isActiveAndEnabled);
+            planes[i].gameObject.SetActive(!m_ShoeController.IsPlaced || !isActiveAndEnabled);
         }
 
-        pointCloud.SetActive(!isPlaced || !isActiveAndEnabled);
+        pointCloud.SetActive(!m_ShoeController.IsPlaced || !isActiveAndEnabled);
     }
 
 

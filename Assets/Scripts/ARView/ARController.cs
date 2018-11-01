@@ -31,7 +31,6 @@ public class ARController : MonoBehaviour
     #endregion
 
     #region PRIVATE_MEMBERS
-    GameObject shoe;
     /// <summary>
     /// A list to hold all planes ARCore is tracking in the current frame. This object is used across
     /// the application to avoid per-frame allocations.
@@ -56,7 +55,6 @@ public class ARController : MonoBehaviour
         m_GroundPlaneUI = FindObjectOfType<GroundPlaneUI>();
         m_ShoeController = FindObjectOfType<ShoeController>();
         InitializeIndicators();
-        shoe = m_ShoeController.shoe;
     }
 
     /// <summary>
@@ -98,11 +96,11 @@ public class ARController : MonoBehaviour
             if (Input.touchCount == 1
                 && Frame.Raycast(touches[0].position.x, touches[0].position.y, raycastFilter, out hit))
             {
-                TouchHandler.InteractSingleFinger(shoe, hit, touches);
+                TouchHandler.InteractSingleFinger(m_ShoeController.shoe, hit, touches);
             }
             else if (Input.touchCount == 2)
             {
-                TouchHandler.InteractDoubleFinger(shoe, touches);
+                TouchHandler.InteractDoubleFinger(m_ShoeController.shoe, touches);
             }
         }
     }
@@ -112,7 +110,7 @@ public class ARController : MonoBehaviour
     /// </summary>
     void InitializeIndicators()
     {
-        shadowPlaneIndicator.transform.SetParent(shoe.transform);
+        shadowPlaneIndicator.transform.SetParent(m_ShoeController.shoe.transform);
         shadowPlaneIndicator.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         InitializeIndicator(rotationIndicator);
         InitializeIndicator(translationIndicator);
@@ -124,7 +122,7 @@ public class ARController : MonoBehaviour
     /// </summary>
     void InitializeIndicator(GameObject indicator)
     {
-        indicator.transform.SetParent(shoe.transform);
+        indicator.transform.SetParent(m_ShoeController.shoe.transform);
         indicator.transform.localRotation = Quaternion.Euler(90f, -90f, 0f);
         indicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, indicatorScale);
     }
@@ -134,7 +132,7 @@ public class ARController : MonoBehaviour
     /// </summary>
     void SetIndicators()
     {
-        shadowPlaneIndicator.SetActive(shoe.activeSelf); // Change shadow activity by shoe's activity.
+        shadowPlaneIndicator.SetActive(m_ShoeController.shoe.activeSelf); // Change shadow activity by shoe's activity.
 
         if(m_ShoeController.IsPlaced)
         {
@@ -163,7 +161,7 @@ public class ARController : MonoBehaviour
         rotationIndicator.SetActive(Input.touchCount == 2 && !m_ShoeController.IsPlaced && !EventSystem.current.IsPointerOverGameObject(0));
         if (rotationIndicator.activeSelf)
         {
-            rotationIndicator.transform.position = shoe.transform.position;
+            rotationIndicator.transform.position = m_ShoeController.shoe.transform.position;
             rotationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
@@ -171,14 +169,14 @@ public class ARController : MonoBehaviour
                                        && !EventSystem.current.IsPointerOverGameObject(0) && !defaultIndicator.activeSelf);
         if (translationIndicator.activeSelf)
         {
-            translationIndicator.transform.position = shoe.transform.position;
+            translationIndicator.transform.position = m_ShoeController.shoe.transform.position;
             translationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
-        defaultIndicator.SetActive((!EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount == 0 && shoe.activeSelf) && !m_ShoeController.IsPlaced);
+        defaultIndicator.SetActive((!EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount == 0 && m_ShoeController.shoe.activeSelf) && !m_ShoeController.IsPlaced);
         if (defaultIndicator.activeSelf)
         {
-            defaultIndicator.transform.position = shoe.transform.position;
+            defaultIndicator.transform.position = m_ShoeController.shoe.transform.position;
             defaultIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
     }

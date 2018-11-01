@@ -29,12 +29,11 @@ public class ShoeController : MonoBehaviour {
     // For checking shoe object is placed.
     bool isPlaced = false;
 
-
     // Size values.
     float shoeHeight = 0.15f;
     float shoeScale = 1.4f;
 
-    void Awake()
+    private void Start()
     {
         CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = false;
         shoe = Instantiate(CurrentCustomShoe.shoe);
@@ -42,12 +41,8 @@ public class ShoeController : MonoBehaviour {
         shoe.name = "CopyShoe";
         shoe.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
         shoe.GetComponentsInChildren<Transform>()[1].localRotation = Quaternion.Euler(0, 0, 0);
-    }
-
-    private void Start()
-    {
-        MoveShoe(); // Shoe object is movable at very first.
         shoe.SetActive(false);
+        MoveShoe(); // Shoe object is movable at very first.
     }
 
     #region public methods

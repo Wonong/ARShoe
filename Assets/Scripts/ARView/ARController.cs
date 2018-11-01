@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using GoogleARCore;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using GoogleARCore;
 #if UNITY_EDITOR
-// Set up touch input propagation while using Instant Preview in the editor.
+    // Set up touch input propagation while using Instant Preview in the editor.
 using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
@@ -13,7 +12,7 @@ using Input = GoogleARCore.InstantPreviewInput;
 /// </summary>
 public class ARController : MonoBehaviour
 {
-    # region PUBLIC_MEMBERS
+    #region PUBLIC_MEMBERS
     /// <summary>
     /// The main camera being used to render the passthrough camera image (i.e. AR background).
     /// </summary>
@@ -24,21 +23,23 @@ public class ARController : MonoBehaviour
     /// </summary>
     public GameObject detectedPlanePrefab;
 
-    public bool IsPlaced {
-        get 
+    public bool IsPlaced
+    {
+        get
         {
             return isPlaced;
         }
-        set 
+        set
         {
             isPlaced = value;
         }
     }
 
-    public bool DoesShoeActive {
+    public bool DoesShoeActive
+    {
         get
         {
-            return shoe!=null && shoe.activeSelf;
+            return shoe != null && shoe.activeSelf;
         }
     }
 
@@ -50,7 +51,7 @@ public class ARController : MonoBehaviour
     public GameObject pointCloud;
     #endregion
 
-    # region PRIVATE_MEMBERS
+    #region PRIVATE_MEMBERS
     /// <summary>
     /// A list to hold all planes ARCore is tracking in the current frame. This object is used across
     /// the application to avoid per-frame allocations.
@@ -98,6 +99,7 @@ public class ARController : MonoBehaviour
         InitializeIndicators();
         MoveShoe(); // Shoe object is movable at very first.
         shoe.SetActive(false);
+
     }
 
     /// <summary>
@@ -107,40 +109,45 @@ public class ARController : MonoBehaviour
     {
         _UpdateApplicationLifecycle();
         Session.GetTrackables<DetectedPlane>(m_AllPlanes);
-        SetIndicators(); // Set indicators children of shoe.
         shadowPlaneIndicator.SetActive(shoe.activeSelf); // Change shadow activity by shoe's activity.
         ChangePlanesVisualizer(); // Change visualizing of planes by status of shoe placed. 
 
-        // If the player has not touched the screen, we are done with this update.
-        Touch[] touches = Input.touches;
-        if (Input.touchCount < 1 || (touches[0] = Input.GetTouch(0)).phase == TouchPhase.Ended)
+        if (m_GroundPlaneUI.m_ListUpDown.image.sprite.name.Equals("up-arrow"))
         {
-            return;
-        }
+            SetIndicators(); // Set indicators children of shoe.
 
-        if(isPlaced && !EventSystem.current.IsPointerOverGameObject(0))
-        {
-            isPlaced = false;
-            m_GroundPlaneUI.SetShoeMovable();
-        }
+            // If the player has not touched the screen, we are done with this update.
+            Touch[] touches = Input.touches;
+            if (Input.touchCount < 1 || (touches[0] = Input.GetTouch(0)).phase == TouchPhase.Ended)
+            {
+                return;
+            }
 
-        // Raycast against the location the player touched to search for planes.
-        TrackableHit hit;
-        TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon |
-            TrackableHitFlags.FeaturePointWithSurfaceNormal;
+            if (isPlaced && !EventSystem.current.IsPointerOverGameObject(0))
+            {
+                isPlaced = false;
+                m_GroundPlaneUI.SetShoeMovable();
+            }
 
-        if (Input.touches[0].phase == TouchPhase.Ended)
-        {
-            TouchHandler.isFirstFrameWithTwoTouches = true;
-        }
+            // Raycast against the location the player touched to search for planes.
+            TrackableHit hit;
+            TrackableHitFlags raycastFilter = TrackableHitFlags.PlaneWithinPolygon |
+                TrackableHitFlags.FeaturePointWithSurfaceNormal;
 
-        if (Input.touchCount == 1 && Frame.Raycast(touches[0].position.x, touches[0].position.y, raycastFilter, out hit))
-        {
-            TouchHandler.InteractSingleFinger(shoe, hit, touches);
-        }
-        else if (Input.touchCount == 2)
-        {
-            TouchHandler.InteractDoubleFinger(shoe, touches);
+            if (Input.touches[0].phase == TouchPhase.Ended)
+            {
+                TouchHandler.isFirstFrameWithTwoTouches = true;
+            }
+
+            if (Input.touchCount == 1
+                && Frame.Raycast(touches[0].position.x, touches[0].position.y, raycastFilter, out hit))
+            {
+                TouchHandler.InteractSingleFinger(shoe, hit, touches);
+            }
+            else if (Input.touchCount == 2)
+            {
+                TouchHandler.InteractDoubleFinger(shoe, touches);
+            }
         }
     }
 
@@ -158,8 +165,9 @@ public class ARController : MonoBehaviour
 #elif UNITY_ANDROID
         shadowPlaneIndicator.transform.localScale = new Vector3(shadowFixedScaled, shadowFixedScaled, shadowFixedScaled);
         shadowPlaneIndicator.transform.position -= Vector3.up * shadowFixedHeight;
-        #endif
+#endif
         GameObject.Find("PuttingSound").GetComponent<AudioSource>().Play();
+        isPlaced = true;
     }
 
     /// <summary>
@@ -175,7 +183,8 @@ public class ARController : MonoBehaviour
 #elif UNITY_ANDROID
         shadowPlaneIndicator.transform.localScale = new Vector3(shadowMovedScale, shadowMovedScale, shadowMovedScale);
         shadowPlaneIndicator.transform.position -= Vector3.up * shadowMovedHeight;
-        #endif
+        isPlaced = false;
+#endif
     }
 
     /// <summary>
@@ -217,21 +226,22 @@ public class ARController : MonoBehaviour
     /// </summary>
     void SetIndicators()
     {
-        rotationIndicator.SetActive(Input.touchCount == 2 && !isPlaced);
+        rotationIndicator.SetActive(Input.touchCount == 2 && !isPlaced && !EventSystem.current.IsPointerOverGameObject(0));
         if (rotationIndicator.activeSelf)
         {
             rotationIndicator.transform.position = shoe.transform.position;
             rotationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
-        translationIndicator.SetActive(Input.touchCount == 1 && !isPlaced && !EventSystem.current.IsPointerOverGameObject(0));
+        translationIndicator.SetActive(Input.touchCount == 1 && !isPlaced
+                                       && !EventSystem.current.IsPointerOverGameObject(0) && !defaultIndicator.activeSelf);
         if (translationIndicator.activeSelf)
         {
             translationIndicator.transform.position = shoe.transform.position;
             translationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
-        defaultIndicator.SetActive(Input.touchCount == 0 && shoe.activeSelf && !isPlaced);
+        defaultIndicator.SetActive((!EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount == 0 && shoe.activeSelf) && !isPlaced);
         if (defaultIndicator.activeSelf)
         {
             defaultIndicator.transform.position = shoe.transform.position;

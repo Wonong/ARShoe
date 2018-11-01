@@ -37,6 +37,7 @@ public class GroundPlaneUI : MonoBehaviour
     GraphicRaycaster[] m_GraphicRayCasters;
     PointerEventData m_PointerEventData;
     EventSystem m_EventSystem;
+    float customizingListSize = 670f;
     #endregion // PRIVATE_MEMBERS
 
 
@@ -126,22 +127,22 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     void ClickListUpDownButton()
     {
-        Vector2 originalPanelVector = m_CustomListRectTransform.sizeDelta;
+        Vector2 originalPanelVector = m_CustomListRectTransform.anchoredPosition;
         Vector2 goalPanelVector;
         Vector2 originalToolbarVector = m_MidToolbarTectTrnasform.anchoredPosition;
         Vector2 goalToolbarVector;
         if (m_ListUpDown.image.sprite.name.Equals("up-arrow"))
         {
             m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/down-arrow");
-            goalPanelVector = new Vector2(m_CustomListRectTransform.sizeDelta.x, 300f);
-            goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y + 300f);
+            goalPanelVector = new Vector2(m_CustomListRectTransform.anchoredPosition.x, 0f);
+            goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y + customizingListSize);
             StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
         }
         else
         {
             m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/up-arrow");
-            goalPanelVector = new Vector2(m_CustomListRectTransform.sizeDelta.x, 0f);
-            goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y - 300f);
+            goalPanelVector = new Vector2(m_CustomListRectTransform.anchoredPosition.x, -customizingListSize);
+            goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y - customizingListSize);
             StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
         }
     }
@@ -164,7 +165,7 @@ public class GroundPlaneUI : MonoBehaviour
             currentTime += Time.deltaTime;
             float normalizedValue = currentTime / timeOver; // we normalize our time 
 
-            m_CustomListRectTransform.sizeDelta = Vector2.Lerp(originalPanelVector, goalPanelVector, normalizedValue);
+            m_CustomListRectTransform.anchoredPosition = Vector2.Lerp(originalPanelVector, goalPanelVector, normalizedValue);
             m_MidToolbarTectTrnasform.anchoredPosition = Vector2.Lerp(originalToolbarVector, goalToolbarVector, normalizedValue);
             yield return null;
         }

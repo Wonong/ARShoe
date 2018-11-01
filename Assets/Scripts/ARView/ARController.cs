@@ -56,6 +56,7 @@ public class ARController : MonoBehaviour
         m_GroundPlaneUI = FindObjectOfType<GroundPlaneUI>();
         m_ShoeController = FindObjectOfType<ShoeController>();
         InitializeIndicators();
+        shoe = m_ShoeController.shoe;
     }
 
     /// <summary>

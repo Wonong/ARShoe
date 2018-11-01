@@ -24,7 +24,7 @@ public class ShoeController : MonoBehaviour {
         }
     }
 
-    GameObject shoe;
+    public GameObject shoe;
 
     // For checking shoe object is placed.
     bool isPlaced = false;

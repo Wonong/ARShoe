@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class GroundPlaneUI : MonoBehaviour
 {
@@ -39,7 +40,6 @@ public class GroundPlaneUI : MonoBehaviour
     EventSystem m_EventSystem;
     float customizingListSize = 670f;
     #endregion // PRIVATE_MEMBERS
-
 
     #region MONOBEHAVIOUR_METHODS
     void Start()
@@ -75,7 +75,6 @@ public class GroundPlaneUI : MonoBehaviour
     void InitializeButtons()
     {
         m_BackButton.onClick.AddListener(ClickBackButton);
-        m_ConfirmButton.onClick.AddListener(ClickConfirmButton);
         m_ResetButton.onClick.AddListener(ClickResetButton);
         m_CaptureButton.onClick.AddListener(ClickCaptureButton);
         m_ListUpDown.onClick.AddListener(ClickListUpDownButton);
@@ -84,6 +83,10 @@ public class GroundPlaneUI : MonoBehaviour
         m_HeartButton.onClick.AddListener(ClickHeartButton);
         m_SocialShareButton.onClick.AddListener(ClickSocialShareButton);
         m_BuyButton.onClick.AddListener(ClickBuyButton);
+        if (SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
+        {
+            m_ConfirmButton.onClick.AddListener(ClickConfirmButton);
+        }
     }
 
     void ClickBackButton()
@@ -190,7 +193,14 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickSceneChangeButton()
     {
-        SceneChanger.ChangeToAttachShoes();
+        if (SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
+        {
+            SceneChanger.ChangeToAttachShoes();
+        }
+        else
+        {
+            SceneChanger.ChangeToWatchingShoes();
+        }
     }
 
     void ClickHeartButton()

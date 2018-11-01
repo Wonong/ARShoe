@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SelectOptionUI : ViewController {
 
-    private bool selected;
+    //public Transform optionContents;
 
 	// Use this for initialization
 	void Start () {

@@ -33,10 +33,14 @@ public class ShoeController : MonoBehaviour {
     float shoeHeight = 0.15f;
     float shoeScale = 1.4f;
 
-    private void Start()
+    private void Awake()
     {
         CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = false;
         shoe = Instantiate(CurrentCustomShoe.shoe);
+    }
+
+    private void Start()
+    {
         shoe.GetComponent<Spin>().enabled = false;
         shoe.name = "CopyShoe";
         shoe.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);

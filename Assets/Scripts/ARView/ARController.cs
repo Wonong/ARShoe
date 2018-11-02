@@ -2,8 +2,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using GoogleARCore;
+using static AndroidController;
 #if UNITY_EDITOR
-    // Set up touch input propagation while using Instant Preview in the editor.
+// Set up touch input propagation while using Instant Preview in the editor.
 using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
@@ -230,35 +231,6 @@ public class ARController : MonoBehaviour
             _ShowAndroidToastMessage("ARCore encountered a problem connecting.  Please start the app again.");
             m_IsQuitting = true;
             Invoke("_DoQuit", 0.5f);
-        }
-    }
-
-    /// <summary>
-    /// Actually quit the application.
-    /// </summary>
-    void _DoQuit()
-    {
-        Application.Quit();
-    }
-
-    /// <summary>
-    /// Show an Android toast message.
-    /// </summary>
-    /// <param name="message">Message string to show in the toast.</param>
-    void _ShowAndroidToastMessage(string message)
-    {
-        AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        AndroidJavaObject unityActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-
-        if (unityActivity != null)
-        {
-            AndroidJavaClass toastClass = new AndroidJavaClass("android.widget.Toast");
-            unityActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
-            {
-                AndroidJavaObject toastObject = toastClass.CallStatic<AndroidJavaObject>("makeText", unityActivity,
-                    message, 0);
-                toastObject.Call("show");
-            }));
         }
     }
 }

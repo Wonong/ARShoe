@@ -38,6 +38,7 @@ public class GroundPlaneUI : MonoBehaviour
     GraphicRaycaster[] m_GraphicRayCasters;
     PointerEventData m_PointerEventData;
     EventSystem m_EventSystem;
+    GameObject m_CustomScrollView;
     float customizingListSize = 670f;
     #endregion // PRIVATE_MEMBERS
 
@@ -49,7 +50,7 @@ public class GroundPlaneUI : MonoBehaviour
         m_EventSystem = FindObjectOfType<EventSystem>();
         InitializeButtons();
         ChangeButtonStatus();
-        // ToDo: If the shoe can custom, then show list up/down button, else hide list up/down button.
+        SetCustomScrollView();
     }
 
     void Update()
@@ -67,6 +68,19 @@ public class GroundPlaneUI : MonoBehaviour
                 ScreenshotPreview.previewGameObject.SetActive(false);
             }
         }
+    }
+
+    /// <summary>
+    /// Sets the custom scroll view into Canvas.
+    /// </summary>
+    private void SetCustomScrollView()
+    {
+        m_CustomScrollView = Instantiate(UIManager.Instance.customizePanel.customize.gameObject);
+        m_CustomScrollView.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
+        RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();
+        customScrollViewRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        customScrollViewRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        customScrollViewRectTransform.anchoredPosition = new Vector2(0f, 0f);
     }
 
     /// <summary>

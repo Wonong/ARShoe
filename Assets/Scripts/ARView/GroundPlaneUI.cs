@@ -39,6 +39,7 @@ public class GroundPlaneUI : MonoBehaviour
     PointerEventData m_PointerEventData;
     EventSystem m_EventSystem;
     GameObject m_CustomScrollView;
+    GameObject shopWebView;
     float customizingListSize = 670f;
     #endregion // PRIVATE_MEMBERS
 
@@ -59,13 +60,17 @@ public class GroundPlaneUI : MonoBehaviour
         // If user click android back button, then call click back button method.
         if (Application.platform == RuntimePlatform.Android && Input.GetKey(KeyCode.Escape))
         {
-            if (!ScreenshotPreview.previewGameObject.activeSelf)
+            if (!ScreenshotPreview.previewGameObject.activeSelf && shopWebView==null)
             {
                 ClickBackButton();
             }
             else if (ScreenshotPreview.previewGameObject.activeSelf)
             {
                 ScreenshotPreview.previewGameObject.SetActive(false);
+            }
+            else if(shopWebView!=null) 
+            {
+                Destroy(shopWebView);
             }
         }
     }
@@ -148,16 +153,16 @@ public class GroundPlaneUI : MonoBehaviour
         Vector2 goalPanelVector;
         Vector2 originalToolbarVector = m_MidToolbarTectTrnasform.anchoredPosition;
         Vector2 goalToolbarVector;
-        if (m_ListUpDown.image.sprite.name.Equals("up-arrow"))
+        if (m_ListUpDown.image.sprite.name.Equals("arrow_up"))
         {
-            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/down-arrow");
+            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_down");
             goalPanelVector = new Vector2(m_CustomListRectTransform.anchoredPosition.x, 0f);
             goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y + customizingListSize);
             StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
         }
         else
         {
-            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/up-arrow");
+            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_up");
             goalPanelVector = new Vector2(m_CustomListRectTransform.anchoredPosition.x, -customizingListSize);
             goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y - customizingListSize);
             StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
@@ -193,15 +198,15 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     void ClickShoeLeftRightTextButton()
     {
-        if (m_ShoeLeftRightTextButton.GetComponent<Text>().text.Equals("R"))
+        if (m_ShoeLeftRightTextButton.image.sprite.name.Equals("right"))
         {
-            m_ShoeLeftRightTextButton.GetComponent<Text>().text = "L";
+            m_ShoeLeftRightTextButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/left");
             // ToDo: Change shoe right to left.
         }
         else
         {
-            m_ShoeLeftRightTextButton.GetComponent<Text>().text = "R";
-            // ToDo: Change shoe left to right.
+            m_ShoeLeftRightTextButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/right");
+;            // ToDo: Change shoe left to right.
         }
     }
 
@@ -224,6 +229,7 @@ public class GroundPlaneUI : MonoBehaviour
             m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_Heart");
             ColorBlock colorBlock = m_HeartButton.colors;
             colorBlock.highlightedColor = new Color32(0, 164, 255, 255);
+            colorBlock.normalColor = new Color32(0, 164, 255, 255);
             m_HeartButton.colors = colorBlock;
             // ToDo: Save Changed info.
         }
@@ -231,7 +237,8 @@ public class GroundPlaneUI : MonoBehaviour
         {
             m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_HeartEmpty");
             ColorBlock colorBlock = m_HeartButton.colors;
-            colorBlock.highlightedColor = new Color32(255, 255, 255, 255);
+            colorBlock.highlightedColor = new Color32(0, 0, 0, 255);
+            colorBlock.normalColor = new Color32(0, 0, 0, 255);
             m_HeartButton.colors = colorBlock;
             // ToDo: Save Changed info.
         }
@@ -244,14 +251,15 @@ public class GroundPlaneUI : MonoBehaviour
     {
         // ToDo: Get url of shop.
         #if UNITY_ANDROID
-        new NativeShare().SetTitle("Title").SetText("text").Share();
+        new NativeShare().SetText("text").Share();
         #elif UNITY_IOS
-        new NativeShare().SetTitle("Title").SetText("text").Share();
+        new NativeShare().SetText("text").Share();
         #endif
     }
 
     void ClickBuyButton() {
-        // ToDo: Shoe webview.
+        shopWebView = Instantiate(UIManager.Instance.shopPanel.gameObject);
+        shopWebView.transform.SetParent(GameObject.Find("Canvas").transform);
     }
 
     public void SetShoeMovable()

@@ -10,6 +10,7 @@ public static class AndroidController
         AndroidJavaClass classUri = new AndroidJavaClass("android.net.Uri");
         AndroidJavaObject objIntent = new AndroidJavaObject("android.content.Intent", new object[2] { "android.intent.action.MEDIA_SCANNER_SCAN_FILE", classUri.CallStatic<AndroidJavaObject>("parse", "file://" + location) });
         objActivity.Call("sendBroadcast", objIntent);
+        _ShowAndroidToastMessage("사진이 갤러리에 저장되었습니다.");
     }
 
     /// <summary>

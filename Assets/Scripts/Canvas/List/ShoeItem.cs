@@ -7,7 +7,7 @@ public class ShoeItem : MonoBehaviour {
 
     public Button buttonComponent;
     public RawImage icon;
-    public Text nameLabel, priceLabel;
+    public Text companyLabel, nameLabel, priceLabel;
 
     private Shoe item;
 
@@ -24,7 +24,8 @@ public class ShoeItem : MonoBehaviour {
     public void Setup(Shoe currentItem){
         item = currentItem;
         icon.texture = item.GetIconAsTexture();
-        nameLabel.text = item.company + "_" + item.name;
+        companyLabel.text = item.company;
+        nameLabel.text = item.name;
         priceLabel.text = item.price.ToString();
     }
 

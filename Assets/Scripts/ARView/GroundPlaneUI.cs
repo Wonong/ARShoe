@@ -216,18 +216,18 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickHeartButton()
     {
-        if (m_HeartButton.image.sprite.name.Equals("UI_Icon_HeartEmpty"))
+        if (m_HeartButton.image.sprite.name.Equals("heart"))
         {
-            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_Heart");
+            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/heart_red");
             ColorBlock colorBlock = m_HeartButton.colors;
-            colorBlock.highlightedColor = new Color32(0, 164, 255, 255);
-            colorBlock.normalColor = new Color32(0, 164, 255, 255);
+            colorBlock.highlightedColor = new Color32(255, 255, 255, 255);
+            colorBlock.normalColor = new Color32(255, 255, 255, 255);
             m_HeartButton.colors = colorBlock;
             // ToDo: Save Changed info.
         }
         else
         {
-            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_HeartEmpty");
+            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/heart");
             ColorBlock colorBlock = m_HeartButton.colors;
             colorBlock.highlightedColor = new Color32(0, 0, 0, 255);
             colorBlock.normalColor = new Color32(0, 0, 0, 255);

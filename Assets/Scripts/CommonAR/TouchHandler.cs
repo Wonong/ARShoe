@@ -21,23 +21,23 @@ static class TouchHandler
     static float speed = 5f;
     #endregion
 
-    public static void InteractSingleFinger(GameObject shoe, TrackableHit hit, Touch[] touches)
+    public static void InteractSingleFinger(GameObject shoes, TrackableHit hit, Touch[] touches)
     {
-        if (!shoe.activeSelf) // Initialize shoe.
+        if (!shoes.activeSelf) // Initialize shoe.
         {
-            shoe.SetActive(true);
-            shoe.transform.position = hit.Pose.position;
-            shoe.transform.position += Vector3.up * 0.2f;
+            shoes.SetActive(true);
+            shoes.transform.position = hit.Pose.position;
+            shoes.transform.position += Vector3.up * 0.2f;
             var anchor = hit.Trackable.CreateAnchor(hit.Pose);
-            shoe.transform.parent = anchor.transform;
+            shoes.transform.parent = anchor.transform;
             isFirstFrameWithTwoTouches = true;
         }
         else if (isFirstFrameWithTwoTouches && (touches[0].phase == TouchPhase.Moved)) // Drag and make shoe move.
         {
             if(!EventSystem.current.IsPointerOverGameObject(touches[0].fingerId))
             {
-                shoe.transform.position = hit.Pose.position;
-                shoe.transform.position += Vector3.up * 0.2f;
+                shoes.transform.position = hit.Pose.position;
+                shoes.transform.position += Vector3.up * 0.2f;
                 isFirstFrameWithTwoTouches = true;
             }
         }
@@ -47,11 +47,11 @@ static class TouchHandler
         }
     }
 
-    public static void InteractDoubleFinger(GameObject shoe, Touch[] touches)
+    public static void InteractDoubleFinger(GameObject shoes, Touch[] touches)
     {
         Vector3 rotationDeg = Vector3.zero;
         rotationDeg.y = -turnAngleDelta;
-        shoe.transform.rotation *= Quaternion.Euler(rotationDeg);
+        shoes.transform.rotation *= Quaternion.Euler(rotationDeg);
 
         // Initialize angle, angleDelta, and touch boolean.
         if (isFirstFrameWithTwoTouches) 

@@ -1,11 +1,4 @@
-﻿/*==============================================================================
-Copyright (c) 2018 PTC Inc. All Rights Reserved.
-
-Vuforia is a trademark of PTC Inc., registered in the United States and other
-countries.
-==============================================================================*/
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -110,7 +103,7 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickBackButton()
     {
-        CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = true;
+        CurrentCustomShoe.shoes.GetComponent<Swiper>().enabled = true;
         SceneChanger.ChangeToShoeListScene();
     }
 
@@ -201,13 +194,12 @@ public class GroundPlaneUI : MonoBehaviour
         if (m_ShoeLeftRightTextButton.image.sprite.name.Equals("right"))
         {
             m_ShoeLeftRightTextButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/left");
-            // ToDo: Change shoe right to left.
         }
         else
         {
             m_ShoeLeftRightTextButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/right");
-;            // ToDo: Change shoe left to right.
         }
+        m_ShoeController.ChangeLeftRight();
     }
 
     void ClickSceneChangeButton()

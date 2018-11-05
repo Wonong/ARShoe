@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using GoogleARCore;
+﻿using GoogleARCore;
 using UnityEngine;
 
 public class ShoeController : MonoBehaviour {
@@ -20,14 +18,17 @@ public class ShoeController : MonoBehaviour {
     {
         get
         {
-            return shoe != null && shoe.activeSelf;
+            return shoes != null && shoes.activeSelf;
         }
     }
 
-    public GameObject shoe;
+    public GameObject shoes;
 
+    private GameObject shoeLeft;
+    private GameObject shoeRight;
     // For checking shoe object is placed.
     bool isPlaced = false;
+    bool isShoeLeft = false;
 
     // Size values.
     float shoeHeight = 0.15f;
@@ -35,18 +36,23 @@ public class ShoeController : MonoBehaviour {
 
     private void Awake()
     {
-        CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = false;
-        shoe = Instantiate(CurrentCustomShoe.shoe);
+        shoes = Instantiate(CurrentCustomShoe.shoes);
+        shoes.GetComponent<Spin>().enabled = false;
     }
 
     private void Start()
     {
-        shoe.GetComponent<Spin>().enabled = false;
-        shoe.name = "CopyShoe";
-        shoe.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
-        shoe.GetComponentsInChildren<Transform>()[1].localRotation = Quaternion.Euler(0, 0, 0);
-        shoe.SetActive(false);
+        shoes.GetComponent<Swiper>().enabled = false;
+        shoes.name = "CopyShoe";
+        shoes.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
+        int componentsLength = shoes.GetComponentsInChildren<Transform>().Length;
+        shoeLeft = shoes.GetComponentsInChildren<Transform>()[1].gameObject;
+        shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        shoeRight = shoes.GetComponentsInChildren<Transform>()[componentsLength/2+1].gameObject;
+        shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        shoes.SetActive(false);
         MoveShoe(); // Shoe object is movable at very first.
+        ChangeLeftRight();
     }
 
     #region public methods
@@ -55,7 +61,7 @@ public class ShoeController : MonoBehaviour {
     /// </summary>
     public void PlaceShoe()
     {
-        shoe.transform.position -= Vector3.up * shoeHeight;
+        shoes.transform.position -= Vector3.up * shoeHeight;
         GameObject.Find("PuttingSound").GetComponent<AudioSource>().Play();
         isPlaced = true;
     }
@@ -65,7 +71,7 @@ public class ShoeController : MonoBehaviour {
     /// </summary>
     public void MoveShoe()
     {
-        shoe.transform.position += Vector3.up * shoeHeight;
+        shoes.transform.position += Vector3.up * shoeHeight;
         isPlaced = false;
     }
 
@@ -75,9 +81,25 @@ public class ShoeController : MonoBehaviour {
     public void ResetAR()
     {
         Destroy(FindObjectOfType<Anchor>());
-        shoe.SetActive(false);
+        shoes.SetActive(false);
         isPlaced = false;
         MoveShoe();
+    }
+
+    public void ChangeLeftRight()
+    {
+        if(isShoeLeft)
+        {
+            shoeRight.SetActive(true);
+            shoeLeft.SetActive(false);
+            isShoeLeft = false;
+        }
+        else
+        {
+            shoeLeft.SetActive(true);
+            shoeRight.SetActive(false);
+            isShoeLeft = true;
+        }
     }
     #endregion
 }

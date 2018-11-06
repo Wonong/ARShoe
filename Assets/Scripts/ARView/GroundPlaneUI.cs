@@ -27,6 +27,7 @@ public class GroundPlaneUI : MonoBehaviour
 
     #region PRIVATE_MEMBERS
     ShoeController m_ShoeController;
+    DetectorController m_DetectController;
     AudioSource shoePuttingSound;
     GraphicRaycaster[] m_GraphicRayCasters;
     PointerEventData m_PointerEventData;
@@ -40,6 +41,7 @@ public class GroundPlaneUI : MonoBehaviour
     void Start()
     {
         m_ShoeController = FindObjectOfType<ShoeController>();
+        m_DetectController = FindObjectOfType<DetectorController>();
         m_GraphicRayCasters = FindObjectsOfType<GraphicRaycaster>();
         m_EventSystem = FindObjectOfType<EventSystem>();
         InitializeButtons();
@@ -133,6 +135,7 @@ public class GroundPlaneUI : MonoBehaviour
         else
         {
             // Attaching scene에서 reset 호출 시의 코드 작성.
+            m_DetectController.ClickResetButton();
         }
     }
 

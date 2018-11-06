@@ -29,83 +29,6 @@ namespace TFClassify
         public static Texture2D CropWithRect(
             Texture2D texture, Rect rect, RectOptions rectOptions, int xMod, int yMod)
         {
-
-            if (rect.height < 0 || rect.width < 0)
-            {
-                throw new System.ArgumentException("Invalid texture size\n");
-                DetectorController.debugStr = "Invalid texture size" + DetectorController.debugStr;
-            }
-
-            Texture2D result = new Texture2D((int)rect.width, (int)rect.height);
-
-            if (rect.width != 0 && rect.height != 0)
-            {
-                float xRect = rect.x;
-                float yRect = rect.y;
-                float widthRect = rect.width;
-                float heightRect = rect.height;
-
-                switch (rectOptions)
-                {
-                    case RectOptions.Center:
-
-                        xRect = (texture.width - rect.width) / 2;
-                        yRect = (texture.height - rect.height) / 2;
-                        break;
-
-                    case RectOptions.BottomRight:
-                        xRect = texture.width - rect.width;
-                        break;
-
-                    case RectOptions.BottomLeft:
-                        break;
-
-                    case RectOptions.TopLeft:
-                        yRect = texture.height - rect.height;
-                        break;
-
-                    case RectOptions.TopRight:
-                        xRect = texture.width - rect.width;
-                        yRect = texture.height - rect.height;
-                        break;
-
-                    case RectOptions.Custom:
-                        float tempWidth = texture.width - rect.width - xMod;
-                        float tempHeight = texture.height - rect.height - yMod;
-                        xRect = tempWidth > texture.width ? 0 : tempWidth;
-                        yRect = tempHeight > texture.height ? 0 : tempHeight;
-                        break;
-                }
-
-                if (texture.width < rect.x + rect.width ||
-                    texture.height < rect.y + rect.height ||
-                    xRect > rect.x + texture.width ||
-                    yRect > rect.y + texture.height ||
-                    xRect < 0 || yRect < 0 || rect.width < 0 || rect.height < 0)
-                {
-
-                    DetectorController.debugStr = string.Format(
-                        "{0} {1} {2} {3}\n {4} {5}\n",
-                        (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height,
-                        texture.width, texture.height
-
-                        ) + DetectorController.debugStr;
-                    DetectorController.debugStr = "Set value crop less than origin texture size\n" + DetectorController.debugStr;
-                    throw new System.ArgumentException("Set value crop less than origin texture size");
-                }
-
-                result.SetPixels(texture.GetPixels(Mathf.FloorToInt(xRect), Mathf.FloorToInt(yRect),
-                                                Mathf.FloorToInt(widthRect), Mathf.FloorToInt(heightRect)));
-
-                result.Apply();
-            }
-
-            return result;
-        }
-
-        public static Texture2D CropWithRect(
-            WebCamTexture texture, Rect rect, RectOptions rectOptions, int xMod, int yMod)
-        {
             if (rect.height < 0 || rect.width < 0)
             {
                 throw new System.ArgumentException("Invalid texture size");
@@ -151,8 +74,10 @@ namespace TFClassify
                         break;
                 }
 
-                if (texture.width < rect.x + rect.width || texture.height < rect.y + rect.height ||
-                    xRect > rect.x + texture.width || yRect > rect.y + texture.height ||
+                if (texture.width < rect.x + rect.width ||
+                    texture.height < rect.y + rect.height ||
+                    xRect > rect.x + texture.width ||
+                    yRect > rect.y + texture.height ||
                     xRect < 0 || yRect < 0 || rect.width < 0 || rect.height < 0)
                 {
                     throw new System.ArgumentException("Set value crop less than origin texture size");

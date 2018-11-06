@@ -65,7 +65,7 @@ public class DetectorController : MonoBehaviour
 
     public void ClickBackButton()
     {
-        SceneChanger.ChangeToShoeListScene();
+        SceneChanger.ChangeToListScene();
     }
 
     private void Awake()
@@ -75,9 +75,9 @@ public class DetectorController : MonoBehaviour
 
     private void InitializeShoe()
     {
-        CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = false;
-        CurrentCustomShoe.shoe.GetComponent<Spin>().enabled = false;
-        copyShoe = Instantiate(CurrentCustomShoe.shoe);
+        CurrentCustomShoe.shoes.GetComponent<Swiper>().enabled = false;
+        CurrentCustomShoe.shoes.GetComponent<Spin>().enabled = false;
+        copyShoe = Instantiate(CurrentCustomShoe.shoes);
         copyShoe.name = "CopyShoe";
         copyShoe.transform.position = new Vector3(0, 0, 0);
         copyShoe.GetComponentsInChildren<Transform>()[1].localRotation = Quaternion.Euler(0, -90, 15);

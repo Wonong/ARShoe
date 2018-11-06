@@ -102,9 +102,9 @@ public class DetectorController : MonoBehaviour
         }
         else
         {
-            m_DebugImage1.gameObject.SetActive(false);
-            m_DebugImage2.gameObject.SetActive(false);
-            m_DebugText.gameObject.SetActive(false);
+            //m_DebugImage1.gameObject.SetActive(false);
+            //m_DebugImage2.gameObject.SetActive(false);
+            //m_DebugText.gameObject.SetActive(false);
         }
     }
 

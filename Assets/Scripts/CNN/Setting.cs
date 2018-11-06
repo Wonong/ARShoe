@@ -23,7 +23,7 @@ public class Setting : MonoBehaviour
     public void ClickSetting()
     {
         settingPanel.SetActive(true);
-        sizeInputField.text = detector.shoeScale.ToString();
+        //sizeInputField.text = detector.shoeScale.ToString();
         lightIntensityField.text = arLight.minusLightIntensity.ToString();
     }
 

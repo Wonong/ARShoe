@@ -1,11 +1,4 @@
-﻿/*==============================================================================
-Copyright (c) 2018 PTC Inc. All Rights Reserved.
-
-Vuforia is a trademark of PTC Inc., registered in the United States and other
-countries.
-==============================================================================*/
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -38,6 +31,8 @@ public class GroundPlaneUI : MonoBehaviour
     GraphicRaycaster[] m_GraphicRayCasters;
     PointerEventData m_PointerEventData;
     EventSystem m_EventSystem;
+    GameObject m_CustomScrollView;
+    GameObject shopWebView;
     float customizingListSize = 670f;
     #endregion // PRIVATE_MEMBERS
 
@@ -49,7 +44,7 @@ public class GroundPlaneUI : MonoBehaviour
         m_EventSystem = FindObjectOfType<EventSystem>();
         InitializeButtons();
         ChangeButtonStatus();
-        // ToDo: If the shoe can custom, then show list up/down button, else hide list up/down button.
+        SetCustomScrollView();
     }
 
     void Update()
@@ -58,7 +53,7 @@ public class GroundPlaneUI : MonoBehaviour
         // If user click android back button, then call click back button method.
         if (Application.platform == RuntimePlatform.Android && Input.GetKey(KeyCode.Escape))
         {
-            if (!ScreenshotPreview.previewGameObject.activeSelf)
+            if (!ScreenshotPreview.previewGameObject.activeSelf && shopWebView==null)
             {
                 ClickBackButton();
             }
@@ -66,7 +61,24 @@ public class GroundPlaneUI : MonoBehaviour
             {
                 ScreenshotPreview.previewGameObject.SetActive(false);
             }
+            else if(shopWebView!=null) 
+            {
+                Destroy(shopWebView);
+            }
         }
+    }
+
+    /// <summary>
+    /// Sets the custom scroll view into Canvas.
+    /// </summary>
+    private void SetCustomScrollView()
+    {
+        m_CustomScrollView = Instantiate(UIManager.Instance.customizePanel.customize.gameObject);
+        m_CustomScrollView.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
+        RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();
+        customScrollViewRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+        customScrollViewRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+        customScrollViewRectTransform.anchoredPosition = new Vector2(0f, 0f);
     }
 
     /// <summary>
@@ -91,8 +103,8 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickBackButton()
     {
-        CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = true;
-        SceneChanger.ChangeToShoeListScene();
+        CurrentCustomShoe.shoes.GetComponent<Swiper>().enabled = true;
+        SceneChanger.ChangeToListScene();
     }
 
     void ClickConfirmButton()
@@ -134,16 +146,16 @@ public class GroundPlaneUI : MonoBehaviour
         Vector2 goalPanelVector;
         Vector2 originalToolbarVector = m_MidToolbarTectTrnasform.anchoredPosition;
         Vector2 goalToolbarVector;
-        if (m_ListUpDown.image.sprite.name.Equals("up-arrow"))
+        if (m_ListUpDown.image.sprite.name.Equals("arrow_up"))
         {
-            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/down-arrow");
+            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_down");
             goalPanelVector = new Vector2(m_CustomListRectTransform.anchoredPosition.x, 0f);
             goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y + customizingListSize);
             StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
         }
         else
         {
-            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Icons/up-arrow");
+            m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_up");
             goalPanelVector = new Vector2(m_CustomListRectTransform.anchoredPosition.x, -customizingListSize);
             goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y - customizingListSize);
             StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
@@ -179,16 +191,15 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     void ClickShoeLeftRightTextButton()
     {
-        if (m_ShoeLeftRightTextButton.GetComponent<Text>().text.Equals("R"))
+        if (m_ShoeLeftRightTextButton.image.sprite.name.Equals("right"))
         {
-            m_ShoeLeftRightTextButton.GetComponent<Text>().text = "L";
-            // ToDo: Change shoe right to left.
+            m_ShoeLeftRightTextButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/left");
         }
         else
         {
-            m_ShoeLeftRightTextButton.GetComponent<Text>().text = "R";
-            // ToDo: Change shoe left to right.
+            m_ShoeLeftRightTextButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/right");
         }
+        m_ShoeController.ChangeLeftRight();
     }
 
     void ClickSceneChangeButton()
@@ -205,19 +216,21 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickHeartButton()
     {
-        if (m_HeartButton.image.sprite.name.Equals("UI_Icon_HeartEmpty"))
+        if (m_HeartButton.image.sprite.name.Equals("heart"))
         {
-            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_Heart");
+            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/heart_red");
             ColorBlock colorBlock = m_HeartButton.colors;
-            colorBlock.highlightedColor = new Color32(0, 164, 255, 255);
+            colorBlock.highlightedColor = new Color32(255, 255, 255, 255);
+            colorBlock.normalColor = new Color32(255, 255, 255, 255);
             m_HeartButton.colors = colorBlock;
             // ToDo: Save Changed info.
         }
         else
         {
-            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Icons/UI_Icon_HeartEmpty");
+            m_HeartButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/heart");
             ColorBlock colorBlock = m_HeartButton.colors;
-            colorBlock.highlightedColor = new Color32(255, 255, 255, 255);
+            colorBlock.highlightedColor = new Color32(0, 0, 0, 255);
+            colorBlock.normalColor = new Color32(0, 0, 0, 255);
             m_HeartButton.colors = colorBlock;
             // ToDo: Save Changed info.
         }
@@ -230,14 +243,15 @@ public class GroundPlaneUI : MonoBehaviour
     {
         // ToDo: Get url of shop.
         #if UNITY_ANDROID
-        new NativeShare().SetTitle("Title").SetText("text").Share();
+        new NativeShare().SetText("text").Share();
         #elif UNITY_IOS
-        new NativeShare().SetTitle("Title").SetText("text").Share();
+        new NativeShare().SetText("text").Share();
         #endif
     }
 
     void ClickBuyButton() {
-        // ToDo: Shoe webview.
+        shopWebView = Instantiate(UIManager.Instance.shopPanel.gameObject);
+        shopWebView.transform.SetParent(GameObject.Find("Canvas").transform);
     }
 
     public void SetShoeMovable()

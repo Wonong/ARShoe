@@ -14,6 +14,6 @@ public class ARLight : MonoBehaviour {
 
         // Apply color correction along with normalized pixel intensity in gamma space.
         directionalLight.color = Frame.LightEstimate.ColorCorrection * normalizedIntensity;
-        directionalLight.intensity = normalizedIntensity;
+        directionalLight.intensity = normalizedIntensity - 0.4f;
     }
 }

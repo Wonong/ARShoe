@@ -2,8 +2,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using GoogleARCore;
+using static AndroidController;
 #if UNITY_EDITOR
-    // Set up touch input propagation while using Instant Preview in the editor.
+// Set up touch input propagation while using Instant Preview in the editor.
 using Input = GoogleARCore.InstantPreviewInput;
 #endif
 
@@ -66,7 +67,7 @@ public class ARController : MonoBehaviour
         Session.GetTrackables<DetectedPlane>(m_AllPlanes);
         ChangePlanesVisualizer(); // Change visualizing of planes by status of shoe placed. 
 
-        if (m_GroundPlaneUI.m_ListUpDown.image.sprite.name.Equals("up-arrow"))
+        if (m_GroundPlaneUI.m_ListUpDown.image.sprite.name.Equals("arrow_up"))
         {
             SetIndicators(); // Set indicators children of shoe.
 
@@ -96,11 +97,11 @@ public class ARController : MonoBehaviour
             if (Input.touchCount == 1
                 && Frame.Raycast(touches[0].position.x, touches[0].position.y, raycastFilter, out hit))
             {
-                TouchHandler.InteractSingleFinger(m_ShoeController.shoe, hit, touches);
+                TouchHandler.InteractSingleFinger(m_ShoeController.shoes, hit, touches);
             }
             else if (Input.touchCount == 2)
             {
-                TouchHandler.InteractDoubleFinger(m_ShoeController.shoe, touches);
+                TouchHandler.InteractDoubleFinger(m_ShoeController.shoes, touches);
             }
         }
     }
@@ -110,7 +111,7 @@ public class ARController : MonoBehaviour
     /// </summary>
     void InitializeIndicators()
     {
-        shadowPlaneIndicator.transform.SetParent(m_ShoeController.shoe.transform);
+        shadowPlaneIndicator.transform.SetParent(m_ShoeController.shoes.transform);
         shadowPlaneIndicator.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         InitializeIndicator(rotationIndicator);
         InitializeIndicator(translationIndicator);
@@ -122,7 +123,7 @@ public class ARController : MonoBehaviour
     /// </summary>
     void InitializeIndicator(GameObject indicator)
     {
-        indicator.transform.SetParent(m_ShoeController.shoe.transform);
+        indicator.transform.SetParent(m_ShoeController.shoes.transform);
         indicator.transform.localRotation = Quaternion.Euler(90f, -90f, 0f);
         indicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, indicatorScale);
     }
@@ -132,7 +133,7 @@ public class ARController : MonoBehaviour
     /// </summary>
     void SetIndicators()
     {
-        shadowPlaneIndicator.SetActive(m_ShoeController.shoe.activeSelf); // Change shadow activity by shoe's activity.
+        shadowPlaneIndicator.SetActive(m_ShoeController.shoes.activeSelf); // Change shadow activity by shoe's activity.
 
         if(m_ShoeController.IsPlaced)
         {
@@ -161,7 +162,7 @@ public class ARController : MonoBehaviour
         rotationIndicator.SetActive(Input.touchCount == 2 && !m_ShoeController.IsPlaced && !EventSystem.current.IsPointerOverGameObject(0));
         if (rotationIndicator.activeSelf)
         {
-            rotationIndicator.transform.position = m_ShoeController.shoe.transform.position;
+            rotationIndicator.transform.position = m_ShoeController.shoes.transform.position;
             rotationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
@@ -169,14 +170,14 @@ public class ARController : MonoBehaviour
                                        && !EventSystem.current.IsPointerOverGameObject(0) && !defaultIndicator.activeSelf);
         if (translationIndicator.activeSelf)
         {
-            translationIndicator.transform.position = m_ShoeController.shoe.transform.position;
+            translationIndicator.transform.position = m_ShoeController.shoes.transform.position;
             translationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
-        defaultIndicator.SetActive((!EventSystem.current.IsPointerOverGameObject(0) || Input.touchCount == 0 && m_ShoeController.shoe.activeSelf) && !m_ShoeController.IsPlaced);
+        defaultIndicator.SetActive(Input.touchCount == 0 && m_ShoeController.shoes.activeSelf && !m_ShoeController.IsPlaced);
         if (defaultIndicator.activeSelf)
         {
-            defaultIndicator.transform.position = m_ShoeController.shoe.transform.position;
+            defaultIndicator.transform.position = m_ShoeController.shoes.transform.position;
             defaultIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
     }
@@ -230,35 +231,6 @@ public class ARController : MonoBehaviour
             _ShowAndroidToastMessage("ARCore encountered a problem connecting.  Please start the app again.");
             m_IsQuitting = true;
             Invoke("_DoQuit", 0.5f);
-        }
-    }
-
-    /// <summary>
-    /// Actually quit the application.
-    /// </summary>
-    void _DoQuit()
-    {
-        Application.Quit();
-    }
-
-    /// <summary>
-    /// Show an Android toast message.
-    /// </summary>
-    /// <param name="message">Message string to show in the toast.</param>
-    void _ShowAndroidToastMessage(string message)
-    {
-        AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        AndroidJavaObject unityActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-
-        if (unityActivity != null)
-        {
-            AndroidJavaClass toastClass = new AndroidJavaClass("android.widget.Toast");
-            unityActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
-            {
-                AndroidJavaObject toastObject = toastClass.CallStatic<AndroidJavaObject>("makeText", unityActivity,
-                    message, 0);
-                toastObject.Call("show");
-            }));
         }
     }
 }

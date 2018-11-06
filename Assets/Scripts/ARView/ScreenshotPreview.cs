@@ -2,8 +2,11 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
 using System;
-using NatShareU;
 using System.Collections;
+using static AndroidController;
+#if UNITY_IOS
+using NatShareU;
+#endif
 
 public class ScreenshotPreview : MonoBehaviour
 {
@@ -92,11 +95,7 @@ public class ScreenshotPreview : MonoBehaviour
     public static void SaveImageToAndroidGallery(string location, byte[] bytes) // Refresh android gallery.
     {
         File.WriteAllBytes(location, bytes);
-        AndroidJavaClass classPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        AndroidJavaObject objActivity = classPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        AndroidJavaClass classUri = new AndroidJavaClass("android.net.Uri");
-        AndroidJavaObject objIntent = new AndroidJavaObject("android.content.Intent", new object[2] { "android.intent.action.MEDIA_SCANNER_SCAN_FILE", classUri.CallStatic<AndroidJavaObject>("parse", "file://" + location) });
-        objActivity.Call("sendBroadcast", objIntent);
+        ResumeAndroidGallery(location);
     }
 
     public static void SaveImageToWindow(string location, byte[] bytes)

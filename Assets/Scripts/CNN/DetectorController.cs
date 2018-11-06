@@ -25,7 +25,6 @@ public class DetectorController : MonoBehaviour
 
     #region PUBLIC_MEMBERS
     public TextAsset modelFile; // .pb or .bytes file    
-    public float shoeScale = 1.8f;
     public int cropMargin = 0;
     #endregion // PUBLIC_MEMBERS
 
@@ -37,9 +36,8 @@ public class DetectorController : MonoBehaviour
     private FootDetector footDetector;
     private List<BoxOutline> boxOutlines;
 
-    private GameObject copyShoe;
-    private GameObject transparentShader;
-
+    private ShoeController m_ShoeController;
+    
     private int footPosX, footPosY;
     private float footAngleDegree;
     private bool findFoot = false;
@@ -48,28 +46,13 @@ public class DetectorController : MonoBehaviour
 
     #region FOR_DEBUG
     public static bool isDebug = false;
-    public RawImage testImage;
-    public RawImage testImage2;
-    public UnityEngine.UI.Text angleText;
+    public RawImage m_DebugImage1;
+    public RawImage m_DebugImage2;
+    public UnityEngine.UI.Text m_DebugText;
     public int tmp = 0;
     public static string debugStr = "";
     public int x, y, z;
     #endregion // FOR_DEBUG
-
-    public void ClickCapture()
-    {
-        StartCoroutine(ScreenshotPreview.CaptureAndShowPreviewImage());
-    }
-
-    public void ClickBackButton()
-    {
-        SceneChanger.ChangeToShoeListScene();
-    }
-
-    private void Awake()
-    {
-        InitializeShoe();
-    }
 
     public static Texture2D LoadImage(string filePath)
     {
@@ -86,95 +69,43 @@ public class DetectorController : MonoBehaviour
         return tex;
     }
 
-    private void InitializeShoe()
-    {
-        if (GameObject.Find("CopyShoe") != null)
-        {
-            return;
-        }
-
-        CurrentCustomShoe.shoe.GetComponent<Swiper>().enabled = false;
-        CurrentCustomShoe.shoe.GetComponent<Spin>().enabled = false;
-        copyShoe = Instantiate(CurrentCustomShoe.shoe);
-        copyShoe.name = "CopyShoe";
-        copyShoe.transform.position = new Vector3(0, 0, 0);
-        copyShoe.GetComponentsInChildren<Transform>()[1].localRotation = Quaternion.Euler(180, -90, 90);
-        copyShoe.SetActive(false);
-        SetShoeScale();
-        transparentShader = Instantiate(Resources.Load("Prefabs/AttachingAR/TransparentShader") as GameObject);
-        transparentShader.transform.SetParent(copyShoe.GetComponentsInChildren<Transform>()[1]);
-        transparentShader.transform.localPosition = new Vector3(0.027f, 0.053f, 0.003f);
-        transparentShader.transform.localRotation = Quaternion.Euler(-7.48f, 84.37f, -2.88f);
-    }
-
-    public void SetShoeScale()
-    {
-        copyShoe.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
-    }
-
     void Start()
     {
-        //copyShoe.transform.position = new Vector3(Screen.width / 2, Screen.height / 2, 0f);
-
         // load tensorflow model
         LoadWorker();
 
-        copyShoe.SetActive(true);
-        copyShoe.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        copyShoe.transform.localPosition = new Vector3(0, 0, 0.55f);
+        m_ShoeController = FindObjectOfType<ShoeController>();
+
+        ResetShoePosition();
     }
 
     // Update is called once per frame
-    public void CallDetect()
+    public void ClickResetButton()
     {
-        //if (isDebug)
-        //{
-        //    TFDetect();
-        //} else
-        //{
-        //    var func = nameof(TFDetect);
-        //    InvokeRepeating(func, 0, 1.0f);
-        //}
-
         GuessAngle();
         ResetShoePosition();
-        
     }
 
     private void ResetShoePosition()
     {
-        copyShoe.transform.parent = GameObject.Find("First Person Camera").transform;
-        copyShoe.transform.localPosition = new Vector3(0, 0, 0.55f);
-        copyShoe.transform.localRotation = Quaternion.Euler(0, 0, footAngleDegree - 90);
-        copyShoe.transform.parent = null;
+        m_ShoeController.ResetPosition(new Vector3(0, 0, 0.55f), Quaternion.Euler(0, 0, footAngleDegree - 90));
     }
 
     void Update()
     {
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            if (!ScreenshotPreview.previewGameObject.activeSelf && Input.GetKey(KeyCode.Escape))
-            {
-                ClickBackButton();
-            }
-        }
-
         if (isDebug)
         {
-            testImage.gameObject.SetActive(true);
-            angleText.gameObject.SetActive(true);
-            angleText.text = debugStr;
-
-            var func = nameof(TFDetect);
-            CancelInvoke(func);
+            m_DebugImage1.gameObject.SetActive(true);
+            m_DebugImage2.gameObject.SetActive(true);
+            m_DebugText.gameObject.SetActive(true);
+            m_DebugText.text = debugStr;
         }
         else
         {
-            testImage.gameObject.SetActive(false);
-            angleText.gameObject.SetActive(false);
+            m_DebugImage1.gameObject.SetActive(false);
+            m_DebugImage2.gameObject.SetActive(false);
+            m_DebugText.gameObject.SetActive(false);
         }
-
-        SetShoeScale();
     }
 
     private void LoadWorker()

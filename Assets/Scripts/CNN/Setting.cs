@@ -22,7 +22,5 @@ public class Setting : MonoBehaviour
     public void ClickConfirmButton()
     {
         Debug.Log("Click confirm");
-        detector.shoeScale = float.Parse(inputField.text);
-        detector.SetShoeScale();
     }
 }

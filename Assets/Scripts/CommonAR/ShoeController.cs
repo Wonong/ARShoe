@@ -55,6 +55,34 @@ public class ShoeController : MonoBehaviour {
         ChangeLeftRight();
     }
 
+    public void ChangeLocalAngle()
+    {
+
+    }
+
+    public void ChangeScale()
+    {
+
+    }
+
+    public void ResetPosition(Vector3 initPosition, Quaternion initAngle)
+    {
+        if (initPosition == null)
+        {
+            initPosition = new Vector3(0, 0, 0.55f);
+        }
+
+        if (initAngle == null)
+        {
+            initAngle = Quaternion.Euler(0, 0, 0);
+        }
+
+        shoes.transform.parent = GameObject.Find("First Person Camera").transform;
+        shoes.transform.localPosition = initPosition;
+        shoes.transform.localRotation = initAngle;
+        shoes.transform.parent = null;
+    }
+
     #region public methods
     /// <summary>
     /// Place shoe to the plane.

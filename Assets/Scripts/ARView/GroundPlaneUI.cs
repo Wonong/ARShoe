@@ -248,7 +248,7 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     void ClickSocialShareButton()
     {
-        // ToDo: Get url of shop.
+        // ToDo(원영): 아래 "text"에 공유할 링크 CurrentCustomShoe.링크멤버변수 할당.
         #if UNITY_ANDROID
         new NativeShare().SetText("text").Share();
         #elif UNITY_IOS
@@ -257,8 +257,7 @@ public class GroundPlaneUI : MonoBehaviour
     }
 
     void ClickBuyButton() {
-        shopWebView = Instantiate(UIManager.Instance.shopPanel.gameObject);
-        shopWebView.transform.SetParent(GameObject.Find("Canvas").transform);
+        // ToDo(원영): buy now 클릭시 판매 페이지로 이동.
     }
 
     public void SetShoeMovable()

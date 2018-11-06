@@ -5,18 +5,22 @@ using UnityEngine.UI;
 
 public class TopMenu : MonoBehaviour {
 
-    public Button cart;
-    public Button search;
+    public Button myMenu, categoriesBut, searchBut;
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+        categoriesBut.onClick.AddListener(CategoriesButtonOnClick);
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
+    public void CategoriesButtonOnClick(){
+        UIManager.Instance.categories.gameObject.SetActive(true);
+        this.HideAllChildButtons();
+    }
 
     public void HideAllChildButtons(){
         foreach(GameObject item in GetComponentsInChildren<GameObject>()){

@@ -65,7 +65,7 @@ public class DetectorController : MonoBehaviour
 
     public void ClickBackButton()
     {
-        SceneChanger.ChangeToShoeListScene();
+        SceneChanger.ChangeToListScene();
     }
 
     private void Awake()

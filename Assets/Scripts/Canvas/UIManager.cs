@@ -40,6 +40,10 @@ public class UIManager : MonoBehaviour
         itemList = JSONHandler.GetAllShoesList();
     }
 
+    public void SetShopUrl(string link){
+        this.shopPanel.url = link;
+    }
+
 
     private void Awake()
     {

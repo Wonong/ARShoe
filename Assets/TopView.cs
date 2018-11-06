@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class TopView : MonoBehaviour {
 
     public Button shopBut, arExpBut, arViewBut;
+    public int shoeId;
+    public string link;
 
     // Use this for initialization
     void Start () {
@@ -21,8 +23,8 @@ public class TopView : MonoBehaviour {
 
     void ShopButtonClick()
     {
-        // ToDo : shop panel link activate
-        //UIManager.Instance.shopPanel.url = link;
+        link = JSONHandler.GetShoeById(shoeId).link;
+        UIManager.Instance.SetShopUrl(link);
         UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel); 
     }
 
@@ -34,5 +36,10 @@ public class TopView : MonoBehaviour {
     void ARViewButtonClick()
     {
         SceneChanger.ChangeToWatchingShoes();
+    }
+
+    void Init(int id){
+        shoeId = id;
+        CurrentCustomShoe.SetCurrentCustomShoe(id);
     }
 }

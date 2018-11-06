@@ -104,7 +104,7 @@ public class GroundPlaneUI : MonoBehaviour
     void ClickBackButton()
     {
         CurrentCustomShoe.shoes.GetComponent<Swiper>().enabled = true;
-        SceneChanger.ChangeToShoeListScene();
+        SceneChanger.ChangeToListScene();
     }
 
     void ClickConfirmButton()

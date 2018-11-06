@@ -6,8 +6,10 @@
     "price": "100000",
     "isCustomizable": "1",
     "link": "https:\/\/www.nike.com\/kr\/ko_kr\/t\/men\/fw\/men-training\/415445-101\/wyqt11\/air-monarch-iv",
-    "objPath": "Prefabs\/Custom\/Shoe",
+    "objPath": "Prefabs\/Custom\/Shoes",
     "imgPath": "Textures\/ShoesImages\/SportShoe",
+    "isNew":  "1",
+    "isBest":  "1",
     "createdAt": "2018-10-02 12:16:05",
     "updatedAt": "2018-10-02 12:16:05"
   },
@@ -20,6 +22,8 @@
     "link": "https:\/\/www.naver.com",
     "objPath": null,
     "imgPath": "Textures\/ShoesImages\/FILADisruptor2",
+    "isNew": "1",
+    "isBest": "1",
     "createdAt": "2018-10-02 12:16:05",
     "updatedAt": "2018-10-02 12:16:05"
   },
@@ -32,6 +36,8 @@
     "link": "https:\/\/www.naver.com",
     "objPath": null,
     "imgPath": "Textures\/ShoesImages\/FILARAY",
+    "isNew": "1",
+    "isBest": "1",
     "createdAt": "2018-10-02 12:16:05",
     "updatedAt": "2018-10-02 12:16:05"
   },
@@ -43,7 +49,9 @@
     "isCustomizable": "0",
     "link": "https:\/\/www.naver.com",
     "objPath": null,
-    "imgPath": "Textures\/ShoesImages\/Whale_lightgray",
+    "imgPath": "Textures\/ShoesImages\/ Whale_lightgray",
+    "isNew": "1",
+    "isBest": "1",
     "createdAt": "2018-10-02 12:16:05",
     "updatedAt": "2018-10-02 12:16:05"
   }

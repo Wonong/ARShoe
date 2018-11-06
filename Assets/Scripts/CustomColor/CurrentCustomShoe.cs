@@ -4,28 +4,34 @@ using System.Collections;
 // Item Panel 상태에서 CustomShoe 오브젝트를 유일하게 유지하기 위한 클래스
 public class CurrentCustomShoe : MonoBehaviour
 {
-    public static GameObject shoe;
-    public static GameObject shoeComponentsGameObject;
+    public static GameObject shoes;
+    public static GameObject shoeLeft;
+    public static GameObject shoeRight;
 
     public static void SetCurrentCustomShoe(int ShoeId)
 	{
-        if (shoe != null)
+        if (shoes != null)
         {
-            Destroy(shoe);
+            Destroy(shoes);
         }
-        shoeComponentsGameObject = JSONHandler.GetShoeById(ShoeId).GetShoeComponent();
-        shoe = Instantiate(JSONHandler.GetShoeById(ShoeId).GetObjectAsGameObject());
+        shoes = Instantiate(JSONHandler.GetShoeById(ShoeId).GetObjectAsGameObject());
+        shoeLeft = GameObject.Find("Shoe_Left");
+        shoeRight = GameObject.Find("Shoe_Right");
         InitializeShoe();
-        DontDestroyOnLoad(shoe);
+        DontDestroyOnLoad(shoes);
 	}
 
     static void InitializeShoe() {
-        shoe.GetComponent<Swiper>().enabled = true;
-        foreach (MeshRenderer mesh in shoe.GetComponentsInChildren<MeshRenderer>())
+        shoes.GetComponent<Spin>().enabled = true;
+        shoes.GetComponent<Swiper>().enabled = true;
+        shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 45);
+        shoeLeft.transform.localPosition = new Vector3(0, 0, 0);
+        //shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 45);
+        shoeRight.transform.localPosition = new Vector3(0, 0, 0);
+        shoeRight.SetActive(false);
+        foreach (MeshRenderer mesh in shoes.GetComponentsInChildren<MeshRenderer>())
         {
             mesh.enabled = true;
         }
-        shoeComponentsGameObject.transform.localRotation = Quaternion.Euler(0, 0, 45);
-        shoeComponentsGameObject.transform.localPosition = new Vector3(0, 0, 0);
     }
 }

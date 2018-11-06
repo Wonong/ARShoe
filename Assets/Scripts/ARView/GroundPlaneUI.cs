@@ -75,6 +75,7 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     private void SetCustomScrollView()
     {
+        // ToDo(원영): 색상 변경 기능 적용(현재는 스크롤만 붙어있는 상태임).
         m_CustomScrollView = Instantiate(UIManager.Instance.customizePanel.customize.gameObject);
         m_CustomScrollView.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
         RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();

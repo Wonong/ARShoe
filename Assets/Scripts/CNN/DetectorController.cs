@@ -1,118 +1,268 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.IO;
-
 using UnityEngine;
 using UnityEngine.UI;
 
-//using Vuforia;
-using GoogleARCore;
+using Vuforia;
 using TFClassify;
 using TensorFlow;
-using OpenCVForUnity;
-
-
-#if UNITY_EDITOR
-// Set up touch input propagation while using Instant Preview in the editor.
-using Input = GoogleARCore.InstantPreviewInput;
-#endif
+using System;
+using System.IO;
 
 public class DetectorController : MonoBehaviour
 {
 
     #region PUBLIC_MEMBERS
     public TextAsset modelFile; // .pb or .bytes file    
-    public int cropMargin = 0;
+
+    public static bool isDebug = false;
+    public RawImage testImage;
+    public Text angleText;
+    public float shoeScale = 1f;
     #endregion // PUBLIC_MEMBERS
 
     #region PRIVATE_MEMBERS
+    private int capturedImageWidth = 256;
+    private static int CNN_INPUT_SIZE = 256;
+
+    private AngleDetector angleDetector;
+    private Texture2D capturedImage = null;
+    private float outputAngle = -1f;
+
     private bool mAccessCameraImage = true;
 
-    private static int INPUT_CNN_SIZE = 416;
-    private int inputCameraWidth = -1, inputCameraHeight = -1;
-    private FootDetector footDetector;
-    private List<BoxOutline> boxOutlines;
-
-    private ShoeController m_ShoeController;
-    
-    private int footPosX, footPosY;
-    private float footAngleDegree;
-    private bool findFoot = false;
-    private bool useTFDetect = false;
+    private static Texture2D boxOutlineTexture;
+    private GameObject copyShoe;
+    private GameObject transparentShader;
     #endregion // PRIVATE_MEMBERS
 
-    #region FOR_DEBUG
-    public static bool isDebug = false;
-    public RawImage m_DebugImage1;
-    public RawImage m_DebugImage2;
-    public UnityEngine.UI.Text m_DebugText;
-    public int tmp = 0;
     public static string debugStr = "";
-    public int x, y, z;
-    #endregion // FOR_DEBUG
 
-    public static Texture2D LoadImage(string filePath)
+
+#if UNITY_EDITOR
+    //private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.GRAYSCALE;
+    private Vuforia.Image.PIXEL_FORMAT mPixelFormat = Vuforia.Image.PIXEL_FORMAT.RGBA8888;
+#elif UNITY_ANDROID
+   private Vuforia.Image.PIXEL_FORMAT mPixelFormat =  Vuforia.Image.PIXEL_FORMAT.RGB888;
+#elif UNITY_IOS
+    private Vuforia.Image.PIXEL_FORMAT mPixelFormat =  Vuforia.Image.PIXEL_FORMAT.RGB888;
+#endif
+    private bool mFormatRegistered = false;
+
+    public void ClickCapture()
     {
-
-        Texture2D tex = null;
-        byte[] fileData;
-
-        if (File.Exists(filePath))
+        if(!isDebug)
         {
-            fileData = File.ReadAllBytes(filePath);
-            tex = new Texture2D(INPUT_CNN_SIZE, INPUT_CNN_SIZE);
-            tex.LoadImage(fileData);
+            StartCoroutine(ScreenshotPreview.CaptureAndShowPreviewImage());
         }
-        return tex;
+        else
+        {
+            StartCoroutine(ScreenshotPreview.CaptureAndShowPreviewImage(capturedImage));
+        }
+    }
+
+    public void ClickBackButton()
+    {
+        SceneChanger.ChangeToListScene();
+    }
+
+    private void Awake()
+    {
+        InitializeShoe();
+    }
+
+    private void InitializeShoe()
+    {
+        CurrentCustomShoe.shoes.GetComponent<Swiper>().enabled = false;
+        CurrentCustomShoe.shoes.GetComponent<Spin>().enabled = false;
+        copyShoe = Instantiate(CurrentCustomShoe.shoes);
+        copyShoe.name = "CopyShoe";
+        copyShoe.transform.position = new Vector3(0, 0, 0);
+        copyShoe.GetComponentsInChildren<Transform>()[1].localRotation = Quaternion.Euler(0, -90, 15);
+        copyShoe.SetActive(false);
+        SetShoeScale();
+        transparentShader = Instantiate(Resources.Load("Prefabs/AttachingAR/TransparentShader") as GameObject);
+        transparentShader.transform.SetParent(copyShoe.GetComponentsInChildren<Transform>()[1]);
+        transparentShader.transform.localPosition = new Vector3(0.027f, 0.053f, 0.003f);
+        transparentShader.transform.localRotation = Quaternion.Euler(-7.48f, 84.37f, -2.88f);
+    }
+
+    public void SetShoeScale()
+    {
+        copyShoe.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
+        Debug.Log(shoeScale);
     }
 
     void Start()
     {
+        //copyShoe.transform.position = new Vector3(Screen.width / 2, Screen.height / 2, 0f);
+
         // load tensorflow model
         LoadWorker();
 
-        m_ShoeController = FindObjectOfType<ShoeController>();
+        // Register Vuforia life-cycle callbacks:
+        Vuforia.VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
+        Vuforia.VuforiaARController.Instance.RegisterOnPauseCallback(OnPause);
+        Vuforia.VuforiaARController.Instance.RegisterTrackablesUpdatedCallback(OnTrackablesUpdated);
+    }
 
-        ResetShoePosition();
+    private void OnVuforiaStarted()
+    {
+        // Try register camera image format
+        if (CameraDevice.Instance.SetFrameFormat(mPixelFormat, true))
+        {
+            Debug.Log("Successfully registered pixel format " + mPixelFormat.ToString());
+            mFormatRegistered = true;
+        }
+        else
+        {
+            debugStr = "OnVuforiaStarted error\n" + debugStr;
+            Debug.LogError("Failed to register pixel format " + mPixelFormat.ToString() +
+                "\n the format may be unsupported by your device;" +
+                "\n consider using a different pixel format.");
+            mFormatRegistered = false;
+        }
+
+    }
+
+    private void OnTrackablesUpdated()
+    {
+        if (mFormatRegistered && mAccessCameraImage && capturedImage == null)
+        {
+            TakeCapture();
+        }
+    }
+
+    private void TakeCapture()
+    {
+        // Get image from camera
+        var snap = TakeTextureSnap();
+
+        if (snap == null)
+        {
+            return;
+        }
+
+        var rotated = Rotate(snap);
+
+        var croped = TextureTools.CropWithRect(
+                    snap,
+                    //rotated,
+                    new Rect(0, 0, capturedImageWidth, capturedImageWidth),
+                    //TextureTools.RectOptions.BottomLeft,
+                    TextureTools.RectOptions.Center,
+                    0, 0);
+
+        if (testImage != null && isDebug)
+        {
+            testImage.texture = rotated;
+        }
+
+        capturedImage = Scale(rotated, CNN_INPUT_SIZE);
+    }
+    /// <summary>
+    /// Called when app is paused / resumed
+    /// </summary>
+    private void OnPause(bool paused)
+    {
+        if (paused)
+        {
+            Debug.Log("App was paused");
+            UnregisterFormat();
+        }
+        else
+        {
+            Debug.Log("App was resumed");
+            RegisterFormat();
+        }
+    }
+
+    /// <summary>
+    /// Unregister the camera pixel format (e.g. call this when app is paused)
+    /// </summary>
+    private void UnregisterFormat()
+    {
+        Debug.Log("Unregistering camera pixel format " + mPixelFormat.ToString());
+        CameraDevice.Instance.SetFrameFormat(mPixelFormat, false);
+        mFormatRegistered = false;
+    }
+
+    private void RegisterFormat()
+    {
+        if (CameraDevice.Instance.SetFrameFormat(mPixelFormat, true))
+        {
+            Debug.Log("Successfully registered camera pixel format " + mPixelFormat.ToString());
+            mFormatRegistered = true;
+        }
+        else
+        {
+            Debug.LogError("Failed to register camera pixel format " + mPixelFormat.ToString());
+            mFormatRegistered = false;
+        }
     }
 
     // Update is called once per frame
-    public void ClickResetButton()
+    public void CallDetect()
     {
-        GuessAngle();
-        ResetShoePosition();
-    }
+        Debug.Log("CallDetect");
 
-    private void ResetShoePosition()
-    {
-        m_ShoeController.ResetPosition(new Vector3(0, 0, 0.55f), Quaternion.Euler(0, 0, footAngleDegree - 90));
+        if (isDebug)
+        {
+            TFDetect();
+        } else
+        {
+            var func = nameof(TFDetect);
+            InvokeRepeating(func, 0, 1.0f);
+        }
+        
     }
 
     void Update()
     {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!ScreenshotPreview.previewGameObject.activeSelf && Input.GetKey(KeyCode.Escape))
+            {
+                ClickBackButton();
+            }
+        }
+
+        if (outputAngle != -1)
+        {
+            if (!copyShoe.activeSelf)
+            {
+                copyShoe.SetActive(true);
+            }
+            copyShoe.transform.localRotation = Quaternion.Euler(0f, outputAngle, 0f);
+            Debug.Log(string.Format("output angle: {0}", outputAngle));
+            debugStr = string.Format("output angle: {0}\n", outputAngle);
+            outputAngle = -1;
+        }
+
         if (isDebug)
         {
-            m_DebugImage1.gameObject.SetActive(true);
-            m_DebugImage2.gameObject.SetActive(true);
-            m_DebugText.gameObject.SetActive(true);
-            m_DebugText.text = debugStr;
+            testImage.gameObject.SetActive(true);
+            angleText.gameObject.SetActive(true);
+            angleText.text = debugStr;
+
+            var func = nameof(TFDetect);
+            CancelInvoke(func);
         }
         else
         {
-            //m_DebugImage1.gameObject.SetActive(false);
-            //m_DebugImage2.gameObject.SetActive(false);
-            //m_DebugText.gameObject.SetActive(false);
+            testImage.gameObject.SetActive(false);
+            angleText.gameObject.SetActive(false);
         }
+
     }
 
     private void LoadWorker()
     {
         try
         {
-            this.footDetector = new FootDetector(this.modelFile.bytes, INPUT_CNN_SIZE);
+            this.angleDetector = new AngleDetector(this.modelFile.bytes, CNN_INPUT_SIZE);
         }
         catch (TFException ex)
         {
@@ -121,255 +271,69 @@ public class DetectorController : MonoBehaviour
         }
     }
 
-    private async void TFDetect()
+    private async void TFDetectAsync()
     {
-        var captured = GetImageFromCamera();
-
-        if (captured == null)
+        if (capturedImage != null)
         {
-            return;
+            var scaled = Scale(capturedImage, CNN_INPUT_SIZE);
+
+            outputAngle = await this.angleDetector.DetectAsync(scaled.GetPixels32());
+            capturedImage = null;
         }
-
-        if (inputCameraWidth == -1)
-        {
-            inputCameraWidth = captured.width;
-            inputCameraHeight = captured.height;
-
-            this.footDetector.SetInputImageSize(inputCameraWidth, inputCameraHeight);
-        }
-
-        var resized = ResizeTexture(captured, INPUT_CNN_SIZE, INPUT_CNN_SIZE);
-        //var rotated = TextureTools.RotateTexture(resized, 180);
-        
-        Color32[] colors = resized.GetPixels32();
-
-        TimeSpan time;
-        DateTime start;
-
-        start = DateTime.Now;
-        boxOutlines = await footDetector.DetectAsync(colors);
-
-        time = DateTime.Now - start;
-        Debug.Log(string.Format("DetectAsync time: {0}.{1}", time.Seconds, time.Milliseconds));
     }
 
-    private async void GuessAngle()
+    private void TFDetect()
     {
-        TimeSpan time;
-        DateTime start;
+        Color32[] colors = capturedImage.GetPixels32();
 
-        start = DateTime.Now;
-
-        var captured = GetImageFromCamera();
-
-        #region DEBUG
-        //var captured = LoadImage("Assets\\test_416.jpg");
-        //var captured = LoadImage("Assets\\test.png");
-        #endregion
-
-        if (captured == null)
-        {
-            return;
-        }
-
-        if (useTFDetect && (boxOutlines == null || boxOutlines.Count <= 0))
-        {
-            return;
-        }
-
-        Texture2D snap;
-        int left, bottom, width, height;
-
-        if (useTFDetect)
-        {
-            var boxOutline = boxOutlines[tmp];
-    
-            cropMargin = 50;
-            left = boxOutline.left - cropMargin;
-            bottom = boxOutline.bottom - cropMargin;
-            width = (boxOutline.right - boxOutline.left) + cropMargin * 2;
-            height = (boxOutline.top - boxOutline.bottom) + cropMargin * 2;
-
-            Debug.Log(string.Format("w/h {0} {1}", width, height));
-
-            var rect = new UnityEngine.Rect(
-                Math.Max(left, 0),
-                Math.Max(bottom, 0),
-                Math.Min(width, inputCameraWidth - boxOutline.left),
-                Math.Min(height, inputCameraHeight - boxOutline.bottom)
-            );
-            snap = TextureTools.CropWithRect(captured, rect, TextureTools.RectOptions.BottomLeft, 0, 0);
-        } else
-        {
-            left = 0;
-            bottom = 0;
-            
-            snap = captured;
-        }
-
-        // Change Texture2D to Opencv.Mat
-        Mat src = new Mat(snap.height, snap.width, CvType.CV_8UC4);
-        Utils.texture2DToMat(snap, src);
-
-        Point cntr = new Point();
-        Point vec = new Point();
-        await GetPCAAsync(src, cntr, vec);
-        //GetPCA(src, cntr, vec);
-
-        footPosX = (int)cntr.x + left;
-        footPosY = (int)cntr.y + bottom;
-        float footAngleRadian = Mathf.Atan2((float)vec.y, (float)vec.x);
-        footAngleDegree = footAngleRadian * (180.0f / Mathf.PI);
-        if (footAngleDegree < 0)
-        {
-            footAngleDegree = 180 + footAngleDegree;
-        }
-        findFoot = true;
-
-        #region DEBUG
-        //DrawCircle(snap, (int)cntr.x, (int)cntr.y, 5);
-        //testImage.texture = snap;
-
-        //int cx = (int)cntr.x + left;
-        //int cy = (int)cntr.y + bottom;
-
-        //DrawCircle(captured, cx, cy, 5);
-        //testImage2.texture = captured;
-
-        time = DateTime.Now - start;
-        Debug.Log(string.Format("GuessAngle time: {0}.{1}", time.Seconds, time.Milliseconds));
-        Debug.Log(string.Format("GuessAngle: {0}", footAngleDegree));
-        #endregion
-
-        src.Dispose();
+        new System.Threading.Thread(() => {
+            //outputAngle = this.angleDetector.Detect(capturedImage.GetPixels32());
+            outputAngle = this.angleDetector.Detect(colors);
+            capturedImage = null;
+        }).Start();
     }
 
-    private Task GetPCAAsync(Mat src, Point cntr, Point vec)
+    private Texture2D Scale(Texture2D texture, int imageSize)
     {
-        return Task.Run(() =>
-        {
-            GetPCA(src, cntr, vec);
-        });
-    }
+        var scaled = TextureTools.scaled(texture, imageSize, imageSize, FilterMode.Bilinear);
+        //var scaled = TextureTools.test(texture, imageSize, imageSize);
 
-    private void GetPCA(Mat src, Point cntr, Point vec)
-    {
-        //Convert image to hsv
-        Mat hsv = new Mat();
-        Imgproc.cvtColor(src, hsv, Imgproc.COLOR_RGB2HSV_FULL);
-
-        Mat mask = new Mat();
-        Core.inRange(hsv, new Scalar(0, 40, 125), new Scalar(179, 255, 255), mask);
-
-        Mat hierarchy = new Mat();
-        List<MatOfPoint> contours = new List<MatOfPoint>();
-        Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
-
-        double largestValue = 0;
-        int largestIndex = -1;
-
-        // find largest contour
-        for (int i = 0; i < contours.Count; ++i)
-        {
-            // Calculate the area of each contour
-            double area = Imgproc.contourArea(contours[i]);
-            // Ignore contours that are too small
-            if (area < 1e2 )
-                continue;
-
-            if (area > largestValue)
-            {
-                largestIndex = i;
-                largestValue = area;
-            }
-        }
-
-        if (largestIndex == -1)
-        {
-            return;
-        }
-
-        #region DEBUG
-        //Texture2D texture = new Texture2D(mask.cols(), mask.rows(), TextureFormat.RGBA32, false);
-        //Utils.matToTexture2D(mask, texture);
-        //testImage2.texture = texture;
-
-        //Imgproc.drawContours(src, contours, largestIndex, new Scalar(255, 0, 0), 2);
-        //Texture2D texture = new Texture2D(src.cols(), src.rows(), TextureFormat.RGBA32, false);
-        //Utils.matToTexture2D(src, texture);
-        //testImage2.texture = texture;
-        #endregion
-
-        // Find PCA value
-        //Construct a buffer used by the pca analysis
-        List<Point> pts = contours[largestIndex].toList();
-        int sz = pts.Count;
-        Mat data_pts = new Mat(sz, 2, CvType.CV_64FC1);
-        for (int p = 0; p < data_pts.rows(); ++p)
-        {
-            data_pts.put(p, 0, pts[p].x);
-            data_pts.put(p, 1, pts[p].y);
-        }
-
-        Mat mean = new Mat();
-        Mat eigenvectors = new Mat();
-        Core.PCACompute(data_pts, mean, eigenvectors, 2);
-
-        cntr.x = mean.get(0, 0)[0];
-        cntr.y = src.rows() - mean.get(0, 1)[0];
-
-        vec.x = eigenvectors.get(0, 0)[0];
-        vec.y = eigenvectors.get(0, 1)[0];
-
-
-        data_pts.Dispose();
-        mean.Dispose();
-        eigenvectors.Dispose();
+        return scaled;
     }
 
     /*
      * Get snaped image from camera
      */
-    private Texture2D GetImageFromCamera()
+    private Texture2D TakeTextureSnap()
     {
-        var captured = (Texture2D)GoogleARCore.Frame.CameraImage.Texture;
+        Vuforia.Image captured = CameraDevice.Instance.GetCameraImage(mPixelFormat);
 
-        if (captured == null)
+        if (captured == null || !captured.IsValid())
         {
             return null;
         }
 
-        var pixels = captured.GetPixels32();
+        byte[] pixels = captured.Pixels;
 
         if (pixels == null || pixels.Length <= 0)
         {
             return null;
         }
 
-        Texture2D result = new Texture2D((int)captured.width, (int)captured.height);
-        result.SetPixels(captured.GetPixels());
-        result.Apply();
-        return result;
-    }
+        // Make temperate Texture2D to copy camera pixel data
+        Texture2D tmp = new Texture2D(captured.Width, captured.Height, TextureFormat.RGB24, false);
+        captured.CopyToTexture(tmp);
 
-    private Texture2D ResizeTexture(Texture2D input, int width, int height)
-    {
-        //TextureTools.scale(input, width, height);
-
-        Texture2D result = new Texture2D(width, height, TextureFormat.RGBA32, true);
-        Color[] pixels = result.GetPixels(0);
-        float incX = (1.0f / (float)width);
-        float incY = (1.0f / (float)height);
-
-        for(int px = 0; px < pixels.Length; px++)
-        {
-            pixels[px] = input.GetPixelBilinear(
-                incX * ((float)px % width),
-                incY * ((float)Mathf.Floor(px / height)));
-        }
-        result.SetPixels(pixels, 0);
-        result.Apply();
-        return result;
+        /*
+         * TODO: Change captureImageWidth to be proportional to Screen.width
+         */
+        return TextureTools.CropWithRect(
+                        tmp,
+                        //new Rect(0, 0, Mathf.Min(tmp.width, Screen.width), Mathf.Min(tmp.height, Screen.height)),
+                        //new Rect(0, 0, 610, 1280),
+                        new Rect(0, 0, capturedImageWidth, capturedImageWidth),
+                        TextureTools.RectOptions.Center,
+                        0, 0);
     }
 
     private Task<Texture2D> AsyncRotate(Texture2D texture)
@@ -392,23 +356,44 @@ public class DetectorController : MonoBehaviour
         return ret;
     }
 
-    public void DrawCircle(Texture2D tex, int x, int y, int r)
+    public static void DrawRectangle(Rect area, int frameWidth, Color color)
     {
-        Color32 color = Color.red;
-        float rSquared = r * r;
-
-        for (int u = 0; u < tex.width; u++)
+        // Create a one pixel texture with the right color
+        if (boxOutlineTexture == null)
         {
-            for (int v = 0; v < tex.height; v++)
-            {
-                if ((x - u) * (x - u) + (y - v) * (y - v) < rSquared)
-                {
-                    tex.SetPixel(u, v, color);
-                }
-            }
+            var texture = new Texture2D(1, 1);
+            texture.SetPixel(0, 0, color);
+            texture.Apply();
+            boxOutlineTexture = texture;
         }
 
-        tex.Apply();
+        Rect lineArea = area;
+        lineArea.height = frameWidth;
+        GUI.DrawTexture(lineArea, boxOutlineTexture); // Top line
 
+        lineArea.y = area.yMax - frameWidth;
+        GUI.DrawTexture(lineArea, boxOutlineTexture); // Bottom line
+
+        lineArea = area;
+        lineArea.width = frameWidth;
+        GUI.DrawTexture(lineArea, boxOutlineTexture); // Left line
+
+        lineArea.x = area.xMax - frameWidth;
+        GUI.DrawTexture(lineArea, boxOutlineTexture); // Right line
+    }
+
+    public void OnGUI()
+    {
+        if (capturedImage != null && isDebug)
+        {
+            var a = new Rect(
+                    (Screen.width / 2) - capturedImageWidth / 2,
+                    ((Screen.height / 2) - capturedImageWidth / 2),
+                    capturedImageWidth,
+                    capturedImageWidth);
+            GUI.Box(
+                a,
+                GUIContent.none);
+        }
     }
 }

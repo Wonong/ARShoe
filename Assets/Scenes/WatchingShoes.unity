@@ -681,7 +681,7 @@ MonoBehaviour:
   m_SceneChangeButton: {fileID: 275011779}
   m_HeartButton: {fileID: 1356327072}
   m_SocialShareButton: {fileID: 463997867}
-  m_BuyButton: {fileID: 0}
+  m_BuyButton: {fileID: 1066729506}
   m_CustomListRectTransform: {fileID: 649545001}
   m_MidToolbarTectTrnasform: {fileID: 1934882268}
 --- !u!1 &255899187

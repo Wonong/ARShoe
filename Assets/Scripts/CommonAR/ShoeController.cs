@@ -45,10 +45,10 @@ public class ShoeController : MonoBehaviour {
         shoes.GetComponent<Swiper>().enabled = false;
         shoes.name = "CopyShoe";
         shoes.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
-        int componentsLength = shoes.GetComponentsInChildren<Transform>().Length;
-        shoeLeft = shoes.GetComponentsInChildren<Transform>()[1].gameObject;
+        int componentsLength = shoes.GetComponents<Transform>().Length;
+        shoeLeft = shoes.transform.GetChild(0).gameObject;
         shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        shoeRight = shoes.GetComponentsInChildren<Transform>()[componentsLength/2+1].gameObject;
+        shoeRight = shoes.transform.GetChild(1).gameObject;
         shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 0);
         shoes.SetActive(false);
         MoveShoe(); // Shoe object is movable at very first.

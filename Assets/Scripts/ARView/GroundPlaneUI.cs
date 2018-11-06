@@ -27,6 +27,7 @@ public class GroundPlaneUI : MonoBehaviour
 
     #region PRIVATE_MEMBERS
     ShoeController m_ShoeController;
+    DetectorController m_DetectController;
     AudioSource shoePuttingSound;
     GraphicRaycaster[] m_GraphicRayCasters;
     PointerEventData m_PointerEventData;
@@ -40,6 +41,7 @@ public class GroundPlaneUI : MonoBehaviour
     void Start()
     {
         m_ShoeController = FindObjectOfType<ShoeController>();
+        m_DetectController = FindObjectOfType<DetectorController>();
         m_GraphicRayCasters = FindObjectsOfType<GraphicRaycaster>();
         m_EventSystem = FindObjectOfType<EventSystem>();
         InitializeButtons();
@@ -125,8 +127,16 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickResetButton()
     {
-        m_ShoeController.ResetAR();
-        ChangeButtonStatus();
+        if(SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
+        {
+            m_ShoeController.ResetAR();
+            ChangeButtonStatus();
+        }
+        else
+        {
+            // Attaching scene에서 reset 호출 시의 코드 작성.
+            m_DetectController.ClickResetButton();
+        }
     }
 
     /// <summary>
@@ -241,7 +251,7 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     void ClickSocialShareButton()
     {
-        // ToDo: Get url of shop.
+        // ToDo(원영): 아래 "text"에 공유할 링크 CurrentCustomShoe.링크멤버변수 할당.
         #if UNITY_ANDROID
         new NativeShare().SetText("text").Share();
         #elif UNITY_IOS
@@ -250,8 +260,7 @@ public class GroundPlaneUI : MonoBehaviour
     }
 
     void ClickBuyButton() {
-        shopWebView = Instantiate(UIManager.Instance.shopPanel.gameObject);
-        shopWebView.transform.SetParent(GameObject.Find("Canvas").transform);
+        // ToDo(원영): buy now 클릭시 판매 페이지로 이동.
     }
 
     public void SetShoeMovable()

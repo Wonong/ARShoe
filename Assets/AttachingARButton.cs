@@ -7,7 +7,7 @@ public class AttachingARButton : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        GetComponent<Button>().onClick.AddListener(SceneChanger.ChangeToWatchingShoes);
+        GetComponent<Button>().onClick.AddListener(SceneChanger.ChangeToAttachShoes);
     }
 	
 	// Update is called once per frame

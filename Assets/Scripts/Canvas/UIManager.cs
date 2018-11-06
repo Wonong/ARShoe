@@ -15,11 +15,15 @@ public class UIManager : MonoBehaviour
     // UI components
     public Canvas canvas;
     public NavigationViewController navigationView;
+    public TopMenu topMenu;
+    public Categories categories;
+
     //public ItemPanel itemPanel;
     public CustomizePanel customizePanel;
     public PanelList listPanel;
     public ShopPanel shopPanel;
-    public TopMenu topMenu;
+
+
 
     // Object pools for auto creating objects
     public SimpleObjectPool itemObjPool;

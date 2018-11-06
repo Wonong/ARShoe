@@ -17,4 +17,17 @@ public class TopMenu : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void HideAllChildButtons(){
+        foreach(GameObject item in GetComponentsInChildren<GameObject>()){
+            item.SetActive(false);
+        }
+    }
+
+    public void ActiveAllChildButtons(){
+        foreach (GameObject item in GetComponentsInChildren<GameObject>())
+        {
+            item.SetActive(true);
+        }
+    }
 }

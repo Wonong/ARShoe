@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4482435, g: 0.49827218, b: 0.5755829, a: 1}
+  m_IndirectSpecularColor: {r: 0.44824374, g: 0.49827278, b: 0.5755834, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -806,7 +806,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.035, y: 0.8332954}
   m_AnchorMax: {x: 0.035, y: 0.8332954}
-  m_AnchoredPosition: {x: 0.000007391, y: -0.000064135}
+  m_AnchoredPosition: {x: 0, y: -0.000061035156}
   m_SizeDelta: {x: 59, y: 41}
   m_Pivot: {x: 0.00000014528632, y: 0.99999684}
 --- !u!114 &238949653
@@ -1895,7 +1895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.95625, y: 0.047390845}
   m_AnchorMax: {x: 0.95625, y: 0.047390845}
-  m_AnchoredPosition: {x: -1.1, y: 0.1}
+  m_AnchoredPosition: {x: -1.1, y: 0.099975586}
   m_SizeDelta: {x: 300, y: 123.5}
   m_Pivot: {x: 0.99999994, y: -0.00000046193367}
 --- !u!114 &692617528
@@ -5403,7 +5403,7 @@ MonoBehaviour:
   cam: {fileID: 1192644405}
   minPos: {x: -913.4, y: -20}
   maxPos: {x: -913.4, y: 7}
-  newRow: {fileID: 0}
+  newRow: {fileID: 1191873615}
   bestRow: {fileID: 947698991}
 --- !u!1 &1423118521
 GameObject:
@@ -6336,7 +6336,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0000085831, y: -224.2}
+  m_AnchoredPosition: {x: 0, y: -0.014952149}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1781120111
@@ -7293,7 +7293,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.04236111, y: 0.052242596}
   m_AnchorMax: {x: 0.04236111, y: 0.052242596}
-  m_AnchoredPosition: {x: -0, y: -0.00012207}
+  m_AnchoredPosition: {x: 0, y: -0.00012207031}
   m_SizeDelta: {x: 115.4, y: 114.6}
   m_Pivot: {x: -0.00000015961123, y: -0.0000032484531}
 --- !u!114 &2086713099

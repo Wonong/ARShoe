@@ -71,13 +71,8 @@ public class DetectorController : MonoBehaviour
 
     void Start()
     {
-<<<<<<< HEAD
-        SceneChanger.ChangeToListScene();
-    }
-=======
         // load tensorflow model
         LoadWorker();
->>>>>>> dfa6511b510d43a9c4097b46d6b44c152eadd579
 
         m_ShoeController = FindObjectOfType<ShoeController>();
 

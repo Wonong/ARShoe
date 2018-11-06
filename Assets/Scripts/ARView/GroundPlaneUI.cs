@@ -125,8 +125,15 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickResetButton()
     {
-        m_ShoeController.ResetAR();
-        ChangeButtonStatus();
+        if(SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
+        {
+            m_ShoeController.ResetAR();
+            ChangeButtonStatus();
+        }
+        else
+        {
+            // Attaching scene에서 reset 호출 시의 코드 작성.
+        }
     }
 
     /// <summary>

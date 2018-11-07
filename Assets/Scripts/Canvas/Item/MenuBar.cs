@@ -23,6 +23,9 @@ public class MenuBar : MonoBehaviour {
     void BuyButtonClick(){
         //UIManager.Instance.shopPanel.Init(link);
         UIManager.Instance.shopPanel.url = link;
+        UIManager.Instance.shopPanel.webView.Load(link);
+        //UIManager.Instance.shopPanel.webView.Show();
+        UIManager.Instance.shopPanel.ShowWebView();
         UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
     }
 

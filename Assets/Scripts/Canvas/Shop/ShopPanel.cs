@@ -28,6 +28,12 @@ public class ShopPanel : ViewController
         url = link;
     }
 
+    public void ShowWebView(){
+        webView.Frame = new Rect(0, 0, Screen.width, Screen.height);
+        webView.Load(url);
+        webView.Show();
+    }
+
     /*
     void RefreshWebView(){
         GameObject webViewGameObject = new GameObject("UniWebView");

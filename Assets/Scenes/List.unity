@@ -563,13 +563,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 145793039}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3c86cbeb8a2a4055a58cf15ee1f4d14, type: 3}
+  m_Script: {fileID: 11500000, guid: 4bce98afb08ab4a2f91293a3f5cbdaf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cancelBut: {fileID: 1278707085}
-  allBut: {fileID: 0}
-  newBut: {fileID: 0}
-  bestBut: {fileID: 0}
+  allBut: {fileID: 260159747}
+  newBut: {fileID: 1695302079}
+  bestBut: {fileID: 902011360}
 --- !u!1 &184634849
 GameObject:
   m_ObjectHideFlags: 0
@@ -3837,10 +3837,10 @@ MonoBehaviour:
   canvas: {fileID: 1018823928}
   navigationView: {fileID: 1057873371}
   topMenu: {fileID: 288446769}
-  categories: {fileID: 0}
+  categories: {fileID: 145793043}
   customizePanel: {fileID: 687508185}
   listPanel: {fileID: 1400694502}
-  shopPanel: {fileID: 0}
+  shopPanel: {fileID: 296710417}
   itemObjPool: {fileID: 545765959}
   rowObjPool: {fileID: 0}
   selectPartObjPool: {fileID: 1261756387}

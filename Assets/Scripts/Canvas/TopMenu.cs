@@ -18,20 +18,21 @@ public class TopMenu : MonoBehaviour {
 	}
 
     public void CategoriesButtonOnClick(){
+        Debug.Log("categori button clicked");
         UIManager.Instance.categories.gameObject.SetActive(true);
         this.HideAllChildButtons();
     }
 
     public void HideAllChildButtons(){
-        foreach(GameObject item in GetComponentsInChildren<GameObject>()){
-            item.SetActive(false);
+        foreach(Transform child in transform){
+            child.gameObject.SetActive(false);
         }
     }
 
     public void ActiveAllChildButtons(){
-        foreach (GameObject item in GetComponentsInChildren<GameObject>())
+        foreach (Transform child in transform)
         {
-            item.SetActive(true);
+            child.gameObject.SetActive(true);
         }
     }
 }

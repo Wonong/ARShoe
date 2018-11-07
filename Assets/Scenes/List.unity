@@ -1331,7 +1331,7 @@ RectTransform:
   - {fileID: 1371635950}
   - {fileID: 2131994542}
   m_Father: {fileID: 1057873368}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -1416,7 +1416,7 @@ RectTransform:
   m_Children:
   - {fileID: 746939726}
   m_Father: {fileID: 1057873368}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2253,7 +2253,7 @@ RectTransform:
   - {fileID: 184634850}
   - {fileID: 1053495843}
   m_Father: {fileID: 1057873368}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2902,7 +2902,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 766485412}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &799072044
@@ -3508,7 +3519,6 @@ GameObject:
   - component: {fileID: 999619005}
   - component: {fileID: 999619008}
   - component: {fileID: 999619007}
-  - component: {fileID: 999619006}
   m_Layer: 5
   m_Name: BuyText
   m_TagString: Untagged
@@ -3534,47 +3544,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 340, y: 80}
   m_Pivot: {x: 1, y: 0.5}
---- !u!114 &999619006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 999619004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 0.12156863, g: 0.6862745, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 999619007}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &999619007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3587,7 +3556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -4012,11 +3981,11 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 288446766}
   - {fileID: 1400694498}
   - {fileID: 687508182}
   - {fileID: 296710416}
   - {fileID: 1822447139}
+  - {fileID: 288446766}
   - {fileID: 145793040}
   m_Father: {fileID: 1018823929}
   m_RootOrder: 1
@@ -4674,11 +4643,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 146c045f06cda4f3b923f172341166a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopBut: {fileID: 2086713099}
-  arExpBut: {fileID: 581135313}
-  arViewBut: {fileID: 2095094803}
-  shoeId: 0
-  link: 
 --- !u!1 &1171570579
 GameObject:
   m_ObjectHideFlags: 0
@@ -5328,7 +5292,7 @@ RectTransform:
   m_Children:
   - {fileID: 670283723}
   m_Father: {fileID: 1057873368}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -5684,7 +5648,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.043, y: 0}
   m_AnchorMax: {x: 0.95477784, y: 1}
-  m_AnchoredPosition: {x: 1.5999764, y: -0.07501221}
+  m_AnchoredPosition: {x: 1.5999209, y: -0.07501221}
   m_SizeDelta: {x: -4.2, y: -0.14993}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1550210385
@@ -6275,7 +6239,7 @@ RectTransform:
   - {fileID: 5187775}
   - {fileID: 840360815}
   m_Father: {fileID: 1057873368}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -6293,9 +6257,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bffc97e237214cab900a52519ad31ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  backBut: {fileID: 0}
-  titleLabel: {fileID: 0}
-  shoeList: []
 --- !u!114 &1822447141
 MonoBehaviour:
   m_ObjectHideFlags: 0

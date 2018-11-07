@@ -11,6 +11,6 @@ public class CustomWebVIew : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(this.GetComponent<UniWebView>().Url != null) this.GetComponent<UniWebView>().UpdateFrame();
+        //if(this.GetComponent<UniWebView>().Url != null) this.GetComponent<UniWebView>().UpdateFrame();
 	}
 }

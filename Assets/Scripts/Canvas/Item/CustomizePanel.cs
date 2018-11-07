@@ -8,6 +8,7 @@ public class CustomizePanel : ViewController {
     public Text name, price, company;
     public MenuBar menuBar;
     public CustomizeMenu customize;
+    public GameObject contentObj;
 
 	// Use this for initialization
 	void Start () {
@@ -31,5 +32,8 @@ public class CustomizePanel : ViewController {
         customize.DeleteSelectParts();
         customize.AddSelectParts(JSONHandler.GetPartsListByShoeId(currentShoe.id));
         customize.gameObject.SetActive(true);
+
+        // Reinitialize height of parent object of customize by content size fitter
+        contentObj.GetComponent<ContentSizeFitter>().enabled = true;
     }
 }

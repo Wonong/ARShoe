@@ -20,7 +20,7 @@ public class ShoeView : MonoBehaviour {
 	}
 
     void BackButtonClick(){
-        UIManager.Instance.viewStack.Pop();
+        UIManager.Instance.navigationView.Pop();
     }
 
     void ARExpButtonClick(){

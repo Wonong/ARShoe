@@ -14,7 +14,7 @@ public class PanelList2 : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        backBut.onClick.AddListener(() => { UIManager.Instance.viewStack.Pop(); });
+        backBut.onClick.AddListener(() => { UIManager.Instance.navigationView.Pop(); });
 
         shoeList = JSONHandler.GetAllShoesList();
 	}

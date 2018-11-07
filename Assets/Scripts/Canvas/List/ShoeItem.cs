@@ -30,14 +30,7 @@ public class ShoeItem : MonoBehaviour {
     }
 
     public void ClickFunc() {
-        if(item.isCustomizable){
-            UIManager.Instance.customizePanel.Init(item);
-            UIManager.Instance.navigationView.Push(UIManager.Instance.customizePanel);
-        }
-        else{
-            //UIManager.Instance.itemPanel.Init(item);
-            //UIManager.Instance.navigationView.Push(UIManager.Instance.itemPanel);
-        }
-
+        UIManager.Instance.customizePanel.Init(item);
+        UIManager.Instance.navigationView.Push(UIManager.Instance.customizePanel);
     }
 }

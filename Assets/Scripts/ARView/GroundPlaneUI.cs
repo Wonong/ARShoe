@@ -85,9 +85,12 @@ public class GroundPlaneUI : MonoBehaviour
         m_CustomScrollView.gameObject.SetActive(true);
 
         RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();
-        customScrollViewRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        customScrollViewRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-        customScrollViewRectTransform.anchoredPosition = new Vector2(0f, 0f);
+        customScrollViewRectTransform.anchorMax = new Vector2(1f, 1f);
+        customScrollViewRectTransform.anchorMin = new Vector2(0f, 0f);
+        customScrollViewRectTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
+        customScrollViewRectTransform.offsetMin = new Vector2Int(67, 0);
+        customScrollViewRectTransform.offsetMax = new Vector2Int(-67, 0);
+        customScrollViewRectTransform.localPosition += Vector3.down*100;
     }
 
     /// <summary>

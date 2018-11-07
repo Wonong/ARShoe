@@ -3230,7 +3230,7 @@ MonoBehaviour:
   m_SocialShareButton: {fileID: 1068109}
   m_BuyButton: {fileID: 1433252498}
   m_CustomListRectTransform: {fileID: 1397860168}
-  m_MidToolbarTectTrnasform: {fileID: 0}
+  m_MidToolbarTectTrnasform: {fileID: 494307861}
 --- !u!4 &1225232995
 Transform:
   m_ObjectHideFlags: 0

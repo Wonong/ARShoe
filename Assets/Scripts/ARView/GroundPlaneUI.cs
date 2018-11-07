@@ -76,13 +76,9 @@ public class GroundPlaneUI : MonoBehaviour
     private void SetCustomScrollView()
     {
         // Solved(원영): 색상 변경 기능 적용(현재는 스크롤만 붙어있는 상태임).
-        m_CustomScrollView = Instantiate(UIManager.Instance.customizePanel.customize.gameObject);
-        m_CustomScrollView.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
+        m_CustomScrollView = UIManager.Instance.customizePanel.customize.gameObject;
+        UIManager.Instance.customizePanel.customize.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
 
-        // Customize menu 초기화
-        m_CustomScrollView.GetComponent<CustomizeMenu>().DeleteSelectParts();
-        m_CustomScrollView.GetComponent<CustomizeMenu>().AddSelectParts(JSONHandler.GetPartsListByShoeId(CurrentCustomShoe.currentShoeId));
-        m_CustomScrollView.gameObject.SetActive(true);
 
         RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();
         customScrollViewRectTransform.anchorMax = new Vector2(1f, 1f);
@@ -117,6 +113,7 @@ public class GroundPlaneUI : MonoBehaviour
     {
         CurrentCustomShoe.shoes.GetComponent<Swiper>().enabled = true;
         SceneChanger.ChangeToListScene();
+        UIManager.Instance.customizePanel.customize.transform.SetParent(UIManager.Instance.customizePanel.contentObj.transform);
     }
 
     void ClickConfirmButton()
@@ -263,14 +260,16 @@ public class GroundPlaneUI : MonoBehaviour
     {
         // ToDo(원영): 아래 "text"에 공유할 링크 CurrentCustomShoe.링크멤버변수 할당.
         #if UNITY_ANDROID
-        new NativeShare().SetText("text").Share();
+        new NativeShare().SetText(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link).Share();
         #elif UNITY_IOS
-        new NativeShare().SetText("text").Share();
+        new NativeShare().SetText(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link).Share();
         #endif
     }
 
     void ClickBuyButton() {
         // ToDo(원영): buy now 클릭시 판매 페이지로 이동.
+        UIManager.Instance.shopPanel.RefreshWebView(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link);
+        UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
     }
 
     public void SetShoeMovable()

@@ -12,7 +12,7 @@ public class SelectPartUI : ViewController {
 
     // Use this for initialization
     void Start () {
-        //Debug.Log("option contents : " + optionContents.name);
+
 	}
 	
 	// Update is called once per frame
@@ -31,10 +31,9 @@ public class SelectPartUI : ViewController {
         {
             SelectOptionUI optionUI = UIManager.Instance.selectOptionObjPool.GetObject().GetComponent<SelectOptionUI>();
 
+
             // 각 옵션 클릭했을 때의 리스너 설정
             optionUI.GetComponent<Button>().onClick.AddListener(() => {
-
-                Debug.Log(option.name + " is checked.");
 
                 part.GetMaterial().mainTexture = option.GetTexture();
 
@@ -45,6 +44,8 @@ public class SelectPartUI : ViewController {
                 }
                 optionUI.CheckOpt();
             });
+
+            //optionUI.AddClickEventListener(part, option);
 
             optionUI.GetComponent<RawImage>().color = option.GetColorByRGB();
             optionUI.transform.SetParent(optionContents, false);

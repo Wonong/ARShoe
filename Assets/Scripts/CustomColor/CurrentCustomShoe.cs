@@ -7,14 +7,17 @@ public class CurrentCustomShoe : MonoBehaviour
     public static GameObject shoes;
     public static GameObject shoeLeft;
     public static GameObject shoeRight;
+    public static int currentShoeId;
 
-    public static void SetCurrentCustomShoe(int ShoeId)
+    public static void SetCurrentCustomShoe(int shoeId)
 	{
         if (shoes != null)
         {
             Destroy(shoes);
         }
-        shoes = Instantiate(JSONHandler.GetShoeById(ShoeId).GetObjectAsGameObject());
+        currentShoeId = shoeId;
+
+        shoes = Instantiate(JSONHandler.GetShoeById(shoeId).GetObjectAsGameObject());
         shoeLeft = GameObject.Find("Shoe_Left");
         shoeRight = GameObject.Find("Shoe_Right");
         InitializeShoe();

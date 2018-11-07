@@ -75,9 +75,15 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     private void SetCustomScrollView()
     {
-        // ToDo(원영): 색상 변경 기능 적용(현재는 스크롤만 붙어있는 상태임).
+        // Solved(원영): 색상 변경 기능 적용(현재는 스크롤만 붙어있는 상태임).
         m_CustomScrollView = Instantiate(UIManager.Instance.customizePanel.customize.gameObject);
         m_CustomScrollView.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
+
+        // Customize menu 초기화
+        m_CustomScrollView.GetComponent<CustomizeMenu>().DeleteSelectParts();
+        m_CustomScrollView.GetComponent<CustomizeMenu>().AddSelectParts(JSONHandler.GetPartsListByShoeId(CurrentCustomShoe.currentShoeId));
+        m_CustomScrollView.gameObject.SetActive(true);
+
         RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();
         customScrollViewRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
         customScrollViewRectTransform.anchorMin = new Vector2(0.5f, 0.5f);

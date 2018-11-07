@@ -34,6 +34,8 @@ public class SelectPartUI : ViewController {
             // 각 옵션 클릭했을 때의 리스너 설정
             optionUI.GetComponent<Button>().onClick.AddListener(() => {
 
+                Debug.Log(option.name + " is checked.");
+
                 part.GetMaterial().mainTexture = option.GetTexture();
 
                 // 다른 option들의 체크 해제

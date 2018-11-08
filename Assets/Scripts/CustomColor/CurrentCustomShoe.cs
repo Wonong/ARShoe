@@ -27,9 +27,7 @@ public class CurrentCustomShoe : MonoBehaviour
     static void InitializeShoe() {
         shoes.GetComponent<Spin>().enabled = true;
         shoes.GetComponent<Swiper>().enabled = true;
-        shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 45);
         shoeLeft.transform.localPosition = new Vector3(0, 0, 0);
-        //shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 45);
         shoeRight.transform.localPosition = new Vector3(0, 0, 0);
         shoeRight.SetActive(false);
         foreach (MeshRenderer mesh in shoes.GetComponentsInChildren<MeshRenderer>())

@@ -1279,9 +1279,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: a9094acde4632446ca4bca089fc33bfd, type: 3}
     m_FontSize: 90
-    m_FontStyle: 1
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 90
@@ -2116,9 +2116,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: a9094acde4632446ca4bca089fc33bfd, type: 3}
     m_FontSize: 90
-    m_FontStyle: 1
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 90
@@ -3810,8 +3810,10 @@ MonoBehaviour:
   customizePanel: {fileID: 687508185}
   listPanel: {fileID: 1400694502}
   shopPanel: {fileID: 296710417}
+  listPanel2: {fileID: 1822447140}
   itemObjPool: {fileID: 545765959}
-  rowObjPool: {fileID: 0}
+  listShoeRowObjPool: {fileID: 1436792351}
+  listShoeItemObjPool: {fileID: 189726444}
   selectPartObjPool: {fileID: 1261756387}
   selectOptionObjPool: {fileID: 1377340260}
   itemList: []
@@ -5485,7 +5487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36863de6d4e3e4d25add316870dd8033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1454520149495930, guid: 50cdfbb20945245d683e80a20fbed72b, type: 2}
+  prefab: {fileID: 1934398432188182, guid: 1ee749115827f4cb89f01f353ad94ae0, type: 2}
 --- !u!1 &1470556593
 GameObject:
   m_ObjectHideFlags: 0
@@ -5803,7 +5805,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 12800000, guid: a9094acde4632446ca4bca089fc33bfd, type: 3}
     m_FontSize: 60
-    m_FontStyle: 1
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 60
@@ -6174,7 +6176,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.2000122, y: 215.93477}
+  m_AnchoredPosition: {x: -0.2000122, y: 43.717567}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1781120111
@@ -6259,9 +6261,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1822447138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bffc97e237214cab900a52519ad31ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 6715fac8e1f3343ec8c54bbee1cc5fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backBut: {fileID: 1953453324}
+  titleLabel: {fileID: 1979555790}
+  content: {fileID: 2096934905}
+  shoeList: []
 --- !u!114 &1822447141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6655,9 +6661,9 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: a9094acde4632446ca4bca089fc33bfd, type: 3}
     m_FontSize: 90
-    m_FontStyle: 1
+    m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 90
@@ -6946,7 +6952,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: a9094acde4632446ca4bca089fc33bfd, type: 3}
     m_FontSize: 80
     m_FontStyle: 1
     m_BestFit: 0
@@ -7295,10 +7301,10 @@ RectTransform:
   m_Father: {fileID: 840360815}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -3.2325897}
+  m_AnchorMin: {x: 0.043, y: 0}
+  m_AnchorMax: {x: 0.95552784, y: 1}
+  m_AnchoredPosition: {x: 0, y: -0.00024414062}
+  m_SizeDelta: {x: 0, y: -3.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2096934906
 MonoBehaviour:

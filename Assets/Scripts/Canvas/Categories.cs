@@ -11,11 +11,7 @@ public class Categories : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        cancelBut.onClick.AddListener(() => { 
-            UIManager.Instance.categories.gameObject.SetActive(false);
-            UIManager.Instance.topMenu.ActiveAllChildButtons();
-        });
-
+        cancelBut.onClick.AddListener(CancelButtonClick);
         allBut.onClick.AddListener(AllButtonClick);
         newBut.onClick.AddListener(NewButtonClick);
         bestBut.onClick.AddListener(BestButtonClick);
@@ -26,7 +22,14 @@ public class Categories : MonoBehaviour {
 		
 	}
 
+    void CancelButtonClick(){
+        UIManager.Instance.categories.gameObject.SetActive(false);
+        UIManager.Instance.topMenu.ActiveAllChildButtons();
+    }
+
     void AllButtonClick(){
+        CancelButtonClick();
+        UIManager.Instance.navigationView.Push(UIManager.Instance.listPanel2);
     }
 
     void NewButtonClick(){

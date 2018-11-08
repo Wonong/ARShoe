@@ -18,16 +18,19 @@ public class UIManager : MonoBehaviour
     public TopMenu topMenu;
     public Categories categories;
 
+    // Panels
     //public ItemPanel itemPanel;
     public CustomizePanel customizePanel;
     public PanelList listPanel;
     public ShopPanel shopPanel;
+    public PanelList2 listPanel2;
 
 
 
     // Object pools for auto creating objects
     public SimpleObjectPool itemObjPool;
-    public SimpleObjectPool rowObjPool;
+    public SimpleObjectPool listShoeRowObjPool;
+    public SimpleObjectPool listShoeItemObjPool;
     public SimpleObjectPool selectPartObjPool;
     public SimpleObjectPool selectOptionObjPool;
 

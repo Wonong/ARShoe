@@ -258,7 +258,7 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     void ClickSocialShareButton()
     {
-        // ToDo(원영): 아래 "text"에 공유할 링크 CurrentCustomShoe.링크멤버변수 할당.
+        // Solved(원영): 아래 "text"에 공유할 링크 CurrentCustomShoe.링크멤버변수 할당.
         #if UNITY_ANDROID
         new NativeShare().SetText(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link).Share();
         #elif UNITY_IOS

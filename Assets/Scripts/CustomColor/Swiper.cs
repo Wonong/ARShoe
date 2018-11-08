@@ -31,7 +31,7 @@ public class Swiper : MonoBehaviour {
 
 	private void Update()
 	{
-        if (Input.mousePosition.y > 2.5 * Screen.height / 9 && Input.mousePosition.y < 8 * Screen.height / 9) // Prevent to swipe the object using y position.
+        if (!EventSystem.current.IsPointerOverGameObject()) // Prevent to swipe the object using y position.
         {
             if (Input.GetMouseButtonDown(0) == true)
             {

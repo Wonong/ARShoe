@@ -79,7 +79,6 @@ public class GroundPlaneUI : MonoBehaviour
         m_CustomScrollView = UIManager.Instance.customizePanel.customize.gameObject;
         UIManager.Instance.customizePanel.customize.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
 
-
         RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();
         customScrollViewRectTransform.anchorMax = new Vector2(1f, 1f);
         customScrollViewRectTransform.anchorMin = new Vector2(0f, 0f);

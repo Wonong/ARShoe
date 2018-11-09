@@ -5,14 +5,13 @@ using UnityEngine.UI;
 
 public class MenuBar : MonoBehaviour {
 
-    public Button buy, share, capture;
-    public string link { get; set; }
+    public Button buy, share;
+    public string link;
 
 	// Use this for initialization
 	void Start () {
         buy.onClick.AddListener(BuyButtonClick);
         share.onClick.AddListener(ShareButtonClick);
-        capture.onClick.AddListener(CaptureButtonClick);
 	}
 	
 	// Update is called once per frame
@@ -21,15 +20,11 @@ public class MenuBar : MonoBehaviour {
 	}
 
     void BuyButtonClick(){
-        UIManager.Instance.shopPanel.RefreshWebView(link);
+        UIManager.Instance.SetShopUrl(link);
         UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
     }
 
     void ShareButtonClick(){
-
-    }
-
-    void CaptureButtonClick(){
 
     }
 }

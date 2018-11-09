@@ -20,8 +20,10 @@ public class ScrollRectEx : ScrollRect
         {
             foreach (var component in parent.GetComponents<Component>())
             {
-                if (component is T)
+                if (component is T){
+                    Debug.Log(parent.name);
                     action((T)(IEventSystemHandler)component);
+                }
             }
             parent = parent.parent;
         }
@@ -41,8 +43,10 @@ public class ScrollRectEx : ScrollRect
     /// </summary>
     public override void OnDrag(UnityEngine.EventSystems.PointerEventData eventData)
     {
-        if (routeToParent)
+        if (routeToParent){
             DoForParents<IDragHandler>((parent) => { parent.OnDrag(eventData); });
+            //base.OnDrag(eventData);
+        }
         else
             base.OnDrag(eventData);
     }

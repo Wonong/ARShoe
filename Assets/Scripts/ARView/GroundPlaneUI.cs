@@ -46,7 +46,14 @@ public class GroundPlaneUI : MonoBehaviour
         m_EventSystem = FindObjectOfType<EventSystem>();
         InitializeButtons();
         ChangeButtonStatus();
-        SetCustomScrollView();
+
+        // 커스터마이징 가능 여부에따라 UI 변화
+        if(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).isCustomizable){
+            SetCustomScrollView();
+        }else{
+            m_ListUpDown.gameObject.SetActive(false);
+        }
+
     }
 
     void Update()
@@ -79,13 +86,17 @@ public class GroundPlaneUI : MonoBehaviour
         m_CustomScrollView = UIManager.Instance.customizePanel.customize.gameObject;
         UIManager.Instance.customizePanel.customize.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
 
+
+        // scroll rect content initialize
+        m_CustomListRectTransform.GetComponent<ScrollRect>().content = m_CustomScrollView.GetComponent<RectTransform>();
+
         RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();
         customScrollViewRectTransform.anchorMax = new Vector2(1f, 1f);
         customScrollViewRectTransform.anchorMin = new Vector2(0f, 0f);
         customScrollViewRectTransform.anchoredPosition = new Vector2(0.5f, 0.5f);
         customScrollViewRectTransform.offsetMin = new Vector2Int(67, 0);
         customScrollViewRectTransform.offsetMax = new Vector2Int(-67, 0);
-        customScrollViewRectTransform.localPosition += Vector3.down*100;
+        customScrollViewRectTransform.localPosition += Vector3.down*240;
     }
 
     /// <summary>
@@ -106,6 +117,20 @@ public class GroundPlaneUI : MonoBehaviour
         {
             m_ConfirmButton.onClick.AddListener(ClickConfirmButton);
         }
+
+        #region DEBUG
+        var m_Setting = FindObjectOfType<Setting>();
+        m_HeartButton.onClick.AddListener(()=>
+        {
+            if (m_Setting.settingPanel.activeSelf)
+            {
+                m_Setting.ClickDismissButton();
+            } else
+            {
+                m_Setting.ClickSetting();
+            }
+        });
+        #endregion
     }
 
     void ClickBackButton()
@@ -267,7 +292,7 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickBuyButton() {
         // ToDo(원영): buy now 클릭시 판매 페이지로 이동.
-        UIManager.Instance.shopPanel.RefreshWebView(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link);
+        UIManager.Instance.SetShopUrl(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link);
         UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
     }
 

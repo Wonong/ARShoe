@@ -23,9 +23,8 @@ public class TopView : MonoBehaviour {
 
     void ShopButtonClick()
     {
-        link = JSONHandler.GetShoeById(shoeId).link;
         UIManager.Instance.SetShopUrl(link);
-        UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel); 
+        UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
     }
 
     void ARExpButtonClick()

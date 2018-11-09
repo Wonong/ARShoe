@@ -106,6 +106,20 @@ public class GroundPlaneUI : MonoBehaviour
         {
             m_ConfirmButton.onClick.AddListener(ClickConfirmButton);
         }
+
+        #region DEBUG
+        var m_Setting = FindObjectOfType<Setting>();
+        m_HeartButton.onClick.AddListener(()=>
+        {
+            if (m_Setting.settingPanel.activeSelf)
+            {
+                m_Setting.ClickDismissButton();
+            } else
+            {
+                m_Setting.ClickSetting();
+            }
+        });
+        #endregion
     }
 
     void ClickBackButton()

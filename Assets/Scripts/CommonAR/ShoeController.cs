@@ -1,5 +1,6 @@
 ﻿using GoogleARCore;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ShoeController : MonoBehaviour {
     public bool IsPlaced
@@ -47,12 +48,25 @@ public class ShoeController : MonoBehaviour {
         shoes.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
         int componentsLength = shoes.GetComponents<Transform>().Length;
         shoeLeft = shoes.transform.GetChild(0).gameObject;
-        shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        if (SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
+        {
+            shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        } else
+        {
+            //shoeLeft.transform.localRotation = Quaternion.Euler(180, -90, 90);
+            shoeLeft.transform.localRotation = Quaternion.Euler(0, 90, 0);
+        }
+            
         shoeRight = shoes.transform.GetChild(1).gameObject;
         shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 0);
         shoes.SetActive(false);
         MoveShoe(); // Shoe object is movable at very first.
         ChangeLeftRight();
+    }
+
+    public void ShowShoes()
+    {
+        shoes.SetActive(true);
     }
 
     public void ChangeLocalAngle()
@@ -65,21 +79,19 @@ public class ShoeController : MonoBehaviour {
 
     }
 
-    public void ResetPosition(Vector3 initPosition, Quaternion initAngle)
+    public void ResetPosition(Vector3 initPosition)
     {
         if (initPosition == null)
         {
             initPosition = new Vector3(0, 0, 0.55f);
         }
 
-        if (initAngle == null)
-        {
-            initAngle = Quaternion.Euler(0, 0, 0);
-        }
+        Quaternion initRotation = Quaternion.Euler(0, 0, 0);
+        shoes.transform.rotation = initRotation;
 
         shoes.transform.parent = GameObject.Find("First Person Camera").transform;
         shoes.transform.localPosition = initPosition;
-        shoes.transform.localRotation = initAngle;
+
         shoes.transform.parent = null;
     }
 

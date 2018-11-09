@@ -17,6 +17,7 @@ public class Setting : MonoBehaviour
     public Text m_HSVRangeText;
     public Button m_HSVConfirmButton;
 
+    public Button m_ToggleDebugButton;
     DetectorController m_DetectController;
     ARLight arLight;
 
@@ -43,6 +44,8 @@ public class Setting : MonoBehaviour
         m_UpperHSlider.value = 179;
         m_UpperSSlider.value = 255;
         m_UpperVSlider.value = 255;
+
+        m_ToggleDebugButton.onClick.AddListener(ClickToggleDebugButton);
 
     }
 
@@ -89,6 +92,11 @@ public class Setting : MonoBehaviour
     {
         OnSliderChange(0);
         m_DetectController.ClickResetButton();
+    }
+
+    public void ClickToggleDebugButton()
+    {
+        m_DetectController.m_IsDebug = !m_DetectController.m_IsDebug;
     }
 
     void Update()

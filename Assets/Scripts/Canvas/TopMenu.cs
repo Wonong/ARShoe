@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class TopMenu : MonoBehaviour {
 
     public Button myMenu, categoriesBut, searchBut;
+    public Text titleLabel;
 
 	// Use this for initialization
 	void Start () {
@@ -17,8 +18,11 @@ public class TopMenu : MonoBehaviour {
 		
 	}
 
+    public void SetTitle(string text){
+        titleLabel.text = text;
+    }
+
     public void CategoriesButtonOnClick(){
-        Debug.Log("categori button clicked");
         UIManager.Instance.categories.gameObject.SetActive(true);
         this.HideAllChildButtons();
     }

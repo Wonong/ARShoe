@@ -7,14 +7,17 @@ public class CurrentCustomShoe : MonoBehaviour
     public static GameObject shoes;
     public static GameObject shoeLeft;
     public static GameObject shoeRight;
+    public static int currentShoeId;
 
-    public static void SetCurrentCustomShoe(int ShoeId)
+    public static void SetCurrentCustomShoe(int shoeId)
 	{
         if (shoes != null)
         {
             Destroy(shoes);
         }
-        shoes = Instantiate(JSONHandler.GetShoeById(ShoeId).GetObjectAsGameObject());
+        currentShoeId = shoeId;
+
+        shoes = Instantiate(JSONHandler.GetShoeById(shoeId).GetObjectAsGameObject());
         shoeLeft = GameObject.Find("Shoe_Left");
         shoeRight = GameObject.Find("Shoe_Right");
         InitializeShoe();
@@ -24,9 +27,7 @@ public class CurrentCustomShoe : MonoBehaviour
     static void InitializeShoe() {
         shoes.GetComponent<Spin>().enabled = true;
         shoes.GetComponent<Swiper>().enabled = true;
-        shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 45);
         shoeLeft.transform.localPosition = new Vector3(0, 0, 0);
-        //shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 45);
         shoeRight.transform.localPosition = new Vector3(0, 0, 0);
         shoeRight.SetActive(false);
         foreach (MeshRenderer mesh in shoes.GetComponentsInChildren<MeshRenderer>())

@@ -187,14 +187,8 @@ public class ARController : MonoBehaviour
     /// </summary>
     private void ChangePlanesVisualizer()
     {
-        Transform[] planes = planeGenerator.GetComponentsInChildren<Transform>();
-        if (planes.Length < 1) return;
-        for (int i = 1; i < planes.Length; i++)
-        {
-            planes[i].gameObject.SetActive(!m_ShoeController.IsPlaced || !isActiveAndEnabled);
-        }
-
-        pointCloud.SetActive(!m_ShoeController.IsPlaced || !isActiveAndEnabled);
+        planeGenerator.SetActive(!m_ShoeController.IsPlaced || !m_ShoeController.isActiveAndEnabled);
+        pointCloud.SetActive(!m_ShoeController.IsPlaced || !m_ShoeController.isActiveAndEnabled);
     }
 
 

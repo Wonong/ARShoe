@@ -29,7 +29,12 @@ namespace GoogleARCore.Examples.Common
     /// </summary>
     public class DetectedPlaneVisualizer : MonoBehaviour
     {
-        private Color k_PlaneColor = new Color(1.0f, 1.0f, 1.0f);
+        private static int s_PlaneCount = 0;
+
+        private readonly Color[] k_PlaneColors = new Color[]
+        {
+            new Color(1.0f, 1.0f, 1.0f)
+        };
 
         private DetectedPlane m_DetectedPlane;
 
@@ -87,7 +92,7 @@ namespace GoogleARCore.Examples.Common
         public void Initialize(DetectedPlane plane)
         {
             m_DetectedPlane = plane;
-            m_MeshRenderer.material.SetColor("_GridColor", k_PlaneColor);
+            m_MeshRenderer.material.SetColor("_GridColor", k_PlaneColors[k_PlaneColors.Length-1]);
             m_MeshRenderer.material.SetFloat("_UvRotation", Random.Range(0.0f, 360.0f));
 
             Update();

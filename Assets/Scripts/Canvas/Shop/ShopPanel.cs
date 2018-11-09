@@ -7,12 +7,20 @@ public class ShopPanel : ViewController
 
 
     public UniWebView webView;
+    public TopMenuShop topMenuShop;
     public string url { get; set; }
 
     // Use this for initialization
     void Start()
     {
+        webView.Load(url);
+        webView.UpdateFrame();
 
+    }
+
+    private void OnEnable()
+    {
+        topMenuShop.Init();
     }
 
     // Update is called once per frame
@@ -21,16 +29,16 @@ public class ShopPanel : ViewController
 
     }
 
-
+    /*
     public void RefreshWebView(string url){
         GameObject webViewGameObject = new GameObject("UniWebView");
         webView = webViewGameObject.AddComponent<UniWebView>();
-        webView.transform.SetParent(CachedRectTransform, false);
+        webView.SetShowToolbar(true);
         webView.ReferenceRectTransform = this.CachedRectTransform;
 
-        webView.Frame = new Rect(0,0, CachedRectTransform.rect.width, CachedRectTransform.rect.height);
         webView.Load(url);
         webView.Show();
     }
+    */
 
 }

@@ -39,19 +39,20 @@ public class DetectorController : MonoBehaviour
     private ShoeController m_ShoeController;
     
     private int footPosX, footPosY;
-    private float footAngleDegree;
+    private float footAngleDegree = 90;
     private bool findFoot = false;
     private bool useTFDetect = false;
+
+    private Scalar lowerHSV = new Scalar(0, 40, 125);
+    private Scalar upperHSV = new Scalar(179, 255, 255);
     #endregion // PRIVATE_MEMBERS
 
     #region FOR_DEBUG
-    public static bool isDebug = false;
+    public bool m_IsDebug = false;
     public RawImage m_DebugImage1;
     public RawImage m_DebugImage2;
     public UnityEngine.UI.Text m_DebugText;
-    public int tmp = 0;
-    public static string debugStr = "";
-    public int x, y, z;
+    public static string m_DebugStr = "";
     #endregion // FOR_DEBUG
 
     public static Texture2D LoadImage(string filePath)
@@ -75,6 +76,7 @@ public class DetectorController : MonoBehaviour
         LoadWorker();
 
         m_ShoeController = FindObjectOfType<ShoeController>();
+        m_ShoeController.ShowShoes();
 
         ResetShoePosition();
     }
@@ -86,25 +88,69 @@ public class DetectorController : MonoBehaviour
         ResetShoePosition();
     }
 
+    private Vector3 ChangeScreenPosToWorldPos(float screenPosX, float screenPosY)
+    {
+        // BottomLeft가 (0,0)인 것을 Center가 (0,0)이 되도록 변경
+        screenPosX = screenPosX - (inputCameraWidth / 2);
+        screenPosY = screenPosY - (inputCameraHeight / 2);
+
+        float clippingWidth, clippingHeight, far;
+        float fieldOfView = 30 * (Mathf.PI / 180);
+
+        // World에서 Screen의 크기 계산
+        far = 200;
+        clippingHeight = Mathf.Tan(fieldOfView) * far * 2;
+        clippingWidth = clippingHeight * ((float)inputCameraWidth / inputCameraHeight);
+
+        float shoeX, shoeY, shoeZ = 0.55f;
+
+        shoeX = screenPosX * (clippingWidth / inputCameraWidth);
+        shoeY = screenPosY * (clippingHeight / inputCameraHeight);
+
+        shoeX = shoeX * shoeZ / far;
+        shoeY = shoeY * shoeZ / far;
+
+        return new Vector3(shoeX, shoeY, shoeZ);
+    }
+
     private void ResetShoePosition()
     {
-        m_ShoeController.ResetPosition(new Vector3(0, 0, 0.55f), Quaternion.Euler(0, 0, footAngleDegree - 90));
+        Vector3 shoePos = ChangeScreenPosToWorldPos(footPosX, footPosY);
+        
+        if (inputCameraWidth == -1)
+        {
+            shoePos.x = 0;
+            shoePos.y = 0;
+        }
+
+        m_ShoeController.ResetPosition(shoePos);
+
+        var cameraPosition = GameObject.Find("First Person Camera").transform.position;        
+        var centerPosition = GameObject.Find("Camera Center").transform.position;
+
+        cameraPosition.y = 0;
+        centerPosition.y = 0;
+
+        var cameraScreenVector = centerPosition - cameraPosition;
+        var cameraShoeAngle = Vector3.Angle(m_ShoeController.shoes.transform.forward, cameraScreenVector.normalized);
+        cameraShoeAngle = cameraShoeAngle + (footAngleDegree - 90);
+        m_ShoeController.shoes.transform.rotation = Quaternion.Euler(0, cameraShoeAngle, 0);       
     }
 
     void Update()
     {
-        if (isDebug)
+        if (m_IsDebug)
         {
             m_DebugImage1.gameObject.SetActive(true);
             m_DebugImage2.gameObject.SetActive(true);
             m_DebugText.gameObject.SetActive(true);
-            m_DebugText.text = debugStr;
+            //m_DebugText.text = m_DebugStr;
         }
         else
         {
-            //m_DebugImage1.gameObject.SetActive(false);
-            //m_DebugImage2.gameObject.SetActive(false);
-            //m_DebugText.gameObject.SetActive(false);
+            m_DebugImage1.gameObject.SetActive(false);
+            m_DebugImage2.gameObject.SetActive(false);
+            m_DebugText.gameObject.SetActive(false);
         }
     }
 
@@ -150,7 +196,7 @@ public class DetectorController : MonoBehaviour
         boxOutlines = await footDetector.DetectAsync(colors);
 
         time = DateTime.Now - start;
-        Debug.Log(string.Format("DetectAsync time: {0}.{1}", time.Seconds, time.Milliseconds));
+        Debug.Log(string.Format("DetectAsync time: {0}", time.TotalSeconds));
     }
 
     private async void GuessAngle()
@@ -163,13 +209,20 @@ public class DetectorController : MonoBehaviour
         var captured = GetImageFromCamera();
 
         #region DEBUG
-        //var captured = LoadImage("Assets\\test_416.jpg");
-        //var captured = LoadImage("Assets\\test.png");
+        m_DebugImage2.texture = captured;
         #endregion
 
         if (captured == null)
         {
+            Debug.Log("captured is null");
             return;
+        }
+
+        if (inputCameraWidth == -1)
+        {
+            inputCameraWidth = captured.width;
+            inputCameraHeight = captured.height;
+            Debug.Log(string.Format("captured w/h: {0} {1}", inputCameraWidth, inputCameraHeight));
         }
 
         if (useTFDetect && (boxOutlines == null || boxOutlines.Count <= 0))
@@ -182,7 +235,7 @@ public class DetectorController : MonoBehaviour
 
         if (useTFDetect)
         {
-            var boxOutline = boxOutlines[tmp];
+            var boxOutline = boxOutlines[0];
     
             cropMargin = 50;
             left = boxOutline.left - cropMargin;
@@ -207,17 +260,20 @@ public class DetectorController : MonoBehaviour
             snap = captured;
         }
 
+
         // Change Texture2D to Opencv.Mat
         Mat src = new Mat(snap.height, snap.width, CvType.CV_8UC4);
         Utils.texture2DToMat(snap, src);
 
         Point cntr = new Point();
         Point vec = new Point();
-        await GetPCAAsync(src, cntr, vec);
-        //GetPCA(src, cntr, vec);
+        //await GetPCAAsync(src, cntr, vec);
+        GetPCA(src, cntr, vec);
 
         footPosX = (int)cntr.x + left;
+        //footPosY = Math.Max(inputCameraHeight - ((int)cntr.y + bottom), 0);
         footPosY = (int)cntr.y + bottom;
+
         float footAngleRadian = Mathf.Atan2((float)vec.y, (float)vec.x);
         footAngleDegree = footAngleRadian * (180.0f / Mathf.PI);
         if (footAngleDegree < 0)
@@ -227,17 +283,10 @@ public class DetectorController : MonoBehaviour
         findFoot = true;
 
         #region DEBUG
-        //DrawCircle(snap, (int)cntr.x, (int)cntr.y, 5);
-        //testImage.texture = snap;
-
-        //int cx = (int)cntr.x + left;
-        //int cy = (int)cntr.y + bottom;
-
-        //DrawCircle(captured, cx, cy, 5);
-        //testImage2.texture = captured;
+        DrawCircle(captured, footPosX, footPosY, 5);
 
         time = DateTime.Now - start;
-        Debug.Log(string.Format("GuessAngle time: {0}.{1}", time.Seconds, time.Milliseconds));
+        Debug.Log(string.Format("GuessAngle time: {0}", time.TotalSeconds));
         Debug.Log(string.Format("GuessAngle: {0}", footAngleDegree));
         #endregion
 
@@ -259,7 +308,7 @@ public class DetectorController : MonoBehaviour
         Imgproc.cvtColor(src, hsv, Imgproc.COLOR_RGB2HSV_FULL);
 
         Mat mask = new Mat();
-        Core.inRange(hsv, new Scalar(0, 40, 125), new Scalar(179, 255, 255), mask);
+        Core.inRange(hsv, lowerHSV, upperHSV, mask);
 
         Mat hierarchy = new Mat();
         List<MatOfPoint> contours = new List<MatOfPoint>();
@@ -290,9 +339,9 @@ public class DetectorController : MonoBehaviour
         }
 
         #region DEBUG
-        //Texture2D texture = new Texture2D(mask.cols(), mask.rows(), TextureFormat.RGBA32, false);
-        //Utils.matToTexture2D(mask, texture);
-        //testImage2.texture = texture;
+        Texture2D texture = new Texture2D(mask.cols(), mask.rows(), TextureFormat.RGBA32, false);
+        Utils.matToTexture2D(mask, texture);
+        m_DebugImage1.texture = texture;
 
         //Imgproc.drawContours(src, contours, largestIndex, new Scalar(255, 0, 0), 2);
         //Texture2D texture = new Texture2D(src.cols(), src.rows(), TextureFormat.RGBA32, false);
@@ -315,6 +364,9 @@ public class DetectorController : MonoBehaviour
         Mat eigenvectors = new Mat();
         Core.PCACompute(data_pts, mean, eigenvectors, 2);
 
+        Debug.Log("mean: " + mean.dump());
+        Debug.Log("eginvectors: " + eigenvectors.dump());
+
         cntr.x = mean.get(0, 0)[0];
         cntr.y = src.rows() - mean.get(0, 1)[0];
 
@@ -332,24 +384,30 @@ public class DetectorController : MonoBehaviour
      */
     private Texture2D GetImageFromCamera()
     {
-        var captured = (Texture2D)GoogleARCore.Frame.CameraImage.Texture;
+        //var captured = (Texture2D)GoogleARCore.Frame.CameraImage.Texture;
 
-        if (captured == null)
-        {
-            return null;
-        }
+        //if (captured == null)
+        //{
+        //    return null;
+        //}
 
-        var pixels = captured.GetPixels32();
+        //var pixels = captured.GetPixels32();
 
-        if (pixels == null || pixels.Length <= 0)
-        {
-            return null;
-        }
+        //if (pixels == null || pixels.Length <= 0)
+        //{
+        //    return null;
+        //}
 
-        Texture2D result = new Texture2D((int)captured.width, (int)captured.height);
-        result.SetPixels(captured.GetPixels());
-        result.Apply();
-        return result;
+        //Texture2D result = new Texture2D((int)captured.width, (int)captured.height);
+        //result.SetPixels(captured.GetPixels());
+        //result.Apply();
+        //return result;
+
+        m_ShoeController.shoes.SetActive(false);
+        var captured = ScreenshotPreview.GetTexture2DOfScreenshot();
+        m_ShoeController.shoes.SetActive(true);
+
+        return captured;
     }
 
     private Texture2D ResizeTexture(Texture2D input, int width, int height)
@@ -374,9 +432,7 @@ public class DetectorController : MonoBehaviour
 
     private Task<Texture2D> AsyncRotate(Texture2D texture)
     {
-        return Task.Run(() =>
-        {
-            texture = TextureTools.ReflectTexture(texture);
+        return Task.Run(() => {
             texture = TextureTools.RotateTexture(texture, -90);
             return texture;
         });
@@ -410,5 +466,11 @@ public class DetectorController : MonoBehaviour
 
         tex.Apply();
 
+    }
+
+    public void SetHSVRange(Scalar lower, Scalar upper)
+    {
+        lowerHSV = lower;
+        upperHSV = upper;
     }
 }

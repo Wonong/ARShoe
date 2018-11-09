@@ -86,6 +86,7 @@ public class GroundPlaneUI : MonoBehaviour
         m_CustomScrollView = UIManager.Instance.customizePanel.customize.gameObject;
         UIManager.Instance.customizePanel.customize.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
 
+
         // scroll rect content initialize
         m_CustomListRectTransform.GetComponent<ScrollRect>().content = m_CustomScrollView.GetComponent<RectTransform>();
 
@@ -116,6 +117,20 @@ public class GroundPlaneUI : MonoBehaviour
         {
             m_ConfirmButton.onClick.AddListener(ClickConfirmButton);
         }
+
+        #region DEBUG
+        var m_Setting = FindObjectOfType<Setting>();
+        m_HeartButton.onClick.AddListener(()=>
+        {
+            if (m_Setting.settingPanel.activeSelf)
+            {
+                m_Setting.ClickDismissButton();
+            } else
+            {
+                m_Setting.ClickSetting();
+            }
+        });
+        #endregion
     }
 
     void ClickBackButton()

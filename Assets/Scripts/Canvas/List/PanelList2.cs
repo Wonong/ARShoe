@@ -29,6 +29,7 @@ public class PanelList2 : ViewController {
             item.transform.SetParent(tempShoeRow.transform, false);
             item.GetComponent<ShoeItem>().Setup(shoeList[i]);
         }
+        content.GetComponent<ContentSizeFitter>().enabled = true;
 	}
 	
 	// Update is called once per frame

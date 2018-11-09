@@ -35,4 +35,12 @@ public class CurrentCustomShoe : MonoBehaviour
             mesh.enabled = true;
         }
     }
+
+    public static Vector3 GetShoesPosition(){
+        return shoes.transform.position;
+    }
+
+    public static void SetShoesPosition(Vector3 newPos){
+        shoes.transform.position = newPos;
+    }
 }

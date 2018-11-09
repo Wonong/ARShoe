@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ShoeList.unity
     guid: 9e419b35c191047bb945dc91636ca67c
+  - enabled: 1
+    path: Assets/Scenes/List.unity
+    guid: 4ef80ae5cd9b34527bd1a81a7f0a5fb8
   - enabled: 1
     path: Assets/Scenes/WatchingShoes.unity
     guid: 3151807591542436f9ddfbf021a1545d

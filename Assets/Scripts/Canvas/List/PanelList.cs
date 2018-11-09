@@ -9,6 +9,7 @@ public class PanelList : ViewController {
     public Camera cam;
     public Vector2 minPos, maxPos;
     public ShoeRow newRow, bestRow;
+    public TopView topView;
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +17,10 @@ public class PanelList : ViewController {
         navigationView = UIManager.Instance.navigationView;
         GetComponent<ScrollRect>().onValueChanged.AddListener(OnScrollChanged);
         AddShoeItemsIntoRow();
+
+        // TopView 의 신발 설정(현재는 리스트의 첫번쨰 신발)
+        CurrentCustomShoe.SetCurrentCustomShoe(1);
+        topView.link = JSONHandler.GetShoeById(1).link;
 
         // navigation view의 첫번째 뷰로 설정
         if (navigationView != null && UIManager.Instance.viewStack.Count == 0)
@@ -30,7 +35,13 @@ public class PanelList : ViewController {
 	}
 
     void OnScrollChanged(Vector2 scrollPos){
-        cam.transform.position = Vector2.Lerp(minPos, maxPos, scrollPos.y);
+        /*
+        Debug.Log("Camera Position Changed : " + cam.transform.position);
+        cam.transform.position = new Vector3(cam.transform.position.x, Vector2.Lerp(minPos, maxPos, scrollPos.y).y, cam.transform.position.z);
+
+        Vector3 oldPos = CurrentCustomShoe.GetShoesPosition();
+        CurrentCustomShoe.SetShoesPosition(new Vector3(oldPos.x, (float)0.1 + Vector2.Lerp(minPos, maxPos, scrollPos.y).y, oldPos.z));
+        */
     }
 
     void AddShoeItemsIntoRow(){
@@ -39,5 +50,7 @@ public class PanelList : ViewController {
             if(item.isNew) newRow.AddNewShoe(item);
             if(item.isBest) bestRow.AddNewShoe(item);
         });
+        newRow.content.GetComponent<ContentSizeFitter>().enabled = true;
+        bestRow.content.GetComponent<ContentSizeFitter>().enabled = true;
     }
 }

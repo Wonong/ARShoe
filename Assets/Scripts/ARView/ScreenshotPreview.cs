@@ -34,7 +34,13 @@ public class ScreenshotPreview : MonoBehaviour
     public static IEnumerator CaptureAndShowPreviewImage(Texture2D imageTexture=null)
     {
         yield return new WaitForEndOfFrame(); // Wait for rendering.
-        byte[] bytes = imageTexture==null? GetBytesOfScreenshot():imageTexture.EncodeToPNG();
+
+        if (imageTexture == null)
+        {
+            imageTexture = GetTexture2DOfScreenshot();
+        }
+
+        byte[] bytes = imageTexture.EncodeToPNG();
         string path;
         string imageName = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png"; // Set image name.
 
@@ -70,7 +76,7 @@ public class ScreenshotPreview : MonoBehaviour
 #endif
     }
 
-    public static byte[] GetBytesOfScreenshot() // Screenshot image -> bytes for file writing.
+    public static Texture2D GetTexture2DOfScreenshot() // Screenshot image -> bytes for file writing.
     {
         int screenWidth = Screen.width;
         int screenHeight = Screen.height;
@@ -89,7 +95,7 @@ public class ScreenshotPreview : MonoBehaviour
         RenderTexture.active = null;
         Destroy(rt);
 
-        return screenshot.EncodeToPNG();
+        return screenshot;
     }
 
     public static void SaveImageToAndroidGallery(string location, byte[] bytes) // Refresh android gallery.

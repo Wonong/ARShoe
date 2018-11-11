@@ -18,9 +18,17 @@ public class Setting : MonoBehaviour
     public Button m_HSVConfirmButton;
 
     public Button m_ToggleDebugButton;
+    
+    public Button m_ToggleRepeatButton;
+    private bool m_IsRepeat = false;
+
     DetectorController m_DetectController;
     ARLight arLight;
 
+    public InputField m_RepeatRateField;
+    public Button m_RepeatRateConfirmButton;
+    private float m_RepeatRate = 0.1f;
+    
     private void Start()
     {
         m_DetectController = FindObjectOfType<DetectorController>();
@@ -46,7 +54,9 @@ public class Setting : MonoBehaviour
         m_UpperVSlider.value = 255;
 
         m_ToggleDebugButton.onClick.AddListener(ClickToggleDebugButton);
+        m_ToggleRepeatButton.onClick.AddListener(ClickToggleRepeatButton);
 
+        m_RepeatRateConfirmButton.onClick.AddListener(ClickRepeatRateConfirmButton);
     }
 
     public void ClickSetting()
@@ -97,6 +107,32 @@ public class Setting : MonoBehaviour
     public void ClickToggleDebugButton()
     {
         m_DetectController.m_IsDebug = !m_DetectController.m_IsDebug;
+    }
+
+    public void ClickToggleRepeatButton()
+    {
+        m_IsRepeat = !m_IsRepeat;
+
+        var func = nameof(ClickHSVConfirmButton);
+
+        if (m_IsRepeat)
+        {
+            InvokeRepeating(func, 0, m_RepeatRate);
+        } else
+        {
+            CancelInvoke(func);
+        }
+    }
+
+    public void ClickRepeatRateConfirmButton()
+    {
+        m_RepeatRate = float.Parse(m_RepeatRateField.text);
+
+        if (m_IsRepeat)
+        {
+            ClickToggleRepeatButton();
+            ClickToggleRepeatButton();
+        }
     }
 
     void Update()

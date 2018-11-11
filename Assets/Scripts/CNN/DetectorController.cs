@@ -122,8 +122,12 @@ public class DetectorController : MonoBehaviour
     {
         float shoeDistance = 0.55f;
 
-        var cameraPosition = GameObject.Find("First Person Camera").transform.position;
-        var centerPosition = GameObject.Find("Camera Center").transform.position;
+        var cameraObject = GameObject.Find("First Person Camera");
+        var cameraCenterObject = GameObject.Find("Camera Center");
+        var shoeObject = m_ShoeController.shoes;
+
+        var cameraPosition = cameraObject.transform.position;
+        var centerPosition = cameraCenterObject.transform.position;
         var cameraToPlaneVector = (centerPosition - cameraPosition).normalized;
 
         // Check to find ground plane
@@ -131,7 +135,7 @@ public class DetectorController : MonoBehaviour
         Session.GetTrackables<DetectedPlane>(allPlanes, TrackableQueryFilter.All);
 
         // If ground plane exist, calculate z value of shoes object at camera coordinate
-        if (allPlanes.Count > 0)
+        if (allPlanes.Count > 0 && allPlanes[0] != null)
         {
             var planeCenter = allPlanes[0].CenterPose.position;
 
@@ -156,10 +160,22 @@ public class DetectorController : MonoBehaviour
 
         m_ShoeController.ResetPosition(shoePos);
 
-        cameraPosition.y = 0;
-        centerPosition.y = 0;
+        var cameraObjectForward = cameraCenterObject.transform.forward;
+        var shoeOjbectForward = shoeObject.transform.forward;
 
-        var cameraShoeAngle = Vector3.Angle(m_ShoeController.shoes.transform.forward, cameraToPlaneVector);
+        // Project to x-z plane
+        cameraObjectForward.y = 0;
+        shoeOjbectForward.y = 0;
+
+        bool angleDirectionIsUp = Vector3.Cross(cameraObjectForward, shoeOjbectForward).y > 0 ? true : false;
+        var cameraShoeAngle = Vector3.Angle(cameraObjectForward, shoeOjbectForward);
+
+        Debug.Log(string.Format("Camera-Shoe Angle: {0}", cameraShoeAngle));
+        if (angleDirectionIsUp)
+        {
+            cameraShoeAngle = -cameraShoeAngle;
+        }
+        Debug.Log(string.Format("Diff Angle: {0}", (footAngleDegree - 90)));
         cameraShoeAngle = cameraShoeAngle + (footAngleDegree - 90);
         m_ShoeController.shoes.transform.rotation = Quaternion.Euler(0, cameraShoeAngle, 0);
     }
@@ -348,6 +364,12 @@ public class DetectorController : MonoBehaviour
 
         // Release used Mat variable
         src.Dispose();
+
+        // Release use Texture2D
+        if (!m_IsDebug)
+        {
+            Destroy(captured);
+        }
     }
 
     private Task GetPCAAsync(Mat src, Point cntr, Point vec)
@@ -433,9 +455,15 @@ public class DetectorController : MonoBehaviour
         vec.x = eigenvectors.get(0, 0)[0];
         vec.y = eigenvectors.get(0, 1)[0];
 
+        // Release used Mat variable
+        hsv.Dispose();
+        mask.Dispose();
+        hierarchy.Dispose();
+
         data_pts.Dispose();
         mean.Dispose();
         eigenvectors.Dispose();
+
     }
 
     /*
@@ -446,13 +474,19 @@ public class DetectorController : MonoBehaviour
         m_ShoeController.shoes.SetActive(false);
         foreach(var planeObject in m_PlaneObjects)
         {
-            planeObject.SetActive(false);
+            if (planeObject != null)
+            {
+                planeObject.SetActive(false);
+            }
         }
         var captured = ScreenshotPreview.GetTexture2DOfScreenshot();
         m_ShoeController.shoes.SetActive(true);
         foreach (var planeObject in m_PlaneObjects)
         {
-            planeObject.SetActive(true);
+            if (planeObject != null)
+            {
+                planeObject.SetActive(true);
+            }
         }
 
         return captured;

@@ -8,7 +8,6 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-//using Vuforia;
 using GoogleARCore;
 using GoogleARCore.Examples.Common;
 using TFClassify;

@@ -48,17 +48,21 @@ public class ShoeController : MonoBehaviour {
         shoes.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
         int componentsLength = shoes.GetComponents<Transform>().Length;
         shoeLeft = shoes.transform.GetChild(0).gameObject;
+        shoeRight = shoes.transform.GetChild(1).gameObject;
         if (SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
         {
             shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        } else
+            shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+        else
         {
             //shoeLeft.transform.localRotation = Quaternion.Euler(180, -90, 90);
+            shoes.transform.position = new Vector3(0, 0, 0);
+            shoes.transform.rotation = Quaternion.Euler(0, 0, 0);
             shoeLeft.transform.localRotation = Quaternion.Euler(0, 90, 0);
+            shoeRight.transform.localRotation = Quaternion.Euler(0, 90, 0);
+            Instantiate(Resources.Load<GameObject>("Prefabs/AttachingAR/TransparentPrefab")).transform.SetParent(shoes.transform);
         }
-            
-        shoeRight = shoes.transform.GetChild(1).gameObject;
-        shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 0);
         shoes.SetActive(false);
         MoveShoe(); // Shoe object is movable at very first.
         ChangeLeftRight();

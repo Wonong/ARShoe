@@ -26,6 +26,8 @@ public class DetectorController : MonoBehaviour
     #region PUBLIC_MEMBERS
     public TextAsset modelFile; // .pb or .bytes file    
     public int cropMargin = 0;
+    public ShoeController m_ShoeController;
+
     #endregion // PUBLIC_MEMBERS
 
     #region PRIVATE_MEMBERS
@@ -35,9 +37,6 @@ public class DetectorController : MonoBehaviour
     private int inputCameraWidth = -1, inputCameraHeight = -1;
     private FootDetector footDetector;
     private List<BoxOutline> boxOutlines;
-
-    private ShoeController m_ShoeController;
-    
     private int footPosX, footPosY;
     private float footAngleDegree = 90;
     private bool findFoot = false;
@@ -78,8 +77,6 @@ public class DetectorController : MonoBehaviour
     {
         // load tensorflow model
         LoadWorker();
-
-        m_ShoeController = FindObjectOfType<ShoeController>();
         m_ShoeController.ShowShoes();
 
         ResetShoePosition();

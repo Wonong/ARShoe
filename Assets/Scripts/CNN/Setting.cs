@@ -28,6 +28,8 @@ public class Setting : MonoBehaviour
     public InputField m_RepeatRateField;
     public Button m_RepeatRateConfirmButton;
     private float m_RepeatRate = 0.1f;
+
+    private ShoeController m_ShoeController;
     
     private void Start()
     {
@@ -57,6 +59,9 @@ public class Setting : MonoBehaviour
         m_ToggleRepeatButton.onClick.AddListener(ClickToggleRepeatButton);
 
         m_RepeatRateConfirmButton.onClick.AddListener(ClickRepeatRateConfirmButton);
+
+        m_ShoeController = FindObjectOfType<ShoeController>();
+        sizeConfirmButton.onClick.AddListener(ClickSizeConfirmButton);
     }
 
     public void ClickSetting()
@@ -68,7 +73,8 @@ public class Setting : MonoBehaviour
 
     public void ClickSizeConfirmButton()
     {
-        Debug.Log("Click confirm");
+        var scale = float.Parse(sizeInputField.text);
+        m_ShoeController.ChangeScale(scale);
     }
 
     public void ClickLightConfirmButton()

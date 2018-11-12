@@ -78,9 +78,10 @@ public class ShoeController : MonoBehaviour {
 
     }
 
-    public void ChangeScale()
+    public void ChangeScale(float scale)
     {
-
+        shoeScale = scale;
+        shoes.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
     }
 
     public void ResetPosition(Vector3 initPosition)

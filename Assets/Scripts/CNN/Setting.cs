@@ -30,7 +30,10 @@ public class Setting : MonoBehaviour
     private float m_RepeatRate = 0.1f;
 
     private ShoeController m_ShoeController;
-    
+
+    public Button m_ForwardConfirmButton;
+    public InputField m_ForwardInputField;
+
     private void Start()
     {
         m_DetectController = FindObjectOfType<DetectorController>();
@@ -62,6 +65,8 @@ public class Setting : MonoBehaviour
 
         m_ShoeController = FindObjectOfType<ShoeController>();
         sizeConfirmButton.onClick.AddListener(ClickSizeConfirmButton);
+
+        m_ForwardConfirmButton.onClick.AddListener(ClickForwardConfirmButton);
     }
 
     public void ClickSetting()
@@ -139,6 +144,12 @@ public class Setting : MonoBehaviour
             ClickToggleRepeatButton();
             ClickToggleRepeatButton();
         }
+    }
+
+    public void ClickForwardConfirmButton()
+    {
+        float forwardDistance = float.Parse(m_ForwardInputField.text);
+        m_DetectController.SetForwardDistance(forwardDistance);
     }
 
     void Update()

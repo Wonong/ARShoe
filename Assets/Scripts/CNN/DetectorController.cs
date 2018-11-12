@@ -26,7 +26,6 @@ public class DetectorController : MonoBehaviour
     #region PUBLIC_MEMBERS
     public TextAsset modelFile; // .pb or .bytes file    
     public int cropMargin = 0;
-    public ShoeController m_ShoeController;
 
     #endregion // PUBLIC_MEMBERS
 
@@ -41,6 +40,7 @@ public class DetectorController : MonoBehaviour
     private float footAngleDegree = 90;
     private bool findFoot = false;
     private bool useTFDetect = false;
+    private ShoeController m_ShoeController;
 
     private Scalar lowerHSV = new Scalar(0, 40, 125);
     private Scalar upperHSV = new Scalar(179, 255, 255);
@@ -56,6 +56,7 @@ public class DetectorController : MonoBehaviour
     public UnityEngine.UI.Text m_DebugText;
     public static string m_DebugStr = "";
     private List<GameObject> m_PlaneObjects = new List<GameObject>();
+    private float m_ForwardDistance = 0.03f;
     #endregion // FOR_DEBUG
 
     public static Texture2D LoadImage(string filePath)
@@ -77,6 +78,7 @@ public class DetectorController : MonoBehaviour
     {
         // load tensorflow model
         LoadWorker();
+        m_ShoeController = FindObjectOfType<ShoeController>();
         m_ShoeController.ShowShoes();
 
         ResetShoePosition();
@@ -174,6 +176,8 @@ public class DetectorController : MonoBehaviour
         Debug.Log(string.Format("Diff Angle: {0}", (footAngleDegree - 90)));
         cameraShoeAngle = cameraShoeAngle + (footAngleDegree - 90);
         m_ShoeController.shoes.transform.rotation = Quaternion.Euler(0, cameraShoeAngle, 0);
+
+        shoeObject.transform.Translate(-shoeObject.transform.forward * m_ForwardDistance);
     }
 
     void Update()
@@ -196,19 +200,32 @@ public class DetectorController : MonoBehaviour
         Session.GetTrackables<DetectedPlane>(newPlanes, TrackableQueryFilter.New);
 
         // Iterate over planes found in this frame and instantiate corresponding GameObjects to visualize them.
-        if (m_IsDebug)
+        foreach (var currentPlane in newPlanes)
         {
-            foreach (var currentPlane in newPlanes)
+            var planeObject = Instantiate(TrackedPlanePrefab, Vector3.zero, Quaternion.identity,
+                transform);
+            planeObject.GetComponent<DetectedPlaneVisualizer>().Initialize(currentPlane);
+
+            // Apply a random color and grid rotation.
+            planeObject.GetComponent<Renderer>().material.SetColor("_GridColor", new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f)));
+            planeObject.GetComponent<Renderer>().material.SetFloat("_UvRotation", UnityEngine.Random.Range(0.0f, 360.0f));
+
+            m_PlaneObjects.Add(planeObject);
+        }
+
+        foreach(var planeObject in m_PlaneObjects)
+        {
+            if (planeObject == null)
             {
-                var planeObject = Instantiate(TrackedPlanePrefab, Vector3.zero, Quaternion.identity,
-                    transform);
-                planeObject.GetComponent<DetectedPlaneVisualizer>().Initialize(currentPlane);
+                continue;
+            }
 
-                // Apply a random color and grid rotation.
-                planeObject.GetComponent<Renderer>().material.SetColor("_GridColor", new Color(UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f), UnityEngine.Random.Range(0.0f, 1.0f)));
-                planeObject.GetComponent<Renderer>().material.SetFloat("_UvRotation", UnityEngine.Random.Range(0.0f, 360.0f));
-
-                m_PlaneObjects.Add(planeObject);
+            if (m_IsDebug)
+            {
+                planeObject.SetActive(true);
+            } else
+            {
+                planeObject.SetActive(false);
             }
         }
     }
@@ -451,6 +468,10 @@ public class DetectorController : MonoBehaviour
         vec.x = eigenvectors.get(0, 0)[0];
         vec.y = eigenvectors.get(0, 1)[0];
 
+        RotatedRect boundRect = Imgproc.minAreaRect(new MatOfPoint2f(contours[largestIndex].toArray()));
+        cntr.x = boundRect.center.x;
+        cntr.y = src.rows() - boundRect.center.y;
+
         // Release used Mat variable
         hsv.Dispose();
         mask.Dispose();
@@ -459,7 +480,6 @@ public class DetectorController : MonoBehaviour
         data_pts.Dispose();
         mean.Dispose();
         eigenvectors.Dispose();
-
     }
 
     /*
@@ -470,20 +490,16 @@ public class DetectorController : MonoBehaviour
         m_ShoeController.shoes.SetActive(false);
         foreach(var planeObject in m_PlaneObjects)
         {
-            if (planeObject != null)
+            if (planeObject == null)
             {
-                planeObject.SetActive(false);
-            }
+                continue;
+            } 
+
+            planeObject.SetActive(false);
         }
         var captured = ScreenshotPreview.GetTexture2DOfScreenshot();
         m_ShoeController.shoes.SetActive(true);
-        foreach (var planeObject in m_PlaneObjects)
-        {
-            if (planeObject != null)
-            {
-                planeObject.SetActive(true);
-            }
-        }
+        
 
         return captured;
     }
@@ -529,9 +545,15 @@ public class DetectorController : MonoBehaviour
     /*
      * Drwa circle at image for debug
      */
-    public void DrawCircle(Texture2D tex, int x, int y, int r)
+    public void DrawCircle(Texture2D tex, int x, int y, int r, int c = 0)
     {
         Color32 color = Color.red;
+
+        if (c != 0)
+        {
+            color = Color.blue;
+        }
+
         float rSquared = r * r;
 
         for (int u = 0; u < tex.width; u++)
@@ -553,5 +575,13 @@ public class DetectorController : MonoBehaviour
     {
         lowerHSV = lower;
         upperHSV = upper;
+    }
+
+    public void SetForwardDistance(float forwardDistance)
+    {
+        m_ForwardDistance = forwardDistance;
+
+        var shoeObject = m_ShoeController.shoes;
+        shoeObject.transform.Translate(-shoeObject.transform.forward * m_ForwardDistance);
     }
 }

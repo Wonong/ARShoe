@@ -264,7 +264,7 @@ public class GroundPlaneUI : MonoBehaviour
             colorBlock.highlightedColor = new Color32(255, 255, 255, 255);
             colorBlock.normalColor = new Color32(255, 255, 255, 255);
             m_HeartButton.colors = colorBlock;
-            // ToDo: Save Changed info.
+            AndroidController._ShowAndroidToastMessage("관심 상품에 추가되었습니다.");
         }
         else
         {
@@ -273,7 +273,7 @@ public class GroundPlaneUI : MonoBehaviour
             colorBlock.highlightedColor = new Color32(0, 0, 0, 255);
             colorBlock.normalColor = new Color32(0, 0, 0, 255);
             m_HeartButton.colors = colorBlock;
-            // ToDo: Save Changed info.
+            AndroidController._ShowAndroidToastMessage("관심 상품에서 제외되었습니다.");
         }
     }
 
@@ -291,7 +291,6 @@ public class GroundPlaneUI : MonoBehaviour
     }
 
     void ClickBuyButton() {
-        // ToDo(원영): buy now 클릭시 판매 페이지로 이동.
         UIManager.Instance.SetShopUrl(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link);
         UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
     }

@@ -4,7 +4,7 @@ using System.Collections;
 // Spin class for Y spinning/transforming the shoe object when user click image from shoe list.
 public class Spin : MonoBehaviour
 {
-    float speed = 100f;
+    float speed = 80f;
     Vector3 originalPosition;
     Vector3 minusYVector = new Vector3(0f, 0.007f, 0f);
 

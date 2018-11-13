@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 // Swiper class for rotating the shoe object by Mouse input/Touch input.
 public class Swiper : MonoBehaviour {
@@ -31,7 +32,7 @@ public class Swiper : MonoBehaviour {
 
 	private void Update()
 	{
-        if (!EventSystem.current.IsPointerOverGameObject()) // Prevent to swipe the object using y position.
+        if (!IsPointerOverUIObject())
         {
             if (Input.GetMouseButtonDown(0) == true)
             {
@@ -73,4 +74,23 @@ public class Swiper : MonoBehaviour {
             }
         }
 	}
+
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        foreach(RaycastResult raycastResult in results)
+        {
+            if(raycastResult.gameObject.name.Equals("BottomList") 
+               || raycastResult.gameObject.name.Equals("TopMenu")
+               || raycastResult.gameObject.name.Equals("ButtonGroup")
+               || raycastResult.gameObject.name.Equals("ShopButton"))
+                {
+                    return true;
+                }
+        }
+        return false;
+    }
 }

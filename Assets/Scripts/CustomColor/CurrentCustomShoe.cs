@@ -27,6 +27,7 @@ public class CurrentCustomShoe : MonoBehaviour
     static void InitializeShoe() {
         shoes.GetComponent<Spin>().enabled = true;
         shoes.GetComponent<Swiper>().enabled = true;
+        shoes.transform.position = new Vector3(-913.4f, 7.07f, -9.9f);
         shoeLeft.transform.localPosition = new Vector3(0, 0, 0);
         shoeRight.transform.localPosition = new Vector3(0, 0, 0);
         shoeRight.SetActive(false);

@@ -8,7 +8,7 @@ using System.IO;
 public class JSONHandler : MonoBehaviour {
 
 
-    static string shoesPath = "DB/Shoes";
+    static string shoesPath = "DB/Shoes2";
     static string partsPath = "DB/CustomizingParts";
     static string optionsPath = "DB/CustomizingOptions";
 

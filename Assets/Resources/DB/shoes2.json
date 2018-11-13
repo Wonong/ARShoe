@@ -1,0 +1,7 @@
+[
+{"id":"1","name":"Air Max1","company":"NIKE","price":"100000","isCustomizable":"1","link":"http:\/\/www.nike.com","objPath":"Prefabs\/Custom\/Shoes","imgPath":"Textures\/ShoesImages\/sports_shoes","isNew":"1","isBest":"0","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
+{"id":"2","name":"벨로 스니커즈","company":"Bello Store","price":"138000","isCustomizable":"0","link":"https:\/\/smartstore.naver.com\/belloshoes\/products\/2402445830","objPath":null,"imgPath":"Textures\/ShoesImages\/bello_black_model","isNew":"0","isBest":"1","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
+{"id":"3","name":"벨로 화이트","company":"Bello Store","price":"138000","isCustomizable":"0","link":"https:\/\/smartstore.naver.com\/belloshoes\/products\/744376470","objPath":null,"imgPath":"Textures\/ShoesImages\/bello_white_model","isNew":"1","isBest":"0","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
+{"id":"4","name":"구두","company":"바이네르","price":"220000","isCustomizable":"0","link":"https:\/\/naver.com","objPath":"Shoes\/Shoes002","imgPath":"Textures\/ShoesImages\/boots","isNew":"1","isBest":"0","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
+{"id":"5","name":"Spline","company":"FILA","price":"49000","isCustomizable":"0","link":"http:\/\/www.fila.co.kr\/product\/view.asp?ProductNo=30917","objPath":null,"imgPath":"Textures\/ShoesImages\/fila_spline","isNew":"0","isBest":"1","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"}
+]

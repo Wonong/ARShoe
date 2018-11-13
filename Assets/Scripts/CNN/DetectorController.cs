@@ -57,6 +57,7 @@ public class DetectorController : MonoBehaviour
     public static string m_DebugStr = "";
     private List<GameObject> m_PlaneObjects = new List<GameObject>();
     private float m_ForwardDistance = 0.03f;
+    private float m_CameraShoeDistance = 0;
     #endregion // FOR_DEBUG
 
     public static Texture2D LoadImage(string filePath)
@@ -147,6 +148,10 @@ public class DetectorController : MonoBehaviour
             Debug.Log(string.Format("distance: {0}", distanceCameraToPlane));
             shoeDistance = distanceCameraToPlane;
         }
+
+        #region DEBUG
+        shoeDistance += m_CameraShoeDistance;
+        #endregion
 
         Vector3 shoePos = ChangeScreenPosToWorldPos(footPosX, footPosY, shoeDistance);
         
@@ -580,8 +585,10 @@ public class DetectorController : MonoBehaviour
     public void SetForwardDistance(float forwardDistance)
     {
         m_ForwardDistance = forwardDistance;
+    }
 
-        var shoeObject = m_ShoeController.shoes;
-        shoeObject.transform.Translate(-shoeObject.transform.forward * m_ForwardDistance);
+    public void SetCameraShoeDistance(float cameraShoeDistance)
+    {
+        m_CameraShoeDistance = cameraShoeDistance;
     }
 }

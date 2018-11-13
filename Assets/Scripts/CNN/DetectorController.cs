@@ -56,8 +56,8 @@ public class DetectorController : MonoBehaviour
     public UnityEngine.UI.Text m_DebugText;
     public static string m_DebugStr = "";
     private List<GameObject> m_PlaneObjects = new List<GameObject>();
-    private float m_ForwardDistance = 0.03f;
-    private float m_CameraShoeDistance = 0;
+    private float m_ForwardDistance = 0;
+    private float m_CameraShoeDistance = -0.05f;
     #endregion // FOR_DEBUG
 
     public static Texture2D LoadImage(string filePath)

@@ -2580,7 +2580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   directionalLight: {fileID: 1959248794}
-  minusLightIntensity: 0.4
+  minusLightIntensity: 0.5
 --- !u!114 &487305119
 MonoBehaviour:
   m_ObjectHideFlags: 0

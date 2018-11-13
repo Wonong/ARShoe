@@ -34,6 +34,9 @@ public class Setting : MonoBehaviour
     public Button m_ForwardConfirmButton;
     public InputField m_ForwardInputField;
 
+    public Button m_DistanceConfirmButton;
+    public InputField m_DistanceInputField;
+
     private void Start()
     {
         m_DetectController = FindObjectOfType<DetectorController>();
@@ -67,6 +70,8 @@ public class Setting : MonoBehaviour
         sizeConfirmButton.onClick.AddListener(ClickSizeConfirmButton);
 
         m_ForwardConfirmButton.onClick.AddListener(ClickForwardConfirmButton);
+
+        m_DistanceConfirmButton.onClick.AddListener(ClickDistanceConfirmButton);
     }
 
     public void ClickSetting()
@@ -150,6 +155,12 @@ public class Setting : MonoBehaviour
     {
         float forwardDistance = float.Parse(m_ForwardInputField.text);
         m_DetectController.SetForwardDistance(forwardDistance);
+    }
+
+    public void ClickDistanceConfirmButton()
+    {
+        float cameraShoeDistance = float.Parse(m_DistanceInputField.text);
+        m_DetectController.SetCameraShoeDistance(cameraShoeDistance);
     }
 
     void Update()

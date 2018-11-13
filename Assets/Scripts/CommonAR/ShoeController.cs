@@ -33,7 +33,7 @@ public class ShoeController : MonoBehaviour {
 
     // Size values.
     float shoeHeight = 0.15f;
-    float shoeScale = 1.4f;
+    float shoeScale = 1.8f;
 
     private void Awake()
     {

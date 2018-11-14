@@ -1,14 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CustomizeMenu : ViewController {
 
     //public SelectPartUI selectPartUI;
+    public Button randBut;
+    List<SelectPartUI> parts = new List<SelectPartUI>();
 
 	// Use this for initialization
 	void Start () {
-		
+        randBut.onClick.AddListener(() =>{
+            RandCustomize();
+        });
 	}
 	
 	// Update is called once per frame
@@ -25,12 +30,20 @@ public class CustomizeMenu : ViewController {
 
             SelectPartUI selectPartUI = selectPart.GetComponent<SelectPartUI>();
             selectPartUI.Setup(part);
+
+            parts.Add(selectPartUI);
         }
     }
 
     public void DeleteSelectParts(){
         foreach(Transform child in this.transform){
             Destroy(child.gameObject);
+        }
+    }
+
+    public void RandCustomize(){
+        foreach(SelectPartUI part in parts){
+            part.RandOptClick();
         }
     }
 }

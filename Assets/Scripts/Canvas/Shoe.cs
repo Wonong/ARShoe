@@ -48,6 +48,14 @@ public class Shoe
         }
         return materialsList;
     }
+    public string GetPriceAsString(){
+        string ret;
+
+        ret = price.ToString("C3");
+        ret = ret.Remove(ret.Length-4);
+
+        return ret;
+    }
 
 }
 

@@ -26,7 +26,7 @@ public class ShoeItem : MonoBehaviour {
         icon.texture = item.GetIconAsTexture();
         companyLabel.text = item.company;
         nameLabel.text = item.name;
-        priceLabel.text = item.price.ToString();
+        priceLabel.text = item.GetPriceAsString();
     }
 
     public void ClickFunc() {

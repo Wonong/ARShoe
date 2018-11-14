@@ -27,12 +27,14 @@ public class PanelList : ViewController {
         {
             navigationView.Push(this);
         }
+
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+    }
 
     void OnScrollChanged(Vector2 scrollPos){
         /*

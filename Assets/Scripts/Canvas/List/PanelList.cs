@@ -15,7 +15,7 @@ public class PanelList : ViewController {
 	void Start () {
 
         navigationView = UIManager.Instance.navigationView;
-        GetComponent<ScrollRect>().onValueChanged.AddListener(OnScrollChanged);
+        //GetComponent<ScrollRect>().onValueChanged.AddListener(OnScrollChanged);
         AddShoeItemsIntoRow();
 
         // TopView 의 신발 설정(현재는 리스트의 첫번쨰 신발)
@@ -27,21 +27,13 @@ public class PanelList : ViewController {
         {
             navigationView.Push(this);
         }
+
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
 
-    void OnScrollChanged(Vector2 scrollPos){
-        /*
-        Debug.Log("Camera Position Changed : " + cam.transform.position);
-        cam.transform.position = new Vector3(cam.transform.position.x, Vector2.Lerp(minPos, maxPos, scrollPos.y).y, cam.transform.position.z);
-
-        Vector3 oldPos = CurrentCustomShoe.GetShoesPosition();
-        CurrentCustomShoe.SetShoesPosition(new Vector3(oldPos.x, (float)0.1 + Vector2.Lerp(minPos, maxPos, scrollPos.y).y, oldPos.z));
-        */
     }
 
     void AddShoeItemsIntoRow(){

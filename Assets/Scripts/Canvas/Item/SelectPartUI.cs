@@ -9,6 +9,7 @@ public class SelectPartUI : ViewController {
     //public SelectOptionUI selectOptionUI;
     public Transform optionContents;
     //public SelectOptionUI selectOpt;
+    List<Button> optButtons = new List<Button>();
 
     // Use this for initialization
     void Start () {
@@ -45,6 +46,9 @@ public class SelectPartUI : ViewController {
                 optionUI.CheckOpt();
             });
 
+            // optList에 현재 option 추가
+            optButtons.Add(optionUI.GetComponent<Button>());
+
             //optionUI.AddClickEventListener(part, option);
 
             optionUI.GetComponent<RawImage>().color = option.GetColorByRGB();
@@ -61,5 +65,9 @@ public class SelectPartUI : ViewController {
             }
         }
 
+    }
+
+    public void RandOptClick(){
+        optButtons[Random.Range(0, optButtons.Count)].onClick.Invoke();
     }
 }

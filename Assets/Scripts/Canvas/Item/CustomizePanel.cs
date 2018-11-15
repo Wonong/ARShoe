@@ -22,7 +22,7 @@ public class CustomizePanel : ViewController {
 
     public void Init(Shoe currentShoe){
         name.text = currentShoe.name;
-        price.text = currentShoe.price + "";
+        price.text = currentShoe.GetPriceAsString();
         company.text = currentShoe.company;
         menuBar.link = currentShoe.link;
 

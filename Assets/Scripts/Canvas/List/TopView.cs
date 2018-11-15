@@ -29,11 +29,13 @@ public class TopView : MonoBehaviour {
 
     void ARExpButtonClick()
     {
+        UIManager.Instance.customizePanel.Init(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId));
         SceneChanger.ChangeToAttachShoes();
     }
 
     void ARViewButtonClick()
     {
+        UIManager.Instance.customizePanel.Init(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId));
         SceneChanger.ChangeToWatchingShoes();
     }
 

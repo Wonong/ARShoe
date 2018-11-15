@@ -171,7 +171,7 @@ public class GroundPlaneUI : MonoBehaviour
         else
         {
             // Attaching scene에서 reset 호출 시의 코드 작성.
-            m_DetectController.ClickResetButton();
+            m_DetectController.ClickRepeatButton();
         }
     }
 

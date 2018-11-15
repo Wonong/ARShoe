@@ -27,6 +27,10 @@ public class DetectorController : MonoBehaviour
     public TextAsset modelFile; // .pb or .bytes file    
     public int cropMargin = 0;
 
+    public Scalar lowerHSV { get; set; } = new Scalar(0, 40, 125);
+    public Scalar upperHSV { get; set; } = new Scalar(179, 255, 255);
+    public float m_ForwardDistance { get; set; } = 0;
+    public float m_CameraShoeDistance { get; set; } = -0.05f;
     #endregion // PUBLIC_MEMBERS
 
     #region PRIVATE_MEMBERS
@@ -38,13 +42,8 @@ public class DetectorController : MonoBehaviour
     private List<BoxOutline> boxOutlines;
     private int footPosX, footPosY;
     private float footAngleDegree = 90;
-    private bool findFoot = false;
     private bool useTFDetect = false;
     private ShoeController m_ShoeController;
-
-    private Scalar lowerHSV = new Scalar(0, 40, 125);
-    private Scalar upperHSV = new Scalar(179, 255, 255);
-
     #endregion // PRIVATE_MEMBERS
 
     public GameObject TrackedPlanePrefab;
@@ -56,8 +55,7 @@ public class DetectorController : MonoBehaviour
     public UnityEngine.UI.Text m_DebugText;
     public static string m_DebugStr = "";
     private List<GameObject> m_PlaneObjects = new List<GameObject>();
-    private float m_ForwardDistance = 0;
-    private float m_CameraShoeDistance = -0.05f;
+    
     #endregion // FOR_DEBUG
 
     public static Texture2D LoadImage(string filePath)
@@ -368,7 +366,6 @@ public class DetectorController : MonoBehaviour
         {
             footAngleDegree = 180 + footAngleDegree;
         }
-        findFoot = true;
 
         #region DEBUG
         if (m_IsDebug)
@@ -574,21 +571,5 @@ public class DetectorController : MonoBehaviour
 
         tex.Apply();
 
-    }
-
-    public void SetHSVRange(Scalar lower, Scalar upper)
-    {
-        lowerHSV = lower;
-        upperHSV = upper;
-    }
-
-    public void SetForwardDistance(float forwardDistance)
-    {
-        m_ForwardDistance = forwardDistance;
-    }
-
-    public void SetCameraShoeDistance(float cameraShoeDistance)
-    {
-        m_CameraShoeDistance = cameraShoeDistance;
     }
 }

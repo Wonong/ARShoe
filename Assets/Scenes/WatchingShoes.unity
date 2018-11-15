@@ -2336,6 +2336,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shoes: {fileID: 0}
+  shoeHeight: 0.15
+  shoeScale: 1.8
 --- !u!114 &627916105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2380,6 +2382,7 @@ MonoBehaviour:
   shoeController: {fileID: 627916104}
   indicatorParent: {fileID: 623722609}
   indicators: {fileID: 69089144}
+  groundPlaneUI: {fileID: 253572021}
 --- !u!1 &646297188
 GameObject:
   m_ObjectHideFlags: 0

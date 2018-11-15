@@ -11,6 +11,7 @@ public class ARShoeList : MonoBehaviour {
     public ShoeController shoeController;
     public GameObject indicatorParent;
     public GameObject indicators;
+    public GroundPlaneUI groundPlaneUI;
 
     RectTransform contentsRectTransform;
     List<RawImage> shoeRawImageList;
@@ -77,6 +78,7 @@ public class ARShoeList : MonoBehaviour {
                 indicators.transform.localPosition = new Vector3(0, 0, 0);
                 indicators.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
+            groundPlaneUI.CheckCustomizingOK();
         }
     }
 }

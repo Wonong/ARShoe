@@ -52,12 +52,7 @@ public class GroundPlaneUI : MonoBehaviour
         InitializeButtons();
         ChangeButtonStatus();
 
-        // 커스터마이징 가능 여부에따라 UI 변화
-        if(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).isCustomizable){
-            SetCustomScrollView();
-        }else{
-            m_ListUpDown.gameObject.SetActive(false);
-        }
+        CheckCustomizingOK();
     }
 
     void Update()
@@ -338,6 +333,20 @@ public class GroundPlaneUI : MonoBehaviour
     public void ChangeButtonStatus() {
         m_ResetButton.interactable = m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ShoeController.DoesShoeActive;
         m_ConfirmButton.image.enabled = m_ShoeController.DoesShoeActive && !m_ShoeController.IsPlaced;
+    }
+
+    public void CheckCustomizingOK()
+    {
+        // 커스터마이징 가능 여부에따라 UI 변화
+        if (JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).isCustomizable)
+        {
+            SetCustomScrollView();
+            m_ListUpDown.gameObject.SetActive(true);
+        }
+        else
+        {
+            m_ListUpDown.gameObject.SetActive(false);
+        }
     }
 #endregion // MONOBEHAVIOUR_METHODS
 }

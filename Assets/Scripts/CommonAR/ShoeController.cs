@@ -141,17 +141,17 @@ public class ShoeController : MonoBehaviour {
 
     public void ChangeLeftRight(string name)
     {
-        if(name.Equals("right"))
-        {
-            shoeRight.SetActive(true);
-            shoeLeft.SetActive(false);
-            isShoeLeft = false;
-        }
-        else if(name.Equals("left") || name == null)
+        if(name == null || name.Equals("left"))
         {
             shoeLeft.SetActive(true);
             shoeRight.SetActive(false);
             isShoeLeft = true;
+        }
+        else if (name.Equals("right"))
+        {
+            shoeRight.SetActive(true);
+            shoeLeft.SetActive(false);
+            isShoeLeft = false;
         }
     }
     #endregion

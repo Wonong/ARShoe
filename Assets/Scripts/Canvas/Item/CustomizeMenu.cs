@@ -37,7 +37,7 @@ public class CustomizeMenu : ViewController {
 
     public void DeleteSelectParts(){
         foreach(Transform child in this.transform){
-            Destroy(child.gameObject);
+            if(child.GetComponent<SelectPartUI>() != null) Destroy(child.gameObject);
         }
     }
 

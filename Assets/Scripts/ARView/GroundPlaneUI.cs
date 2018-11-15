@@ -26,6 +26,8 @@ public class GroundPlaneUI : MonoBehaviour
     public RectTransform m_BottomMidToolbarRectTrnasform;
     public RectTransform m_ShoeListRectTransform;
     public RectTransform m_TopMidToolbarRectTransform;
+
+    public static String leftRightName;
     #endregion // PUBLIC_MEMBERS
 
 
@@ -138,6 +140,8 @@ public class GroundPlaneUI : MonoBehaviour
         SceneChanger.ChangeToListScene();
         UIManager.Instance.customizePanel.customize.transform.SetParent(UIManager.Instance.customizePanel.contentObj.transform);
         m_ShoeController.shoes.transform.SetParent(CurrentCustomShoe.shoeParent.transform);
+        m_ShoeController.shoeLeft.SetActive(true);
+        m_ShoeController.shoeRight.SetActive(false);
     }
 
     void ClickConfirmButton()
@@ -265,7 +269,7 @@ public class GroundPlaneUI : MonoBehaviour
         {
             m_ShoeLeftRightTextButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/right");
         }
-        m_ShoeController.ChangeLeftRight();
+        m_ShoeController.ChangeLeftRight(leftRightName=m_ShoeLeftRightTextButton.image.sprite.name);
     }
 
     void ClickSceneChangeButton()

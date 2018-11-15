@@ -19,16 +19,14 @@ public class Setting : MonoBehaviour
     public Button m_HSVConfirmButton;
 
     public Button m_ToggleDebugButton;
-    
+
     public Button m_ToggleRepeatButton;
-    private bool m_IsRepeat = false;
 
     DetectorController m_DetectController;
     ARLight arLight;
 
     public InputField m_RepeatRateField;
     public Button m_RepeatRateConfirmButton;
-    private float m_RepeatRate = 0.04f;
 
     private ShoeController m_ShoeController;
 
@@ -48,7 +46,7 @@ public class Setting : MonoBehaviour
 
         lightIntensityField.text = arLight.minusLightIntensity.ToString();
         sizeInputField.text = m_ShoeController.shoeScale.ToString();
-        m_RepeatRateField.text = m_RepeatRate.ToString();
+        m_RepeatRateField.text = m_DetectController.m_RepeatRate.ToString();
         m_DistanceInputField.text = m_DetectController.m_CameraShoeDistance.ToString();
         m_ForwardInputField.text = m_DetectController.m_ForwardDistance.ToString();
 
@@ -131,7 +129,7 @@ public class Setting : MonoBehaviour
     public void ClickHSVConfirmButton()
     {
         OnSliderChange(0);
-        m_DetectController.ClickResetButton();
+        m_DetectController.AttachShoe();
     }
 
     public void ClickToggleDebugButton()
@@ -141,22 +139,12 @@ public class Setting : MonoBehaviour
 
     public void ClickToggleRepeatButton()
     {
-        m_IsRepeat = !m_IsRepeat;
-
-        var func = nameof(ClickHSVConfirmButton);
-
-        if (m_IsRepeat)
-        {
-            InvokeRepeating(func, 0, m_RepeatRate);
-        } else
-        {
-            CancelInvoke(func);
-        }
+        m_DetectController.ClickRepeatButton();
     }
 
     public void ClickRepeatRateConfirmButton()
     {
-        m_RepeatRate = float.Parse(m_RepeatRateField.text);
+        m_DetectController.m_RepeatRate = float.Parse(m_RepeatRateField.text);
     }
 
     public void ClickForwardConfirmButton()
@@ -200,7 +188,7 @@ public class Setting : MonoBehaviour
         PlayerPrefs.SetFloat("LowerV", (float)m_DetectController.lowerHSV.val[2]);
         PlayerPrefs.SetFloat("UpperV", (float)m_DetectController.upperHSV.val[2]);
 
-        PlayerPrefs.SetFloat("RepeatRate", m_RepeatRate);
+        PlayerPrefs.SetFloat("RepeatRate", m_DetectController.m_RepeatRate);
 
         PlayerPrefs.SetFloat("CameraShoeDistance", m_DetectController.m_CameraShoeDistance);
 
@@ -225,7 +213,7 @@ public class Setting : MonoBehaviour
 
         OnSliderChange(0);
 
-        m_RepeatRateField.text = PlayerPrefs.GetFloat("RepeatRate", m_RepeatRate).ToString();
+        m_RepeatRateField.text = PlayerPrefs.GetFloat("RepeatRate", m_DetectController.m_RepeatRate).ToString();
 
         ClickRepeatRateConfirmButton();
 

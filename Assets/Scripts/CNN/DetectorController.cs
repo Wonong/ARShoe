@@ -31,6 +31,8 @@ public class DetectorController : MonoBehaviour
     public Scalar upperHSV { get; set; } = new Scalar(179, 255, 255);
     public float m_ForwardDistance { get; set; } = 0;
     public float m_CameraShoeDistance { get; set; } = -0.05f;
+    public float m_RepeatRate { get; set; } = 0.04f;
+    public Boolean m_IsRepeating { get; set; } = false;
     #endregion // PUBLIC_MEMBERS
 
     #region PRIVATE_MEMBERS
@@ -55,7 +57,7 @@ public class DetectorController : MonoBehaviour
     public UnityEngine.UI.Text m_DebugText;
     public static string m_DebugStr = "";
     private List<GameObject> m_PlaneObjects = new List<GameObject>();
-    
+
     #endregion // FOR_DEBUG
 
     public static Texture2D LoadImage(string filePath)
@@ -83,11 +85,26 @@ public class DetectorController : MonoBehaviour
         ResetShoePosition();
     }
 
-    // Update is called once per frame
-    public void ClickResetButton()
+    public void AttachShoe()
     {
         GuessAngle();
         ResetShoePosition();
+    }
+
+    public void ClickRepeatButton()
+    {
+        m_IsRepeating = !m_IsRepeating;
+
+        var func = nameof(AttachShoe);
+
+        if (m_IsRepeating)
+        {
+            InvokeRepeating(func, 0, m_RepeatRate);
+        }
+        else
+        {
+            CancelInvoke(func);
+        }
     }
 
     private Vector3 ChangeScreenPosToWorldPos(float screenPosX, float screenPosY, float distance)
@@ -143,7 +160,7 @@ public class DetectorController : MonoBehaviour
             var intersectionZ = cameraToPlaneVector.z * t + cameraPosition.z;
 
             float distanceCameraToPlane = Vector3.Distance(cameraPosition, new Vector3(intersectionX, intersectionY, intersectionZ));
-            
+
             Debug.Log(string.Format("distance: {0}", distanceCameraToPlane));
             shoeDistance = distanceCameraToPlane;
         }
@@ -154,7 +171,7 @@ public class DetectorController : MonoBehaviour
 
         // Change detected foot position to world position
         Vector3 shoePos = ChangeScreenPosToWorldPos(footPosX, footPosY, shoeDistance);
-        
+
         if (inputCameraWidth == -1)
         {
             shoePos.x = 0;
@@ -171,7 +188,7 @@ public class DetectorController : MonoBehaviour
         shoeDecoyObject.transform.localPosition = shoePos;
 
         shoeDecoyObject.transform.parent = null;
-        
+
         // First, make decoy shoe and camera to be parallels
         var cameraObjectForward = cameraCenterObject.transform.forward;
         var shoeOjbectForward = shoeDecoyObject.transform.forward;
@@ -233,7 +250,7 @@ public class DetectorController : MonoBehaviour
             m_PlaneObjects.Add(planeObject);
         }
 
-        foreach(var planeObject in m_PlaneObjects)
+        foreach (var planeObject in m_PlaneObjects)
         {
             if (planeObject == null)
             {
@@ -243,7 +260,8 @@ public class DetectorController : MonoBehaviour
             if (m_IsDebug)
             {
                 planeObject.SetActive(true);
-            } else
+            }
+            else
             {
                 planeObject.SetActive(false);
             }
@@ -282,7 +300,7 @@ public class DetectorController : MonoBehaviour
 
         var resized = ResizeTexture(captured, INPUT_CNN_SIZE, INPUT_CNN_SIZE);
         //var rotated = TextureTools.RotateTexture(resized, 180);
-        
+
         Color32[] colors = resized.GetPixels32();
 
         TimeSpan time;
@@ -333,7 +351,7 @@ public class DetectorController : MonoBehaviour
         if (useTFDetect)
         {
             var boxOutline = boxOutlines[0];
-    
+
             cropMargin = 50;
             left = boxOutline.left - cropMargin;
             bottom = boxOutline.bottom - cropMargin;
@@ -349,11 +367,12 @@ public class DetectorController : MonoBehaviour
                 Math.Min(height, inputCameraHeight - boxOutline.bottom)
             );
             snap = TextureTools.CropWithRect(captured, rect, TextureTools.RectOptions.BottomLeft, 0, 0);
-        } else
+        }
+        else
         {
             left = 0;
             bottom = 0;
-            
+
             snap = captured;
         }
 
@@ -367,11 +386,12 @@ public class DetectorController : MonoBehaviour
         if (m_IsDebug)
         {
             GetPCA(src, cntr, vec);
-        } else
+        }
+        else
         {
             await GetPCAAsync(src, cntr, vec);
         }
-        
+
         // Change PCA result to angle
         footPosX = (int)cntr.x + left;
         //footPosY = Math.Max(inputCameraHeight - ((int)cntr.y + bottom), 0);
@@ -434,7 +454,7 @@ public class DetectorController : MonoBehaviour
             // Calculate the area of each contour
             double area = Imgproc.contourArea(contours[i]);
             // Ignore contours that are too small
-            if (area < 1e2 )
+            if (area < 1e2)
                 continue;
 
             if (area > largestValue)
@@ -507,18 +527,18 @@ public class DetectorController : MonoBehaviour
     private Texture2D GetImageFromCamera()
     {
         m_ShoeController.shoes.SetActive(false);
-        foreach(var planeObject in m_PlaneObjects)
+        foreach (var planeObject in m_PlaneObjects)
         {
             if (planeObject == null)
             {
                 continue;
-            } 
+            }
 
             planeObject.SetActive(false);
         }
         var captured = ScreenshotPreview.GetTexture2DOfScreenshot();
         m_ShoeController.shoes.SetActive(true);
-        
+
 
         return captured;
     }
@@ -532,7 +552,7 @@ public class DetectorController : MonoBehaviour
         float incX = (1.0f / (float)width);
         float incY = (1.0f / (float)height);
 
-        for(int px = 0; px < pixels.Length; px++)
+        for (int px = 0; px < pixels.Length; px++)
         {
             pixels[px] = input.GetPixelBilinear(
                 incX * ((float)px % width),

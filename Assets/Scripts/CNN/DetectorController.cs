@@ -121,6 +121,7 @@ public class DetectorController : MonoBehaviour
 
         var cameraObject = GameObject.Find("First Person Camera");
         var cameraCenterObject = GameObject.Find("Camera Center");
+        var shoeDecoyObject = GameObject.Find("Shoe Decoy");
         var shoeObject = m_ShoeController.shoes;
 
         var cameraPosition = cameraObject.transform.position;
@@ -151,6 +152,7 @@ public class DetectorController : MonoBehaviour
         shoeDistance += m_CameraShoeDistance;
         #endregion
 
+        // Change detected foot position to world position
         Vector3 shoePos = ChangeScreenPosToWorldPos(footPosX, footPosY, shoeDistance);
         
         if (inputCameraWidth == -1)
@@ -159,28 +161,43 @@ public class DetectorController : MonoBehaviour
             shoePos.y = 0;
         }
 
-        m_ShoeController.ResetPosition(shoePos);
+        //m_ShoeController.ResetPosition(shoePos);
 
+        // Reset decoy object position and angle
+        Quaternion initRotation = Quaternion.Euler(0, 0, 0);
+        shoeDecoyObject.transform.rotation = initRotation;
+
+        shoeDecoyObject.transform.parent = cameraObject.transform;
+        shoeDecoyObject.transform.localPosition = shoePos;
+
+        shoeDecoyObject.transform.parent = null;
+        
+        // First, make decoy shoe and camera to be parallels
         var cameraObjectForward = cameraCenterObject.transform.forward;
-        var shoeOjbectForward = shoeObject.transform.forward;
+        var shoeOjbectForward = shoeDecoyObject.transform.forward;
 
-        // Project to x-z plane
-        cameraObjectForward.y = 0;
-        shoeOjbectForward.y = 0;
+        cameraObjectForward.y = 0; // Project to x-z plane
+        shoeOjbectForward.y = 0; // Project to x-z plane
 
         bool angleDirectionIsUp = Vector3.Cross(cameraObjectForward, shoeOjbectForward).y > 0 ? true : false;
         var cameraShoeAngle = Vector3.Angle(cameraObjectForward, shoeOjbectForward);
 
-        Debug.Log(string.Format("Camera-Shoe Angle: {0}", cameraShoeAngle));
         if (angleDirectionIsUp)
         {
             cameraShoeAngle = -cameraShoeAngle;
         }
-        Debug.Log(string.Format("Diff Angle: {0}", (footAngleDegree - 90)));
-        cameraShoeAngle = cameraShoeAngle + (footAngleDegree - 90);
-        m_ShoeController.shoes.transform.rotation = Quaternion.Euler(0, cameraShoeAngle, 0);
 
-        shoeObject.transform.Translate(-shoeObject.transform.forward * m_ForwardDistance);
+        Debug.Log(string.Format("Camera-Shoe Angle: {0}", cameraShoeAngle));
+        Debug.Log(string.Format("Diff Angle: {0}", (footAngleDegree - 90)));
+
+        // Second, Rotate shoe about detect angle
+        cameraShoeAngle = cameraShoeAngle + (footAngleDegree - 90);
+        shoeDecoyObject.transform.rotation = Quaternion.Euler(0, cameraShoeAngle, 0);
+        shoeDecoyObject.transform.position = (shoeDecoyObject.transform.position - shoeDecoyObject.transform.forward * m_ForwardDistance);
+
+        // Finally, Project decoy object position and rotation to shoe object
+        shoeObject.transform.rotation = shoeDecoyObject.transform.rotation;
+        shoeObject.transform.position = shoeDecoyObject.transform.position;
     }
 
     void Update()

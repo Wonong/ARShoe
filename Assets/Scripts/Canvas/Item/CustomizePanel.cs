@@ -14,20 +14,35 @@ public class CustomizePanel : ViewController {
 	void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void OnEnable()
+    {
+        if(CurrentCustomShoe.currentShoeId != null){
+            ResetShoeInfo(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId));
+        }
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 
     public void Init(Shoe currentShoe){
+
+        /*
         name.text = currentShoe.name;
         price.text = currentShoe.GetPriceAsString();
         company.text = currentShoe.company;
         menuBar.link = currentShoe.link;
+        */
+
+        ResetShoeInfo(currentShoe);
 
         CurrentCustomShoe.SetCurrentCustomShoe(currentShoe.id);
 
+        RefreshCustomizeMenu(currentShoe.id);
+
+        /*
         // Customize menu 초기화
         customize.DeleteSelectParts();
         customize.AddSelectParts(JSONHandler.GetPartsListByShoeId(currentShoe.id));
@@ -35,5 +50,23 @@ public class CustomizePanel : ViewController {
 
         // Reinitialize height of parent object of customize by content size fitter
         contentObj.GetComponent<ContentSizeFitter>().enabled = true;
+        */
+    }
+
+    public void RefreshCustomizeMenu(int shoeId){
+        // Customize menu 초기화
+        customize.DeleteSelectParts();
+        customize.AddSelectParts(JSONHandler.GetPartsListByShoeId(shoeId));
+        customize.gameObject.SetActive(true);
+
+        // Reinitialize height of parent object of customize by content size fitter
+        contentObj.GetComponent<ContentSizeFitter>().enabled = true;
+    }
+
+    public void ResetShoeInfo(Shoe shoe){
+        name.text = shoe.name;
+        price.text = shoe.GetPriceAsString();
+        company.text = shoe.company;
+        menuBar.link = shoe.link;
     }
 }

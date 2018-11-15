@@ -79,6 +79,9 @@ public class ARShoeList : MonoBehaviour {
                 indicators.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
             groundPlaneUI.CheckCustomizingOK();
+
+            // customzie menu 초기화
+            UIManager.Instance.customizePanel.RefreshCustomizeMenu(id);
         }
     }
 }

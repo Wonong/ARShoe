@@ -24,9 +24,8 @@ public class ShoeController : MonoBehaviour {
     }
 
     public GameObject shoes;
-
-    private GameObject shoeLeft;
-    private GameObject shoeRight;
+    public GameObject shoeLeft;
+    public GameObject shoeRight;
     // For checking shoe object is placed.
     bool isPlaced = false;
     bool isShoeLeft = false;
@@ -37,14 +36,23 @@ public class ShoeController : MonoBehaviour {
 
     private void Awake()
     {
-        shoes = Instantiate(CurrentCustomShoe.shoes);
-        shoes.GetComponent<Spin>().enabled = false;
+        CreateShoe();
     }
 
     private void Start()
     {
+        InitShoe();
+    }
+
+    public void CreateShoe()
+    {
+        shoes = CurrentCustomShoe.shoes;
+        shoes.GetComponent<Spin>().enabled = false;
+    }
+
+    public void InitShoe()
+    {
         shoes.GetComponent<Swiper>().enabled = false;
-        shoes.name = "CopyShoe";
         shoes.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
         int componentsLength = shoes.GetComponents<Transform>().Length;
         shoeLeft = shoes.transform.GetChild(0).gameObject;
@@ -65,7 +73,7 @@ public class ShoeController : MonoBehaviour {
         }
         shoes.SetActive(false);
         MoveShoe(); // Shoe object is movable at very first.
-        ChangeLeftRight();
+        ChangeLeftRight(GroundPlaneUI.leftRightName);
     }
 
     public void ShowShoes()
@@ -131,15 +139,15 @@ public class ShoeController : MonoBehaviour {
         MoveShoe();
     }
 
-    public void ChangeLeftRight()
+    public void ChangeLeftRight(string name)
     {
-        if(isShoeLeft)
+        if(name.Equals("right"))
         {
             shoeRight.SetActive(true);
             shoeLeft.SetActive(false);
             isShoeLeft = false;
         }
-        else
+        else if(name.Equals("left") || name == null)
         {
             shoeLeft.SetActive(true);
             shoeRight.SetActive(false);

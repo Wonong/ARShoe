@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GroundPlaneUI : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class GroundPlaneUI : MonoBehaviour
     public Button m_BackButton;
     public Button m_CaptureButton;
     public Button m_ListUpDown;
+    public Button m_ShoeListDownUp;
     public Button m_ShoeLeftRightTextButton;
     public Button m_SceneChangeButton;
     public Button m_HeartButton;
@@ -21,7 +23,11 @@ public class GroundPlaneUI : MonoBehaviour
 
     [Header("UI Panels")]
     public RectTransform m_CustomListRectTransform;
-    public RectTransform m_MidToolbarTectTrnasform;
+    public RectTransform m_BottomMidToolbarRectTrnasform;
+    public RectTransform m_ShoeListRectTransform;
+    public RectTransform m_TopMidToolbarRectTransform;
+
+    public static String leftRightName;
     #endregion // PUBLIC_MEMBERS
 
 
@@ -35,6 +41,7 @@ public class GroundPlaneUI : MonoBehaviour
     GameObject m_CustomScrollView;
     GameObject shopWebView;
     float customizingListSize = 670f;
+    float shoeListSize = 280f;
     #endregion // PRIVATE_MEMBERS
 
     #region MONOBEHAVIOUR_METHODS
@@ -47,13 +54,7 @@ public class GroundPlaneUI : MonoBehaviour
         InitializeButtons();
         ChangeButtonStatus();
 
-        // 커스터마이징 가능 여부에따라 UI 변화
-        if(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).isCustomizable){
-            SetCustomScrollView();
-        }else{
-            m_ListUpDown.gameObject.SetActive(false);
-        }
-
+        CheckCustomizingOK();
     }
 
     void Update()
@@ -82,7 +83,6 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     private void SetCustomScrollView()
     {
-        // Solved(원영): 색상 변경 기능 적용(현재는 스크롤만 붙어있는 상태임).
         m_CustomScrollView = UIManager.Instance.customizePanel.customize.gameObject;
         UIManager.Instance.customizePanel.customize.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
 
@@ -108,6 +108,7 @@ public class GroundPlaneUI : MonoBehaviour
         m_ResetButton.onClick.AddListener(ClickResetButton);
         m_CaptureButton.onClick.AddListener(ClickCaptureButton);
         m_ListUpDown.onClick.AddListener(ClickListUpDownButton);
+        m_ShoeListDownUp.onClick.AddListener(ClickShoeListDownUpButton);
         m_ShoeLeftRightTextButton.onClick.AddListener(ClickShoeLeftRightTextButton);
         m_SceneChangeButton.onClick.AddListener(ClickSceneChangeButton);
         m_HeartButton.onClick.AddListener(ClickHeartButton);
@@ -138,6 +139,9 @@ public class GroundPlaneUI : MonoBehaviour
         CurrentCustomShoe.shoes.GetComponent<Swiper>().enabled = true;
         SceneChanger.ChangeToListScene();
         UIManager.Instance.customizePanel.customize.transform.SetParent(UIManager.Instance.customizePanel.contentObj.transform);
+        m_ShoeController.shoes.transform.SetParent(CurrentCustomShoe.shoeParent.transform);
+        m_ShoeController.shoeLeft.SetActive(true);
+        m_ShoeController.shoeRight.SetActive(false);
     }
 
     void ClickConfirmButton()
@@ -161,6 +165,7 @@ public class GroundPlaneUI : MonoBehaviour
         if(SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
         {
             m_ShoeController.ResetAR();
+           
             ChangeButtonStatus();
         }
         else
@@ -185,21 +190,44 @@ public class GroundPlaneUI : MonoBehaviour
     {
         Vector2 originalPanelVector = m_CustomListRectTransform.anchoredPosition;
         Vector2 goalPanelVector;
-        Vector2 originalToolbarVector = m_MidToolbarTectTrnasform.anchoredPosition;
+        Vector2 originalToolbarVector = m_BottomMidToolbarRectTrnasform.anchoredPosition;
         Vector2 goalToolbarVector;
         if (m_ListUpDown.image.sprite.name.Equals("arrow_up"))
         {
             m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_down");
             goalPanelVector = new Vector2(m_CustomListRectTransform.anchoredPosition.x, 0f);
-            goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y + customizingListSize);
-            StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
+            goalToolbarVector = new Vector2(m_BottomMidToolbarRectTrnasform.anchoredPosition.x, m_BottomMidToolbarRectTrnasform.anchoredPosition.y + customizingListSize);
+            StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector, m_CustomListRectTransform, m_BottomMidToolbarRectTrnasform));
         }
         else
         {
             m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_up");
             goalPanelVector = new Vector2(m_CustomListRectTransform.anchoredPosition.x, -customizingListSize);
-            goalToolbarVector = new Vector2(m_MidToolbarTectTrnasform.anchoredPosition.x, m_MidToolbarTectTrnasform.anchoredPosition.y - customizingListSize);
-            StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector));
+            goalToolbarVector = new Vector2(m_BottomMidToolbarRectTrnasform.anchoredPosition.x, m_BottomMidToolbarRectTrnasform.anchoredPosition.y - customizingListSize);
+            StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector, m_CustomListRectTransform, m_BottomMidToolbarRectTrnasform));
+        }
+    }
+
+    void ClickShoeListDownUpButton()
+    {
+        Vector2 originalPanelVector = m_ShoeListRectTransform.anchoredPosition;
+        Vector2 goalPanelVector;
+        Vector2 originalToolbarVector = m_TopMidToolbarRectTransform.anchoredPosition;
+        Vector2 goalToolbarVector;
+
+        if (m_ShoeListDownUp.image.sprite.name.Equals("arrow_up"))
+        {
+            m_ShoeListDownUp.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_down");
+            goalPanelVector = new Vector2(m_ShoeListRectTransform.anchoredPosition.x, shoeListSize);
+            goalToolbarVector = new Vector2(m_TopMidToolbarRectTransform.anchoredPosition.x, 0);
+            StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector, m_ShoeListRectTransform, m_TopMidToolbarRectTransform));
+        }
+        else
+        {
+            m_ShoeListDownUp.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_up");
+            goalPanelVector = new Vector2(m_ShoeListRectTransform.anchoredPosition.x, 0);
+            goalToolbarVector = new Vector2(m_TopMidToolbarRectTransform.anchoredPosition.x, -shoeListSize);
+            StartCoroutine(ListUpOrDownAnimation(originalPanelVector, goalPanelVector, originalToolbarVector, goalToolbarVector, m_ShoeListRectTransform, m_TopMidToolbarRectTransform));
         }
     }
 
@@ -211,7 +239,8 @@ public class GroundPlaneUI : MonoBehaviour
     /// <param name="goalPanelVector">Goal vector.</param>
     /// <param name="originalToolbarVector">Original toolbar vector.</param>
     /// <param name="goalToolbarVector">Goal toolbar vector.</param>
-    IEnumerator<RectTransform> ListUpOrDownAnimation(Vector2 originalPanelVector, Vector2 goalPanelVector, Vector2 originalToolbarVector, Vector2 goalToolbarVector)
+    IEnumerator<RectTransform> ListUpOrDownAnimation(Vector2 originalPanelVector, Vector2 goalPanelVector, Vector2 originalToolbarVector, Vector2 goalToolbarVector,
+                                                     RectTransform listRectTransform, RectTransform toolbarRectTransform)
     {
         float currentTime = 0f;
         float timeOver = 0.3f;
@@ -221,8 +250,8 @@ public class GroundPlaneUI : MonoBehaviour
             currentTime += Time.deltaTime;
             float normalizedValue = currentTime / timeOver; // we normalize our time 
 
-            m_CustomListRectTransform.anchoredPosition = Vector2.Lerp(originalPanelVector, goalPanelVector, normalizedValue);
-            m_MidToolbarTectTrnasform.anchoredPosition = Vector2.Lerp(originalToolbarVector, goalToolbarVector, normalizedValue);
+            listRectTransform.anchoredPosition = Vector2.Lerp(originalPanelVector, goalPanelVector, normalizedValue);
+            toolbarRectTransform.anchoredPosition = Vector2.Lerp(originalToolbarVector, goalToolbarVector, normalizedValue);
             yield return null;
         }
     }
@@ -240,7 +269,7 @@ public class GroundPlaneUI : MonoBehaviour
         {
             m_ShoeLeftRightTextButton.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/right");
         }
-        m_ShoeController.ChangeLeftRight();
+        m_ShoeController.ChangeLeftRight(leftRightName=m_ShoeLeftRightTextButton.image.sprite.name);
     }
 
     void ClickSceneChangeButton()
@@ -308,6 +337,20 @@ public class GroundPlaneUI : MonoBehaviour
     public void ChangeButtonStatus() {
         m_ResetButton.interactable = m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ShoeController.DoesShoeActive;
         m_ConfirmButton.image.enabled = m_ShoeController.DoesShoeActive && !m_ShoeController.IsPlaced;
+    }
+
+    public void CheckCustomizingOK()
+    {
+        // 커스터마이징 가능 여부에따라 UI 변화
+        if (JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).isCustomizable)
+        {
+            SetCustomScrollView();
+            m_ListUpDown.gameObject.SetActive(true);
+        }
+        else
+        {
+            m_ListUpDown.gameObject.SetActive(false);
+        }
     }
 #endregion // MONOBEHAVIOUR_METHODS
 }

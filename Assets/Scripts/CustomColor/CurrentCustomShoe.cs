@@ -7,6 +7,7 @@ public class CurrentCustomShoe : MonoBehaviour
     public static GameObject shoes;
     public static GameObject shoeLeft;
     public static GameObject shoeRight;
+    public static GameObject shoeParent;
     public static int currentShoeId;
 
     public static void SetCurrentCustomShoe(int shoeId)
@@ -18,10 +19,12 @@ public class CurrentCustomShoe : MonoBehaviour
         currentShoeId = shoeId;
 
         shoes = Instantiate(JSONHandler.GetShoeById(shoeId).GetObjectAsGameObject());
+        shoeParent = GameObject.Find("ShoeParent");
+        shoes.transform.SetParent(shoeParent.transform);
         shoeLeft = GameObject.Find("Shoe_Left");
         shoeRight = GameObject.Find("Shoe_Right");
         InitializeShoe();
-        DontDestroyOnLoad(shoes);
+        DontDestroyOnLoad(shoeParent);
 	}
 
     static void InitializeShoe() {

@@ -23,6 +23,7 @@ public class ARController : MonoBehaviour
     /// A prefab for tracking and visualizing detected planes.
     /// </summary>
     public GameObject detectedPlanePrefab;
+    public GameObject indicators;
     public GameObject shadowPlaneIndicator;
     public GameObject rotationIndicator;
     public GameObject translationIndicator;
@@ -67,7 +68,7 @@ public class ARController : MonoBehaviour
         Session.GetTrackables<DetectedPlane>(m_AllPlanes);
         ChangePlanesVisualizer(); // Change visualizing of planes by status of shoe placed. 
 
-        if (m_GroundPlaneUI.m_ListUpDown.image.sprite.name.Equals("arrow_up"))
+        if (m_GroundPlaneUI.m_ListUpDown.image.sprite.name.Equals("arrow_up") && m_ShoeController.shoes != null)
         {
             SetIndicators(); // Set indicators children of shoe.
 
@@ -111,7 +112,9 @@ public class ARController : MonoBehaviour
     /// </summary>
     void InitializeIndicators()
     {
-        shadowPlaneIndicator.transform.SetParent(m_ShoeController.shoes.transform);
+        indicators.transform.SetParent(m_ShoeController.shoes.transform);
+        indicators.transform.localPosition = new Vector3(0, 0, 0);
+        indicators.transform.localRotation = Quaternion.Euler(0, 0, 0);
         shadowPlaneIndicator.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         InitializeIndicator(rotationIndicator);
         InitializeIndicator(translationIndicator);
@@ -123,7 +126,6 @@ public class ARController : MonoBehaviour
     /// </summary>
     void InitializeIndicator(GameObject indicator)
     {
-        indicator.transform.SetParent(m_ShoeController.shoes.transform);
         indicator.transform.localRotation = Quaternion.Euler(90f, -90f, 0f);
         indicator.transform.localScale = new Vector3(indicatorScale, indicatorScale, indicatorScale);
     }

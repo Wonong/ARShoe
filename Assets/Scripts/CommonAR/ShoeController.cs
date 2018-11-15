@@ -37,14 +37,23 @@ public class ShoeController : MonoBehaviour {
 
     private void Awake()
     {
-        shoes = Instantiate(CurrentCustomShoe.shoes);
-        shoes.GetComponent<Spin>().enabled = false;
+        CreateShoe();
     }
 
     private void Start()
     {
+        InitShoe();
+    }
+
+    public void CreateShoe()
+    {
+        shoes = CurrentCustomShoe.shoes;
+        shoes.GetComponent<Spin>().enabled = false;
+    }
+
+    public void InitShoe()
+    {
         shoes.GetComponent<Swiper>().enabled = false;
-        shoes.name = "CopyShoe";
         shoes.transform.localScale = new Vector3(shoeScale, shoeScale, shoeScale);
         int componentsLength = shoes.GetComponents<Transform>().Length;
         shoeLeft = shoes.transform.GetChild(0).gameObject;

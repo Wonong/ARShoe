@@ -139,7 +139,7 @@ public class DetectorController : MonoBehaviour
         var cameraObject = GameObject.Find("First Person Camera");
         var cameraCenterObject = GameObject.Find("Camera Center");
         var shoeDecoyObject = GameObject.Find("Shoe Decoy");
-        var shoeObject = m_ShoeController.shoes;
+        var shoeObject = CurrentCustomShoe.shoeParent;
 
         var cameraPosition = cameraObject.transform.position;
         var centerPosition = cameraCenterObject.transform.position;

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ShoeRow : MonoBehaviour {
 
     public Transform content;
+    public ScrollRect shoeScroll;
 
 	// Use this for initialization
 	void Start () {
@@ -14,8 +15,8 @@ public class ShoeRow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+    }
 
     public void AddNewShoe(Shoe shoeInfo){
         GameObject newShoe = UIManager.Instance.itemObjPool.GetObject();
@@ -24,5 +25,7 @@ public class ShoeRow : MonoBehaviour {
         ShoeItem shoeItem = newShoe.GetComponent<ShoeItem>();
 
         shoeItem.Setup(shoeInfo);
+
+
     }
 }

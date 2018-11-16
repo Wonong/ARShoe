@@ -76,11 +76,6 @@ public class ShoeController : MonoBehaviour {
         ChangeLeftRight(GroundPlaneUI.leftRightName);
     }
 
-    public void ShowShoes()
-    {
-        shoes.SetActive(true);
-    }
-
     public void ChangeLocalAngle()
     {
 
@@ -106,6 +101,16 @@ public class ShoeController : MonoBehaviour {
         shoes.transform.localPosition = initPosition;
 
         shoes.transform.parent = null;
+    }
+
+    public void ActivateShoe()
+    {
+        shoes.SetActive(true);
+    }
+
+    public void DeactivateShoe()
+    {
+        shoes.SetActive(false);
     }
 
     #region public methods

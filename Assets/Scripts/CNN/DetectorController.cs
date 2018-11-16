@@ -77,12 +77,11 @@ public class DetectorController : MonoBehaviour
 
     void Start()
     {
+        m_ShoeController = FindObjectOfType<ShoeController>();
+        m_ShoeController.ActivateShoe();
+
         // load tensorflow model
         LoadWorker();
-        m_ShoeController = FindObjectOfType<ShoeController>();
-        m_ShoeController.ShowShoes();
-
-        ResetShoePosition();
     }
 
     public void AttachShoe()
@@ -139,7 +138,9 @@ public class DetectorController : MonoBehaviour
         var cameraObject = GameObject.Find("First Person Camera");
         var cameraCenterObject = GameObject.Find("Camera Center");
         var shoeDecoyObject = GameObject.Find("Shoe Decoy");
-        var shoeObject = CurrentCustomShoe.shoeParent;
+        var shoeObject = m_ShoeController.shoes;
+
+        shoeObject.transform.parent = null;
 
         var cameraPosition = cameraObject.transform.position;
         var centerPosition = cameraCenterObject.transform.position;
@@ -205,10 +206,10 @@ public class DetectorController : MonoBehaviour
         }
 
         Debug.Log(string.Format("Camera-Shoe Angle: {0}", cameraShoeAngle));
-        Debug.Log(string.Format("Diff Angle: {0}", (footAngleDegree - 90)));
+        Debug.Log(string.Format("Diff Angle: {0}", (90 - footAngleDegree)));
 
         // Second, Rotate shoe about detect angle
-        cameraShoeAngle = cameraShoeAngle + (footAngleDegree - 90);
+        cameraShoeAngle = cameraShoeAngle + (90 - footAngleDegree);
         shoeDecoyObject.transform.rotation = Quaternion.Euler(0, cameraShoeAngle, 0);
         shoeDecoyObject.transform.position = (shoeDecoyObject.transform.position - shoeDecoyObject.transform.forward * m_ForwardDistance);
 
@@ -441,6 +442,20 @@ public class DetectorController : MonoBehaviour
         Mat mask = new Mat();
         Core.inRange(hsv, lowerHSV, upperHSV, mask);
 
+        #region DEBUG
+        if (m_IsDebug)
+        {
+            Texture2D texture = new Texture2D(mask.cols(), mask.rows(), TextureFormat.RGBA32, false);
+            Utils.matToTexture2D(mask, texture);
+            m_DebugImage1.texture = texture;
+
+            //Imgproc.drawContours(src, contours, largestIndex, new Scalar(255, 0, 0), 2);
+            //Texture2D texture = new Texture2D(src.cols(), src.rows(), TextureFormat.RGBA32, false);
+            //Utils.matToTexture2D(src, texture);
+            //testImage2.texture = texture;
+        }
+        #endregion
+
         Mat hierarchy = new Mat();
         List<MatOfPoint> contours = new List<MatOfPoint>();
         Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_NONE);
@@ -469,20 +484,6 @@ public class DetectorController : MonoBehaviour
             return;
         }
 
-        #region DEBUG
-        if (m_IsDebug)
-        {
-            Texture2D texture = new Texture2D(mask.cols(), mask.rows(), TextureFormat.RGBA32, false);
-            Utils.matToTexture2D(mask, texture);
-            m_DebugImage1.texture = texture;
-
-            //Imgproc.drawContours(src, contours, largestIndex, new Scalar(255, 0, 0), 2);
-            //Texture2D texture = new Texture2D(src.cols(), src.rows(), TextureFormat.RGBA32, false);
-            //Utils.matToTexture2D(src, texture);
-            //testImage2.texture = texture;
-        }
-        #endregion
-
         // Find PCA value
         //Construct a buffer used by the pca analysis
         List<Point> pts = contours[largestIndex].toList();
@@ -501,15 +502,13 @@ public class DetectorController : MonoBehaviour
         Debug.Log("mean: " + mean.dump());
         Debug.Log("eginvectors: " + eigenvectors.dump());
 
-        cntr.x = mean.get(0, 0)[0];
-        cntr.y = src.rows() - mean.get(0, 1)[0];
-
         vec.x = eigenvectors.get(0, 0)[0];
         vec.y = eigenvectors.get(0, 1)[0];
 
         RotatedRect boundRect = Imgproc.minAreaRect(new MatOfPoint2f(contours[largestIndex].toArray()));
         cntr.x = boundRect.center.x;
-        cntr.y = src.rows() - boundRect.center.y;
+        //cntr.y = src.rows() - boundRect.center.y;
+        cntr.y = boundRect.center.y;
 
         // Release used Mat variable
         hsv.Dispose();
@@ -526,7 +525,7 @@ public class DetectorController : MonoBehaviour
      */
     private Texture2D GetImageFromCamera()
     {
-        m_ShoeController.shoes.SetActive(false);
+        m_ShoeController.DeactivateShoe();
         foreach (var planeObject in m_PlaneObjects)
         {
             if (planeObject == null)
@@ -537,8 +536,7 @@ public class DetectorController : MonoBehaviour
             planeObject.SetActive(false);
         }
         var captured = ScreenshotPreview.GetTexture2DOfScreenshot();
-        m_ShoeController.shoes.SetActive(true);
-
+        m_ShoeController.ActivateShoe();
 
         return captured;
     }

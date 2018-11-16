@@ -68,6 +68,10 @@ public class ARShoeList : MonoBehaviour {
             {
                 indicators.transform.SetParent(indicatorParent.transform);
             }
+            Vector3 position = shoeController.shoes.transform.localPosition;
+            Quaternion rotation = shoeController.shoes.transform.localRotation;
+            Vector3 scale = shoeController.shoes.transform.localScale;
+
             Destroy(shoeController.shoes);
             CurrentCustomShoe.SetCurrentCustomShoe(id);
             shoeController.CreateShoe();
@@ -77,6 +81,13 @@ public class ARShoeList : MonoBehaviour {
                 indicators.transform.SetParent(shoeController.shoes.transform);
                 indicators.transform.localPosition = new Vector3(0, 0, 0);
                 indicators.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            }
+            else 
+            {
+                shoeController.shoes.SetActive(true);
+                shoeController.shoes.transform.localPosition = position;
+                shoeController.shoes.transform.localRotation = rotation;
+                shoeController.shoes.transform.localScale = scale;
             }
             groundPlaneUI.CheckCustomizingOK();
 

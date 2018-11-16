@@ -98,6 +98,7 @@ public class DetectorController : MonoBehaviour
 
         if (m_IsRepeating)
         {
+            CancelInvoke(func);
             InvokeRepeating(func, 0, m_RepeatRate);
         }
         else
@@ -179,8 +180,6 @@ public class DetectorController : MonoBehaviour
             shoePos.y = 0;
         }
 
-        //m_ShoeController.ResetPosition(shoePos);
-
         // Reset decoy object position and angle
         Quaternion initRotation = Quaternion.Euler(0, 0, 0);
         shoeDecoyObject.transform.rotation = initRotation;
@@ -206,10 +205,10 @@ public class DetectorController : MonoBehaviour
         }
 
         Debug.Log(string.Format("Camera-Shoe Angle: {0}", cameraShoeAngle));
-        Debug.Log(string.Format("Diff Angle: {0}", (90 - footAngleDegree)));
+        Debug.Log(string.Format("Diff Angle: {0}", (90 - footAngleDegree - 90)));
 
         // Second, Rotate shoe about detect angle
-        cameraShoeAngle = cameraShoeAngle + (m_IsDebug ? (90 - footAngleDegree) : (footAngleDegree - 90));
+        cameraShoeAngle = cameraShoeAngle + (footAngleDegree - 90);
         shoeDecoyObject.transform.rotation = Quaternion.Euler(0, cameraShoeAngle, 0);
         shoeDecoyObject.transform.position = (shoeDecoyObject.transform.position - shoeDecoyObject.transform.forward * m_ForwardDistance);
 
@@ -409,6 +408,9 @@ public class DetectorController : MonoBehaviour
         if (m_IsDebug)
         {
             DrawCircle(captured, footPosX, footPosY, 5);
+        } else
+        {
+            Destroy(captured);
         }
         time = DateTime.Now - start;
         Debug.Log(string.Format("GuessAngle time: {0}", time.TotalSeconds));
@@ -417,12 +419,6 @@ public class DetectorController : MonoBehaviour
 
         // Release used Mat variable
         src.Dispose();
-
-        // Release use Texture2D
-        if (!m_IsDebug)
-        {
-            Destroy(captured);
-        }
     }
 
     private Task GetPCAAsync(Mat src, Point cntr, Point vec)
@@ -441,15 +437,6 @@ public class DetectorController : MonoBehaviour
 
         Mat mask = new Mat();
         Core.inRange(hsv, lowerHSV, upperHSV, mask);
-
-        #region DEBUG
-        if (m_IsDebug)
-        {
-            Texture2D texture = new Texture2D(mask.cols(), mask.rows(), TextureFormat.RGBA32, false);
-            Utils.matToTexture2D(mask, texture);
-            m_DebugImage1.texture = texture;
-        }
-        #endregion
 
         Mat hierarchy = new Mat();
         List<MatOfPoint> contours = new List<MatOfPoint>();
@@ -475,6 +462,16 @@ public class DetectorController : MonoBehaviour
                 largestValue = area;
             }
         }
+
+        #region DEBUG
+        if (m_IsDebug)
+        {
+            Texture2D texture = new Texture2D(mask.cols(), mask.rows(), TextureFormat.RGBA32, false);
+            Utils.matToTexture2D(mask, texture);
+            Destroy(m_DebugImage1.texture);
+            m_DebugImage1.texture = texture;
+        }
+        #endregion
 
         if (largestIndex == -1)
         {
@@ -504,14 +501,7 @@ public class DetectorController : MonoBehaviour
 
         RotatedRect boundRect = Imgproc.minAreaRect(new MatOfPoint2f(contours[largestIndex].toArray()));
         cntr.x = boundRect.center.x;
-
-        if (m_IsDebug)
-        {
-            cntr.y = src.rows() - boundRect.center.y;
-        } else
-        {
-            cntr.y = boundRect.center.y;
-        }
+        cntr.y = src.rows() - boundRect.center.y;
 
         // Release used Mat variable
         hsv.Dispose();

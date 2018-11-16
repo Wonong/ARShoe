@@ -34,12 +34,9 @@ static class TouchHandler
         }
         else if (isFirstFrameWithTwoTouches && (touches[0].phase == TouchPhase.Moved)) // Drag and make shoe move.
         {
-            if(!EventSystem.current.IsPointerOverGameObject(touches[0].fingerId))
-            {
-                shoes.transform.position = hit.Pose.position;
-                shoes.transform.position += Vector3.up * 0.2f;
-                isFirstFrameWithTwoTouches = true;
-            }
+            shoes.transform.position = hit.Pose.position;
+            shoes.transform.position += Vector3.up * 0.2f;
+            isFirstFrameWithTwoTouches = true;
         }
         else if (!isFirstFrameWithTwoTouches && touches[0].phase == TouchPhase.Began) // Set the bool value true for moving shoe.
         {

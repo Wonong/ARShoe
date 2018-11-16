@@ -34,6 +34,7 @@ public class GroundPlaneUI : MonoBehaviour
     #region PRIVATE_MEMBERS
     ShoeController m_ShoeController;
     DetectorController m_DetectController;
+    ARController m_ARController;
     AudioSource shoePuttingSound;
     GraphicRaycaster[] m_GraphicRayCasters;
     PointerEventData m_PointerEventData;
@@ -47,6 +48,7 @@ public class GroundPlaneUI : MonoBehaviour
     #region MONOBEHAVIOUR_METHODS
     void Start()
     {
+        m_ARController = FindObjectOfType<ARController>();
         m_ShoeController = FindObjectOfType<ShoeController>();
         m_DetectController = FindObjectOfType<DetectorController>();
         m_GraphicRayCasters = FindObjectsOfType<GraphicRaycaster>();
@@ -140,8 +142,26 @@ public class GroundPlaneUI : MonoBehaviour
         SceneChanger.ChangeToListScene();
         UIManager.Instance.customizePanel.customize.transform.SetParent(UIManager.Instance.customizePanel.contentObj.transform);
         m_ShoeController.shoes.transform.SetParent(CurrentCustomShoe.shoeParent.transform);
+        m_ShoeController.shoes.SetActive(true);
+        m_ShoeController.shoes.transform.localScale = new Vector3(1, 1, 1);
         m_ShoeController.shoeLeft.SetActive(true);
         m_ShoeController.shoeRight.SetActive(false);
+        m_ShoeController.shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 45);
+        if(m_ARController!=null)
+        {
+            m_ARController.DeleteIndicators();
+        }
+        else 
+        {
+            switch(CurrentCustomShoe.currentShoeId) {
+                case 1:
+                    Destroy(GameObject.Find("TransparentPrefab(Clone)"));
+                    break;
+                case 2:
+                    Destroy(GameObject.Find("TransparentPrefab2(Clone)"));
+                    break;
+            }
+        }
     }
 
     void ClickConfirmButton()

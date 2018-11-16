@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44824374, g: 0.49827278, b: 0.5755834, a: 1}
+  m_IndirectSpecularColor: {r: 0.4482435, g: 0.49827218, b: 0.5755829, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1757,8 +1757,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.043, y: 0}
   m_AnchorMax: {x: 0.95477784, y: 1}
-  m_AnchoredPosition: {x: 1.5999146, y: -0.000061035156}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 1.5999756, y: 0}
+  m_SizeDelta: {x: -4.0477, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &515340214
 MonoBehaviour:
@@ -1772,7 +1772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 52
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
@@ -1788,7 +1788,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 515340212}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -2688,7 +2688,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 600}
+  m_SizeDelta: {x: 0, y: 640}
   m_Pivot: {x: 0.00000048056245, y: 1.0054264}
 --- !u!114 &721184495
 MonoBehaviour:
@@ -3678,7 +3678,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 870}
+  m_SizeDelta: {x: 0, y: 887}
   m_Pivot: {x: 0.50000006, y: 1}
 --- !u!114 &947698990
 MonoBehaviour:
@@ -3714,6 +3714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: {fileID: 1550210384}
+  shoeScroll: {fileID: 721184495}
 --- !u!1 &1016817207
 GameObject:
   m_ObjectHideFlags: 0
@@ -4921,7 +4922,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 870}
+  m_SizeDelta: {x: 0, y: 887}
   m_Pivot: {x: 0.50000006, y: 1}
 --- !u!114 &1191873615
 MonoBehaviour:
@@ -4935,6 +4936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   content: {fileID: 515340213}
+  shoeScroll: {fileID: 1748787030}
 --- !u!114 &1191873616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5998,7 +6000,7 @@ RectTransform:
   m_AnchorMin: {x: 0.036000002, y: 0}
   m_AnchorMax: {x: 0.96400005, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -10.186, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1550210385
 MonoBehaviour:
@@ -6012,7 +6014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 52
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
@@ -6028,7 +6030,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1550210383}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
@@ -6464,7 +6466,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 600}
+  m_SizeDelta: {x: 0, y: 640}
   m_Pivot: {x: 0.00000048056245, y: 1.0054264}
 --- !u!114 &1748787030
 MonoBehaviour:
@@ -6606,8 +6608,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.437}
-  m_AnchoredPosition: {x: 0, y: 755.3772}
-  m_SizeDelta: {x: 0, y: 1480.6}
+  m_AnchoredPosition: {x: 0, y: 755.3777}
+  m_SizeDelta: {x: 0, y: 1513.3}
   m_Pivot: {x: 0.4575773, y: 1}
 --- !u!114 &1781120111
 MonoBehaviour:

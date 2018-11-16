@@ -44,5 +44,8 @@ public class PanelList : ViewController {
         });
         newRow.content.GetComponent<ContentSizeFitter>().enabled = true;
         bestRow.content.GetComponent<ContentSizeFitter>().enabled = true;
+
+        newRow.shoeScroll.horizontalNormalizedPosition = 0;
+        bestRow.shoeScroll.horizontalNormalizedPosition = 0;
     }
 }

@@ -7,8 +7,6 @@ public class SceneChanger : MonoBehaviour {
     public static void ChangeToListScene() {
         SceneManager.LoadScene("List");
         UIManager.Instance.gameObject.SetActive(true);
-        CurrentCustomShoe.shoes.GetComponent<Swiper>().enabled = true;
-        CurrentCustomShoe.shoes.GetComponent<Spin>().enabled = true;
         //UIManager.Instance.navigationView.Pop();
     }
 

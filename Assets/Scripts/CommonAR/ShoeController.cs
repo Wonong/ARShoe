@@ -69,7 +69,14 @@ public class ShoeController : MonoBehaviour {
             shoes.transform.rotation = Quaternion.Euler(0, 0, 0);
             shoeLeft.transform.localRotation = Quaternion.Euler(0, 90, 0);
             shoeRight.transform.localRotation = Quaternion.Euler(0, 90, 0);
-            Instantiate(Resources.Load<GameObject>("Prefabs/AttachingAR/TransparentPrefab")).transform.SetParent(shoes.transform);
+            switch(CurrentCustomShoe.currentShoeId){
+                case 1:
+                    Instantiate(Resources.Load<GameObject>("Prefabs/AttachingAR/TransparentPrefab")).transform.SetParent(shoes.transform);
+                    break;
+                case 2:
+                    Instantiate(Resources.Load<GameObject>("Prefabs/AttachingAR/TransparentPrefab2")).transform.SetParent(shoes.transform);
+                    break;
+            }
         }
         shoes.SetActive(false);
         MoveShoe(); // Shoe object is movable at very first.

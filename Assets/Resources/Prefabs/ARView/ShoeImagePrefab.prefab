@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114775743249084732}
   - component: {fileID: 114152071581006298}
   m_Layer: 0
-  m_Name: ShoeImageButton
+  m_Name: ShoeImagePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

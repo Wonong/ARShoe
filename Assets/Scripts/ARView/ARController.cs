@@ -79,7 +79,7 @@ public class ARController : MonoBehaviour
                 return;
             }
 
-            if (m_ShoeController.IsPlaced && !EventSystem.current.IsPointerOverGameObject(0))
+            if (m_ShoeController.IsPlaced)
             {
                 m_ShoeController.IsPlaced = false;
                 m_GroundPlaneUI.SetShoeMovable();
@@ -161,15 +161,14 @@ public class ARController : MonoBehaviour
         }
 
 
-        rotationIndicator.SetActive(Input.touchCount == 2 && !m_ShoeController.IsPlaced && !EventSystem.current.IsPointerOverGameObject(0));
+        rotationIndicator.SetActive(Input.touchCount == 2 && !m_ShoeController.IsPlaced);
         if (rotationIndicator.activeSelf)
         {
             rotationIndicator.transform.position = m_ShoeController.shoes.transform.position;
             rotationIndicator.transform.position -= Vector3.up * indicatorHeight;
         }
 
-        translationIndicator.SetActive(Input.touchCount == 1 && !m_ShoeController.IsPlaced
-                                       && !EventSystem.current.IsPointerOverGameObject(0) && !defaultIndicator.activeSelf);
+        translationIndicator.SetActive(Input.touchCount == 1 && !m_ShoeController.IsPlaced && !defaultIndicator.activeSelf);
         if (translationIndicator.activeSelf)
         {
             translationIndicator.transform.position = m_ShoeController.shoes.transform.position;

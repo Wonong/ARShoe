@@ -209,7 +209,7 @@ public class DetectorController : MonoBehaviour
         Debug.Log(string.Format("Diff Angle: {0}", (90 - footAngleDegree)));
 
         // Second, Rotate shoe about detect angle
-        cameraShoeAngle = cameraShoeAngle + (90 - footAngleDegree);
+        cameraShoeAngle = cameraShoeAngle + (m_IsDebug ? (90 - footAngleDegree) : (footAngleDegree - 90));
         shoeDecoyObject.transform.rotation = Quaternion.Euler(0, cameraShoeAngle, 0);
         shoeDecoyObject.transform.position = (shoeDecoyObject.transform.position - shoeDecoyObject.transform.forward * m_ForwardDistance);
 
@@ -448,11 +448,6 @@ public class DetectorController : MonoBehaviour
             Texture2D texture = new Texture2D(mask.cols(), mask.rows(), TextureFormat.RGBA32, false);
             Utils.matToTexture2D(mask, texture);
             m_DebugImage1.texture = texture;
-
-            //Imgproc.drawContours(src, contours, largestIndex, new Scalar(255, 0, 0), 2);
-            //Texture2D texture = new Texture2D(src.cols(), src.rows(), TextureFormat.RGBA32, false);
-            //Utils.matToTexture2D(src, texture);
-            //testImage2.texture = texture;
         }
         #endregion
 
@@ -470,7 +465,9 @@ public class DetectorController : MonoBehaviour
             double area = Imgproc.contourArea(contours[i]);
             // Ignore contours that are too small
             if (area < 1e2)
+            {
                 continue;
+            }
 
             if (area > largestValue)
             {
@@ -507,8 +504,14 @@ public class DetectorController : MonoBehaviour
 
         RotatedRect boundRect = Imgproc.minAreaRect(new MatOfPoint2f(contours[largestIndex].toArray()));
         cntr.x = boundRect.center.x;
-        //cntr.y = src.rows() - boundRect.center.y;
-        cntr.y = boundRect.center.y;
+
+        if (m_IsDebug)
+        {
+            cntr.y = src.rows() - boundRect.center.y;
+        } else
+        {
+            cntr.y = boundRect.center.y;
+        }
 
         // Release used Mat variable
         hsv.Dispose();

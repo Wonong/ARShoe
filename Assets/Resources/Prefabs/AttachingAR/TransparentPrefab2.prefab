@@ -86,7 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4258121042775124}
   m_Layer: 0
-  m_Name: TransparentPrefab(Clone)
+  m_Name: TransparentPrefab2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

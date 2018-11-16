@@ -19,16 +19,11 @@ public class PanelList : ViewController {
         AddShoeItemsIntoRow();
 
         // TopView 의 신발 설정(현재는 리스트의 첫번쨰 신발)
-        CurrentCustomShoe.SetCurrentCustomShoe(1);
-        topView.link = JSONHandler.GetShoeById(1).link;
-
-        // navigation view의 첫번째 뷰로 설정
-        if (navigationView != null && UIManager.Instance.viewStack.Count == 0)
-        {
-            navigationView.Push(this);
-        }
-
-
+        Debug.Log("shoe id : " + CurrentCustomShoe.currentShoeId);
+        if(CurrentCustomShoe.shoes == null){
+            CurrentCustomShoe.SetCurrentCustomShoe(1);
+        } 
+        topView.link = JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link;
 	}
 	
 	// Update is called once per frame

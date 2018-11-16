@@ -58,9 +58,15 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
         JSONHandler.InitDB();
         SetShoesData();
+
+        // navigation view의 첫번째 뷰를 리스트로 설정
+        if (navigationView != null && viewStack.Count == 0)
+        {
+            navigationView.Push(listPanel);
+        }
     }
 }

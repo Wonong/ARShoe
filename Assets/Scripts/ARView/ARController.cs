@@ -192,6 +192,10 @@ public class ARController : MonoBehaviour
         pointCloud.SetActive(!m_ShoeController.IsPlaced || !m_ShoeController.isActiveAndEnabled);
     }
 
+    public void DeleteIndicators()
+    {
+        Destroy(indicators);
+    }
 
     /// <summary>
     /// Check and update the application lifecycle.

@@ -34,9 +34,12 @@ static class TouchHandler
         }
         else if (isFirstFrameWithTwoTouches && (touches[0].phase == TouchPhase.Moved)) // Drag and make shoe move.
         {
-            shoes.transform.position = hit.Pose.position;
-            shoes.transform.position += Vector3.up * 0.2f;
-            isFirstFrameWithTwoTouches = true;
+            if(!IsPointerOverUIObject(hit))
+            {
+                shoes.transform.position = hit.Pose.position;
+                shoes.transform.position += Vector3.up * 0.2f;
+                isFirstFrameWithTwoTouches = true;
+            }
         }
         else if (!isFirstFrameWithTwoTouches && touches[0].phase == TouchPhase.Began) // Set the bool value true for moving shoe.
         {
@@ -91,5 +94,24 @@ static class TouchHandler
         }
 
         return result;
+    }
+
+    private static bool IsPointerOverUIObject(TrackableHit hit)
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = hit.Pose.position;
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        foreach (RaycastResult raycastResult in results)
+        {
+            if (raycastResult.gameObject.name.Equals("UpperToolbar")
+               || raycastResult.gameObject.name.Equals("UnderToolbar")
+               || raycastResult.gameObject.name.Equals("ScreenshotPreview")
+               || raycastResult.gameObject.name.Equals("Setting"))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -4,11 +4,9 @@ using System.Collections;
 // Item Panel 상태에서 CustomShoe 오브젝트를 유일하게 유지하기 위한 클래스
 public class CurrentCustomShoe : MonoBehaviour
 {
-    public static GameObject shoes;
-    public static GameObject shoeLeft;
-    public static GameObject shoeRight;
-    public static GameObject shoeParent;
+    public static GameObject shoes, shoeLeft, shoeRight, shoeParent;
     public static int currentShoeId;
+    public static Shoe currentShoeInfo;
 
     public static void SetCurrentCustomShoe(int shoeId)
 	{
@@ -16,9 +14,12 @@ public class CurrentCustomShoe : MonoBehaviour
         {
             Destroy(shoes);
         }
-        currentShoeId = shoeId;
 
-        shoes = Instantiate(JSONHandler.GetShoeById(shoeId).GetObjectAsGameObject());
+        // 현재 인스턴스화된 신발 정보 저장
+        currentShoeId = shoeId;
+        currentShoeInfo = JSONHandler.GetShoeById(shoeId);
+
+        shoes = Instantiate(currentShoeInfo.GetObjectAsGameObject());
         shoeParent = GameObject.Find("ShoeParent");
         shoes.transform.SetParent(shoeParent.transform);
         shoeLeft = GameObject.Find("Shoe_Left");

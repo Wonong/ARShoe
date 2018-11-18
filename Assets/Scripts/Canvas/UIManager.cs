@@ -51,6 +51,8 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Debug.Log("UiManager Awake");
+
+
         if (Instance == null)
         {
             Instance = this;
@@ -62,11 +64,17 @@ public class UIManager : MonoBehaviour
         }
         JSONHandler.InitDB();
         SetShoesData();
+        Debug.Log("awake viewstack count : " + viewStack.Count);
 
-        // navigation view의 첫번째 뷰를 리스트로 설정
-        if (navigationView != null && viewStack.Count == 0)
-        {
-            navigationView.Push(listPanel);
-        }
+    }
+
+    private void OnEnable()
+    {
+
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log("onDisable count : " + viewStack.Count);
     }
 }

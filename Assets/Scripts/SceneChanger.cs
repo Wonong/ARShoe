@@ -20,6 +20,9 @@ public class SceneChanger : MonoBehaviour {
     {
         SceneManager.LoadScene("WatchingShoes");
         UIManager.Instance.gameObject.SetActive(false);
+
+
+        //customize panel 있으면 해당 씬으로 move
     }
 
     public static void ChangeToAttachShoes()

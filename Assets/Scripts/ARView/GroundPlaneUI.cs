@@ -85,13 +85,17 @@ public class GroundPlaneUI : MonoBehaviour
     /// </summary>
     private void SetCustomScrollView()
     {
+        Debug.Log("SetCustomScrollView");
+        Debug.Log("customize obj : " + UIManager.Instance.customizePanel.customize);
         m_CustomScrollView = UIManager.Instance.customizePanel.customize.gameObject;
+
         UIManager.Instance.customizePanel.customize.transform.SetParent(m_CustomListRectTransform.gameObject.transform);
 
 
         // scroll rect content initialize
         m_CustomListRectTransform.GetComponent<ScrollRect>().content = m_CustomScrollView.GetComponent<RectTransform>();
 
+        // 위치 변경
         RectTransform customScrollViewRectTransform = m_CustomScrollView.GetComponent<RectTransform>();
         customScrollViewRectTransform.anchorMax = new Vector2(1f, 1f);
         customScrollViewRectTransform.anchorMin = new Vector2(0f, 0f);
@@ -99,6 +103,13 @@ public class GroundPlaneUI : MonoBehaviour
         customScrollViewRectTransform.offsetMin = new Vector2Int(67, 0);
         customScrollViewRectTransform.offsetMax = new Vector2Int(-67, 0);
         customScrollViewRectTransform.localPosition += Vector3.down*240;
+    }
+
+    /// <summary>
+    ///  Reset the custom scroll view inton UIManager
+    /// </summary>
+    private void ResetCustomScrollView(){
+        m_CustomScrollView.transform.SetParent(UIManager.Instance.customizePanel.contentObj.transform);
     }
 
     /// <summary>
@@ -297,6 +308,7 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickSceneChangeButton()
     {
+        ResetCustomScrollView();
         if (SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
         {
             SceneChanger.ChangeToAttachShoes();

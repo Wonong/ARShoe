@@ -78,7 +78,6 @@ public class DetectorController : MonoBehaviour
     void Start()
     {
         m_ShoeController = FindObjectOfType<ShoeController>();
-        m_ShoeController.ActivateShoe();
 
         // load tensorflow model
         LoadWorker();
@@ -88,6 +87,7 @@ public class DetectorController : MonoBehaviour
     {
         GuessAngle();
         ResetShoePosition();
+        m_ShoeController.ActivateShoe();
     }
 
     public void ClickRepeatButton()

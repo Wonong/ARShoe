@@ -383,7 +383,8 @@ public class GroundPlaneUI : MonoBehaviour
     // Change button's clickability and visualization.
     // Return true: If shoe object does not placed and arcore detect floor, or shoe object placed.
     public void ChangeButtonStatus() {
-        m_ResetButton.interactable = m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ShoeController.DoesShoeActive;
+        m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ShoeController.DoesShoeActive;
+        m_ResetButton.interactable = m_ShoeController.DoesShoeActive || SceneManager.GetActiveScene().name.Equals("AttachingShoes");
         m_ConfirmButton.image.enabled = m_ShoeController.DoesShoeActive && !m_ShoeController.IsPlaced;
     }
 

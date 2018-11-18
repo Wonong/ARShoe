@@ -64,19 +64,40 @@ public class ARShoeList : MonoBehaviour {
     {
         if (id != CurrentCustomShoe.currentShoeId)
         {
+            Vector3 shoePosition = shoeController.shoes.transform.position;
+            Quaternion shoeRotation = shoeController.shoes.transform.rotation;
+            Transform shoeParent = shoeController.shoes.transform.parent;
+
             if (indicatorParent != null)
             {
                 indicators.transform.SetParent(indicatorParent.transform);
             }
+            Vector3 position = shoeController.shoes.transform.localPosition;
+            Quaternion rotation = shoeController.shoes.transform.localRotation;
+            Vector3 scale = shoeController.shoes.transform.localScale;
+
             Destroy(shoeController.shoes);
             CurrentCustomShoe.SetCurrentCustomShoe(id);
             shoeController.CreateShoe();
             shoeController.InitShoe();
             if (indicatorParent != null)
             {
+                shoeController.IsPlaced = true;
                 indicators.transform.SetParent(shoeController.shoes.transform);
                 indicators.transform.localPosition = new Vector3(0, 0, 0);
                 indicators.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                indicators.SetActive(!shoeController.IsPlaced);
+                shoeController.shoes.transform.SetParent(shoeParent);
+                shoeController.shoes.transform.position = shoePosition;
+                shoeController.shoes.transform.rotation = shoeRotation;
+                shoeController.shoes.SetActive(true);
+            }
+            else 
+            {
+                shoeController.shoes.SetActive(true);
+                shoeController.shoes.transform.localPosition = position;
+                shoeController.shoes.transform.localRotation = rotation;
+                shoeController.shoes.transform.localScale = scale;
             }
             groundPlaneUI.CheckCustomizingOK();
 

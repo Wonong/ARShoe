@@ -64,6 +64,10 @@ public class ARShoeList : MonoBehaviour {
     {
         if (id != CurrentCustomShoe.currentShoeId)
         {
+            Vector3 shoePosition = shoeController.shoes.transform.position;
+            Quaternion shoeRotation = shoeController.shoes.transform.rotation;
+            Transform shoeParent = shoeController.shoes.transform.parent;
+
             if (indicatorParent != null)
             {
                 indicators.transform.SetParent(indicatorParent.transform);
@@ -78,9 +82,15 @@ public class ARShoeList : MonoBehaviour {
             shoeController.InitShoe();
             if (indicatorParent != null)
             {
+                shoeController.IsPlaced = true;
                 indicators.transform.SetParent(shoeController.shoes.transform);
                 indicators.transform.localPosition = new Vector3(0, 0, 0);
                 indicators.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                indicators.SetActive(!shoeController.IsPlaced);
+                shoeController.shoes.transform.SetParent(shoeParent);
+                shoeController.shoes.transform.position = shoePosition;
+                shoeController.shoes.transform.rotation = shoeRotation;
+                shoeController.shoes.SetActive(true);
             }
             else 
             {

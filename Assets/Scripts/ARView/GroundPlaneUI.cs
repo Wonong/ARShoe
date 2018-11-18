@@ -47,6 +47,7 @@ public class GroundPlaneUI : MonoBehaviour
     #region MONOBEHAVIOUR_METHODS
     void Start()
     {
+        Debug.Log("ground start viewstack count : " + UIManager.Instance.viewStack.Count);
         m_ShoeController = FindObjectOfType<ShoeController>();
         m_DetectController = FindObjectOfType<DetectorController>();
         m_GraphicRayCasters = FindObjectsOfType<GraphicRaycaster>();

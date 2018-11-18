@@ -64,7 +64,7 @@ public class NavigationViewController : ViewController {
         Debug.Log("Pop");
         string toPrint = UIManager.Instance.viewStack.ToArray().ToString();
         Debug.Log(toPrint);
-
+        
         float rectWidth = this.CachedRectTransform.rect.width;
 
         if (UIManager.Instance.viewStack.Count < 1) return;

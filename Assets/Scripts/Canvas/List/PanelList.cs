@@ -24,7 +24,13 @@ public class PanelList : ViewController {
             CurrentCustomShoe.SetCurrentCustomShoe(1);
         } 
         topView.link = JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link;
-	}
+
+        // navigation view의 첫번째 뷰를 리스트로 설정
+        if (navigationView != null && UIManager.Instance.viewStack.Count == 0)
+        {
+            navigationView.Push(this);
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {

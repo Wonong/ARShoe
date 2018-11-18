@@ -42,6 +42,7 @@ public class ShoeController : MonoBehaviour {
     private void Start()
     {
         InitShoe();
+        MoveShoe(); // Shoe object is movable at very first.
     }
 
     public void CreateShoe()
@@ -59,6 +60,7 @@ public class ShoeController : MonoBehaviour {
         shoeRight = shoes.transform.GetChild(1).gameObject;
         if (SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
         {
+            shoes.transform.localRotation = Quaternion.Euler(0, 0, 0);
             shoeLeft.transform.localRotation = Quaternion.Euler(0, 0, 0);
             shoeRight.transform.localRotation = Quaternion.Euler(0, 0, 0);
         }
@@ -79,7 +81,6 @@ public class ShoeController : MonoBehaviour {
             }
         }
         shoes.SetActive(false);
-        MoveShoe(); // Shoe object is movable at very first.
         ChangeLeftRight(GroundPlaneUI.leftRightName);
     }
 

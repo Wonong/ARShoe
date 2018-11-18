@@ -10,7 +10,7 @@ public class Spin : MonoBehaviour
     Quaternion goalRotation;
     private float startTime;
     private float journeyLength;
-    private float positionSpeed = 0.3f;
+    private float positionSpeed = 0.2f;
     private float rotationSpeed = 0.1f;
 
     private void Start()
@@ -18,7 +18,7 @@ public class Spin : MonoBehaviour
         originalPosition = transform.position + Vector3.up * 0.2f;
         originalRotation = Quaternion.Euler(0, 180f, 45f);
         goalPosition = new Vector3(-913.4f, 7.1f, -9.9f);
-        goalRotation = Quaternion.Euler(0, 0, 0f);
+        goalRotation = Quaternion.Euler(0, 0, 0);
         transform.position = originalPosition;
         transform.rotation = originalRotation;
 
@@ -35,9 +35,11 @@ public class Spin : MonoBehaviour
         transform.position =  Vector3.Lerp(originalPosition, goalPosition, fracPositionJourney);
         transform.rotation = Quaternion.Lerp(originalRotation, goalRotation, fracRotationJourney);
        
-        if (transform.rotation == goalRotation)
+        if (transform.rotation == goalRotation || Input.GetMouseButtonDown(0))
         {
             transform.GetComponent<Spin>().enabled = false;
+            transform.position = goalPosition;
+            transform.rotation = goalRotation;
         }
     }
 }

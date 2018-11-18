@@ -4,39 +4,39 @@ using System.Collections;
 // Spin class for Y spinning/transforming the shoe object when user click image from shoe list.
 public class Spin : MonoBehaviour
 {
-    float speed = 80f;
     Vector3 originalPosition;
-    Vector3 minusYVector = new Vector3(0f, 0.007f, 0f);
+    Vector3 goalPosition;
+    Quaternion originalRotation;
+    Quaternion goalRotation;
+    private float startTime;
+    private float journeyLength;
+    private float positionSpeed = 0.3f;
+    private float rotationSpeed = 0.1f;
 
-	private void Start()
+    private void Start()
 	{
-        originalPosition = transform.position;
-        transform.position += new Vector3(0f, 0.2f, 0f); 
-        transform.rotation = Quaternion.EulerRotation(0, 180f, 0);
-	}
+        originalPosition = transform.position + Vector3.up * 0.2f;
+        originalRotation = Quaternion.Euler(0, 180f, 45f);
+        goalPosition = new Vector3(-913.4f, 7.1f, -9.9f);
+        goalRotation = Quaternion.Euler(0, 0, 0f);
+        transform.position = originalPosition;
+        transform.rotation = originalRotation;
 
-	void Update()
+        startTime = Time.time;
+        journeyLength = Vector3.Distance(originalPosition, goalPosition);
+    }
+
+    void Update()
     {
-        if (transform.rotation.y < 180f && transform.rotation.y>=90f)
+        float distPositionCovered = (Time.time - startTime) * positionSpeed;
+        float distRotationCovered = (Time.time - startTime) * rotationSpeed;
+        float fracPositionJourney = distPositionCovered / journeyLength;
+        float fracRotationJourney = distRotationCovered / journeyLength;
+        transform.position =  Vector3.Lerp(originalPosition, goalPosition, fracPositionJourney);
+        transform.rotation = Quaternion.Lerp(originalRotation, goalRotation, fracRotationJourney);
+       
+        if (transform.rotation == goalRotation)
         {
-            transform.Rotate(Vector3.up, speed * Time.deltaTime);
-            speed += 10;
-        } 
-        else if(transform.rotation.y<90f&&transform.rotation.y>0f){
-            transform.Rotate(Vector3.up, speed * Time.deltaTime);
-            speed *= 0.99f;
-        }
-        else {
-            transform.rotation = Quaternion.EulerRotation(0, 0, 0);
-        }
-
-        if(transform.position.y>originalPosition.y) {
-            transform.position -= minusYVector;
-        } else {
-            transform.position = originalPosition;
-        }
-
-        if(transform.rotation.y==0f&&transform.position==originalPosition) {
             transform.GetComponent<Spin>().enabled = false;
         }
     }

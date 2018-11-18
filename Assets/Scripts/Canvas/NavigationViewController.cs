@@ -17,11 +17,13 @@ public class NavigationViewController : ViewController {
     }
 
     // Push newView to stack & set currentView
-    public void Push(ViewController newView) {
+    public void Push(ViewController newView)
+    {
 
         float rectWidth = this.CachedRectTransform.rect.width;
 
-        if(UIManager.Instance.currentView == null){
+        if (UIManager.Instance.currentView == null)
+        {
             newView.gameObject.SetActive(true);
             UIManager.Instance.currentView = newView;
             return;
@@ -36,10 +38,11 @@ public class NavigationViewController : ViewController {
         Vector2 lastViewPos = lastView.CachedRectTransform.anchoredPosition;
         lastViewPos.x = -rectWidth;
         lastView.CachedRectTransform.MoveTo(
-            lastViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, () => {
+            lastViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, () =>
+            {
                 // set inactive after moving
                 lastView.gameObject.SetActive(false);
-        });
+            });
 
         // move new view to centor of screen
         newView.gameObject.SetActive(true);
@@ -47,21 +50,18 @@ public class NavigationViewController : ViewController {
         newView.CachedRectTransform.anchoredPosition = new Vector2(rectWidth, newViewPos.y);
         newViewPos.x = 0.0f;
         newView.CachedRectTransform.MoveTo(
-            newViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, () => {
-            EnableInteraction(true);
-        });
+            newViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, () =>
+            {
+                EnableInteraction(true);
+            });
 
         // set new view to current view & activate back button
         UIManager.Instance.currentView = newView;
-        //UIManager.Instance.toolbar.back.gameObject.SetActive(true);
-
-        //UIManager.Instance.toolbar.ChangeActivation(UIManager.Instance.currentView.name);
 
     }
 
     public void Pop() {
-
-        Debug.Log("Pop");
+    
         string toPrint = UIManager.Instance.viewStack.ToArray().ToString();
         Debug.Log(toPrint);
         
@@ -86,12 +86,10 @@ public class NavigationViewController : ViewController {
         poppedView.gameObject.SetActive(true);
         Vector2 poppedViewPos = poppedView.CachedRectTransform.anchoredPosition;
         poppedViewPos.x = 0.0f;
-        Debug.Log("Popped view move to");
         poppedView.CachedRectTransform.MoveTo(
             poppedViewPos, 0.3f, 0.0f, iTween.EaseType.easeOutSine, () => {
                 EnableInteraction(true);
         });
-
         // set view from stack to currentView
         UIManager.Instance.currentView = poppedView;
 

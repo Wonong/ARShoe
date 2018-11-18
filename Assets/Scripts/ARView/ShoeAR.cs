@@ -5,4 +5,5 @@ using UnityEngine;
 public class ShoeAR : MonoBehaviour {
     public int id;
     public string link;
+    public GameObject shoeCheckImage;
 }

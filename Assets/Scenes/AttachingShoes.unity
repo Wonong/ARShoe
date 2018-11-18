@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.43667564, g: 0.48427135, b: 0.5645232, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667564, g: 0.48427147, b: 0.56452364, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2701,7 +2701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contents: {fileID: 1550210383}
-  contentPrefab: {fileID: 1875227657992740, guid: efd816ad6fe0040dab96f22fe2ed5a14,
+  contentPrefab: {fileID: 1836036683762458, guid: 22085fe8125114b5192e438653bd9474,
     type: 2}
   shoeController: {fileID: 487305121}
   indicatorParent: {fileID: 0}
@@ -7927,7 +7927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aef4815560dd06b40b2e0aa1e0a36dfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelFile: {fileID: 4900000, guid: 2347822a1305b5844a549136475b7c83, type: 3}
+  modelFile: {fileID: 4900000, guid: 753e1393d7cc74a31bd8a6c180b2f7bf, type: 3}
   cropMargin: 0
   TrackedPlanePrefab: {fileID: 1654175882956584, guid: 8b7d321d4607e93488f83d4dd52d57dd,
     type: 2}

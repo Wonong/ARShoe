@@ -11,9 +11,14 @@ public class SceneChanger : MonoBehaviour {
         CurrentCustomShoe.shoes.GetComponent<Spin>().enabled = true;
 
         // 해당 신발의 커스터마이즈 패널(또는 일반정보 패널) 보여줌
-        //UIManager.Instance.navigationView.Push(UIManager.Instance.listPanel);
-        UIManager.Instance.navigationView.Push(UIManager.Instance.customizePanel);
-        UIManager.Instance.customizePanel.Init(CurrentCustomShoe.currentShoeInfo);
+        Shoe shoeInfo = CurrentCustomShoe.currentShoeInfo;
+
+        // list -> ar -> back button 흐름 시, 
+        if(UIManager.Instance.currentView.name != "PanelCustomize"){
+            UIManager.Instance.navigationView.Push(UIManager.Instance.customizePanel);
+            UIManager.Instance.customizePanel.Init(shoeInfo);
+        }
+
     }
 
     public static void ChangeToWatchingShoes()

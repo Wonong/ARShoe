@@ -13,27 +13,36 @@ public class PanelList : ViewController {
 
 	// Use this for initialization
 	void Start () {
-
+    
         navigationView = UIManager.Instance.navigationView;
-        //GetComponent<ScrollRect>().onValueChanged.AddListener(OnScrollChanged);
         AddShoeItemsIntoRow();
-
-        // TopView 의 신발 설정(현재는 리스트의 첫번쨰 신발)
-        Debug.Log("shoe id : " + CurrentCustomShoe.currentShoeId);
-        if(CurrentCustomShoe.shoes == null){
-            CurrentCustomShoe.SetCurrentCustomShoe(1);
-        } 
-        topView.link = JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link;
 
         // navigation view의 첫번째 뷰를 리스트로 설정
         if (navigationView != null && UIManager.Instance.viewStack.Count == 0)
         {
             navigationView.Push(this);
         }
+
+        if(!UIManager.Instance.customizePanel.gameObject.activeSelf){
+            // TopView 의 신발 설정(현재는 리스트의 첫번쨰 신발)
+            CurrentCustomShoe.SetCurrentCustomShoe(1);
+            topView.link = JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link;
+        }
+
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+    }
+
+    private void OnEnable()
+    {
+
+    }
+
+    private void OnDisable()
+    {
 
     }
 

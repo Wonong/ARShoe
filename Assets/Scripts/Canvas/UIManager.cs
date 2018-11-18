@@ -50,8 +50,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("UiManager Awake");
-
 
         if (Instance == null)
         {
@@ -64,7 +62,6 @@ public class UIManager : MonoBehaviour
         }
         JSONHandler.InitDB();
         SetShoesData();
-        Debug.Log("awake viewstack count : " + viewStack.Count);
 
     }
 
@@ -75,6 +72,6 @@ public class UIManager : MonoBehaviour
 
     private void OnDisable()
     {
-        Debug.Log("onDisable count : " + viewStack.Count);
+
     }
 }

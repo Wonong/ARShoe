@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427135, b: 0.56452316, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667564, g: 0.48427147, b: 0.56452364, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2701,7 +2701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contents: {fileID: 1550210383}
-  contentPrefab: {fileID: 1875227657992740, guid: efd816ad6fe0040dab96f22fe2ed5a14,
+  contentPrefab: {fileID: 1836036683762458, guid: 22085fe8125114b5192e438653bd9474,
     type: 2}
   shoeController: {fileID: 487305121}
   indicatorParent: {fileID: 0}

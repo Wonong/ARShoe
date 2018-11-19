@@ -39,7 +39,6 @@ public class Spin : MonoBehaviour
         {
             transform.GetComponent<Spin>().enabled = false;
             transform.position = goalPosition;
-            transform.rotation = goalRotation;
         }
     }
 }

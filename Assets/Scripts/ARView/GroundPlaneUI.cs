@@ -371,6 +371,7 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickBuyButton() {
         shopPanel.url = CurrentCustomShoe.currentShoeInfo.link;
+        shopPanel.webView.Load(CurrentCustomShoe.currentShoeInfo.link);
         shopPanel.gameObject.SetActive(true);
 
         //UIManager.Instance.SetShopUrl(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link);

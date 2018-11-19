@@ -21,7 +21,7 @@ public class ShoeView : MonoBehaviour {
 
     void BackButtonClick(){
         UIManager.Instance.navigationView.Pop();
-        CurrentCustomShoe.SetCurrentCustomShoe(1);
+        CurrentCustomShoe.SetCurrentCustomShoe(2);
     }
 
     void ARExpButtonClick(){

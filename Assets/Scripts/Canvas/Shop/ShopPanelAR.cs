@@ -9,15 +9,15 @@ public class ShopPanelAR : ViewController
 
     public UniWebView webView;
     public string url { get; set; }
-    public Button backBut;
+    //public Button backBut;
     public Button sceneBackBut;
-    public Text title;
+    //public Text title;
 
     // Use this for initialization
     void Start()
     {
         Debug.Log("shop panel ar start");
-        backBut.onClick.AddListener(BackButtonClicked);
+        //backBut.onClick.AddListener(BackButtonClicked);
         webView.Load(url);
         webView.UpdateFrame();
 
@@ -25,8 +25,8 @@ public class ShopPanelAR : ViewController
 
     private void OnEnable()
     {
-        title.text = CurrentCustomShoe.currentShoeInfo.name;
-        sceneBackBut.gameObject.SetActive(false);
+        //title.text = CurrentCustomShoe.currentShoeInfo.name;
+        //sceneBackBut.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -37,7 +37,7 @@ public class ShopPanelAR : ViewController
 
     private void OnDisable()
     {
-        sceneBackBut.gameObject.SetActive(true);
+        //sceneBackBut.gameObject.SetActive(true);
     }
     
 

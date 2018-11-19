@@ -174,6 +174,9 @@ public class GroundPlaneUI : MonoBehaviour
                 case 2:
                     Destroy(GameObject.Find("TransparentPrefab2(Clone)"));
                     break;
+                case 4:
+                    Destroy(GameObject.Find("TransparentPrefab4(Clone)"));
+                    break;
             }
         }
     }
@@ -326,6 +329,9 @@ public class GroundPlaneUI : MonoBehaviour
                     break;
                 case 2:
                     Destroy(GameObject.Find("TransparentPrefab2(Clone)"));
+                    break;
+                case 4:
+                    Destroy(GameObject.Find("TransparentPrefab4(Clone)"));
                     break;
             }
             SceneChanger.ChangeToWatchingShoes();

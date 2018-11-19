@@ -16,7 +16,7 @@ public class Spin : MonoBehaviour
     private void Start()
 	{
         originalPosition = transform.position + Vector3.up * 0.2f;
-        originalRotation = Quaternion.Euler(0, 180f, 45f);
+        originalRotation = Quaternion.Euler(0, 180f, 0);
         goalPosition = new Vector3(-913.4f, 7.1f, -9.9f);
         goalRotation = Quaternion.Euler(0, 0, 0);
         transform.position = originalPosition;

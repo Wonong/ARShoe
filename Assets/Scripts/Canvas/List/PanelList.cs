@@ -10,9 +10,12 @@ public class PanelList : ViewController {
     public Vector2 minPos, maxPos;
     public ShoeRow newRow, bestRow;
     public TopView topView;
+    public Button shopAllBut;
 
 	// Use this for initialization
 	void Start () {
+
+        shopAllBut.onClick.AddListener(ShopAllButtonClick);
     
         navigationView = UIManager.Instance.navigationView;
         AddShoeItemsIntoRow();
@@ -57,5 +60,9 @@ public class PanelList : ViewController {
 
         newRow.shoeScroll.horizontalNormalizedPosition = 0;
         bestRow.shoeScroll.horizontalNormalizedPosition = 0;
+    }
+
+    void ShopAllButtonClick(){
+        UIManager.Instance.navigationView.Push(UIManager.Instance.listPanel2);
     }
 }

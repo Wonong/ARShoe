@@ -12,7 +12,7 @@ public class Swiper : MonoBehaviour {
     Vector3 mouseEndPosiotion;
 
     private float rotY;
-    private Vector3 origRot;
+    private Quaternion origRot;
     float dir = -1;
     float deltaY;
     float rotSpeed;
@@ -23,7 +23,7 @@ public class Swiper : MonoBehaviour {
 	void Start ()
     {
         shoe = transform.gameObject;
-        origRot = shoe.transform.eulerAngles;
+        origRot = shoe.transform.localRotation;
         rotY = origRot.y;
         isMouseUp = false;
         minSpeed = 0f;
@@ -69,7 +69,7 @@ public class Swiper : MonoBehaviour {
             else if (isMouseUp && rotSpeed > minSpeed && mouseInitPosition.x - mouseEndPosiotion.x != 0)
             {
                 rotY -= deltaY * Time.deltaTime * rotSpeed * dir;
-                shoe.transform.eulerAngles = new Vector3(0f, rotY, 0f);
+                shoe.transform.localRotation = Quaternion.Euler(0f, rotY, 0f);
                 rotSpeed -= 1.5f;
             }
         }

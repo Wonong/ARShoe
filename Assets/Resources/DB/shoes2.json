@@ -1,13 +1,13 @@
 [
   {
     "id": "1",
-    "name": "Air Max1",
+    "name": "Air Max",
     "company": "NIKE",
     "price": "100000",
     "isCustomizable": "1",
     "link": "https://www.nike.com/kr/ko_kr/t/men/fw/nike-sportswear/AH8145-007/ymcp19/nike-air-max-1","objPath":"Prefabs\/Custom\/Shoes","imgPath":"Textures\/ShoesImages\/sports_shoes","isNew":"1","isBest":"0","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
-{"id":"2","name":"벨로 스니커즈","company":"Bello Store","price":"138000","isCustomizable":"0","link":"https:\/\/smartstore.naver.com\/belloshoes\/products\/2402445830","objPath":"Shoes\/ShoesBello\/Bello_BK","imgPath":"Textures\/ShoesImages\/bello_black_model","isNew":"0","isBest":"1","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
-{"id":"3","name":"벨로 화이트","company":"Bello Store","price":"138000","isCustomizable":"0","link":"https:\/\/smartstore.naver.com\/belloshoes\/products\/744376470","objPath":null,"imgPath":"Textures\/ShoesImages\/bello_white_model","isNew":"1","isBest":"0","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
-{"id":"4","name":"ROYAL BRIDGE 2.0","company":"Reebok","price":"65500","isCustomizable":"0","link":"http://www.abcmart.co.kr/abc/product/detail?prdtCode=0065306&ctgrId=000002","objPath":null,"imgPath":"Textures\/ShoesImages\/asics","isNew":"1","isBest":"0","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
-{"id":"5","name":"Spline","company":"FILA","price":"49000","isCustomizable":"0","link":"http:\/\/www.fila.co.kr\/product\/view.asp?ProductNo=30917","objPath":null,"imgPath":"Textures\/ShoesImages\/fila_spline","isNew":"0","isBest":"1","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"}
+{"id":"2","name":"벨로 남자 키높이 스니커즈 +6cm 블랙","company":"Bello Store","price":"138000","isCustomizable":"0","link":"https:\/\/smartstore.naver.com\/belloshoes\/products\/2402445830","objPath":"Shoes\/ShoesBello\/Bello_BK","imgPath":"Textures\/ShoesImages\/bello_black_model","isNew":"0","isBest":"1","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
+{"id":"3","name":"벨로 키높이 스니커즈 화이트 +6cm","company":"Bello Store","price":"138000","isCustomizable":"0","link":"https:\/\/smartstore.naver.com\/belloshoes\/products\/744376470","objPath":null,"imgPath":"Textures\/ShoesImages\/bello_white_model","isNew":"1","isBest":"0","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
+{"id":"4","name":"ROYAL BRIDGE 2.0","company":"Reebok","price":"65500","isCustomizable":"0","link":"http://www.abcmart.co.kr/abc/product/detail?prdtCode=0065306&ctgrId=000002","objPath":"Shoes\/ShoesReebok\/ReebokShoes","imgPath":"Textures\/ShoesImages\/asics","isNew":"1","isBest":"0","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"},
+{"id":"5","name":"FILA SPLINE","company":"FILA","price":"49000","isCustomizable":"0","link":"http:\/\/www.fila.co.kr\/product\/view.asp?ProductNo=30917","objPath":null,"imgPath":"Textures\/ShoesImages\/fila_spline","isNew":"0","isBest":"1","updatedAt":"2018-11-01 00:00:00","createdAt":"2018-11-01 00:00:00"}
 ]

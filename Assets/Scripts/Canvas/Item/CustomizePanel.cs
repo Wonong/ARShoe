@@ -38,7 +38,13 @@ public class CustomizePanel : ViewController {
         ResetShoeInfo(currentShoe);
         CurrentCustomShoe.SetCurrentCustomShoe(currentShoe.id);
 
-        RefreshCustomizeMenu(currentShoe.id);
+        if (currentShoe.isCustomizable)
+        {
+            RefreshCustomizeMenu(currentShoe.id);
+        }
+        else {
+            customize.gameObject.SetActive(false);
+        }
 
     }
 

@@ -21,7 +21,7 @@ public class MenuBar : MonoBehaviour {
 
     void BuyButtonClick(){
         UIManager.Instance.SetShopUrl(CurrentCustomShoe.currentShoeInfo.link);
-        UIManager.Instance.shopPanel.webView.Load(CurrentCustomShoe.currentShoeInfo.link);
+        //UIManager.Instance.shopPanel.webView.Load(CurrentCustomShoe.currentShoeInfo.link);
         UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
     }
 

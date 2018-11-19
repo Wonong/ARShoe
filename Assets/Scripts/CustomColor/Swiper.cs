@@ -88,7 +88,8 @@ public class Swiper : MonoBehaviour {
                || raycastResult.gameObject.name.Equals("ButtonGroup")
                || raycastResult.gameObject.name.Equals("ShopButton")
                || raycastResult.gameObject.name.Equals("Viewport")
-               || raycastResult.gameObject.name.Equals("BackButton"))
+               || raycastResult.gameObject.name.Equals("BackButton")
+               || raycastResult.gameObject.name.Equals("BottomToolbar"))
                 {
                     return true;
                 }

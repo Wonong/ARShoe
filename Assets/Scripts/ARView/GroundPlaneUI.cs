@@ -27,6 +27,8 @@ public class GroundPlaneUI : MonoBehaviour
     public RectTransform m_ShoeListRectTransform;
     public RectTransform m_TopMidToolbarRectTransform;
 
+    public ShopPanel shopPanel;
+
     public static String leftRightName;
     #endregion // PUBLIC_MEMBERS
 

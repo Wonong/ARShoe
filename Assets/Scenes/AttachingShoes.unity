@@ -5631,6 +5631,7 @@ MonoBehaviour:
   m_BottomMidToolbarRectTrnasform: {fileID: 494307861}
   m_ShoeListRectTransform: {fileID: 2082048811}
   m_TopMidToolbarRectTransform: {fileID: 1742899022}
+  shopPanel: {fileID: 0}
 --- !u!4 &1225232995
 Transform:
   m_ObjectHideFlags: 0
@@ -7623,7 +7624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   backButton: {fileID: 1752191468}
-  shareButton: {fileID: 1068109}
+  shareButton: {fileID: 697384532}
 --- !u!222 &1617596712
 CanvasRenderer:
   m_ObjectHideFlags: 0

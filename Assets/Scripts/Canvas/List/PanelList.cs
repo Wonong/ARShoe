@@ -25,7 +25,7 @@ public class PanelList : ViewController {
 
         if(!UIManager.Instance.customizePanel.gameObject.activeSelf){
             // TopView 의 신발 설정(현재는 리스트의 첫번쨰 신발)
-            CurrentCustomShoe.SetCurrentCustomShoe(1);
+            CurrentCustomShoe.SetCurrentCustomShoe(2);
             topView.link = JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link;
         }
 

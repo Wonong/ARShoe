@@ -68,7 +68,7 @@ public class ARController : MonoBehaviour
         Session.GetTrackables<DetectedPlane>(m_AllPlanes);
         ChangePlanesVisualizer(); // Change visualizing of planes by status of shoe placed. 
 
-        if (m_GroundPlaneUI.m_ListUpDown.image.sprite.name.Equals("arrow_up") && m_ShoeController.shoes != null)
+        if (m_ShoeController.shoes != null)
         {
             SetIndicators(); // Set indicators children of shoe.
 
@@ -115,6 +115,7 @@ public class ARController : MonoBehaviour
         indicators.transform.SetParent(m_ShoeController.shoes.transform);
         indicators.transform.localPosition = new Vector3(0, 0, 0);
         indicators.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        indicators.transform.localScale = new Vector3(1, 1, 1);
         shadowPlaneIndicator.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         InitializeIndicator(rotationIndicator);
         InitializeIndicator(translationIndicator);

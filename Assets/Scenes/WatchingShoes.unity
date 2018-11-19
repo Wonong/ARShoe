@@ -2336,6 +2336,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shoes: {fileID: 0}
+  shoeLeft: {fileID: 0}
+  shoeRight: {fileID: 0}
   shoeHeight: 0.15
   shoeScale: 1.8
 --- !u!114 &627916105
@@ -2377,7 +2379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contents: {fileID: 1550210383}
-  contentPrefab: {fileID: 1875227657992740, guid: efd816ad6fe0040dab96f22fe2ed5a14,
+  contentPrefab: {fileID: 1836036683762458, guid: 22085fe8125114b5192e438653bd9474,
     type: 2}
   shoeController: {fileID: 627916104}
   indicatorParent: {fileID: 623722609}

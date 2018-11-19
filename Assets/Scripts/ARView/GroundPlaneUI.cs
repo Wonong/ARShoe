@@ -201,7 +201,6 @@ public class GroundPlaneUI : MonoBehaviour
         if(SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
         {
             m_ShoeController.ResetAR();
-           
             ChangeButtonStatus();
         }
         else
@@ -310,13 +309,27 @@ public class GroundPlaneUI : MonoBehaviour
 
     void ClickSceneChangeButton()
     {
-        ResetCustomScrollView();
+        if (JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).isCustomizable)
+        {
+            ResetCustomScrollView();
+        }
         if (SceneManager.GetActiveScene().name.Equals("WatchingShoes"))
         {
+            m_ShoeController.shoes.transform.SetParent(CurrentCustomShoe.shoeParent.transform);
+            m_ARController.DeleteIndicators();
             SceneChanger.ChangeToAttachShoes();
         }
         else
         {
+            switch (CurrentCustomShoe.currentShoeId)
+            {
+                case 1:
+                    Destroy(GameObject.Find("TransparentPrefab(Clone)"));
+                    break;
+                case 2:
+                    Destroy(GameObject.Find("TransparentPrefab2(Clone)"));
+                    break;
+            }
             SceneChanger.ChangeToWatchingShoes();
         }
     }
@@ -372,7 +385,8 @@ public class GroundPlaneUI : MonoBehaviour
     // Change button's clickability and visualization.
     // Return true: If shoe object does not placed and arcore detect floor, or shoe object placed.
     public void ChangeButtonStatus() {
-        m_ResetButton.interactable = m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ShoeController.DoesShoeActive;
+        m_CaptureButton.interactable = m_ConfirmButton.interactable = m_ShoeController.DoesShoeActive;
+        m_ResetButton.interactable = m_ShoeController.DoesShoeActive || SceneManager.GetActiveScene().name.Equals("AttachingShoes");
         m_ConfirmButton.image.enabled = m_ShoeController.DoesShoeActive && !m_ShoeController.IsPlaced;
     }
 
@@ -387,6 +401,12 @@ public class GroundPlaneUI : MonoBehaviour
         else
         {
             m_ListUpDown.gameObject.SetActive(false);
+            if(m_ListUpDown.image.sprite.name.Equals("arrow_down"))
+            {
+                m_ListUpDown.image.sprite = Resources.Load<Sprite>("Sprites/Arshoe/arrow_up");
+                m_CustomListRectTransform.anchoredPosition = new Vector2(m_CustomListRectTransform.anchoredPosition.x, -customizingListSize);
+                m_BottomMidToolbarRectTrnasform.anchoredPosition = new Vector2(m_BottomMidToolbarRectTrnasform.anchoredPosition.x, m_BottomMidToolbarRectTrnasform.anchoredPosition.y - customizingListSize);
+            }
         }
     }
 #endregion // MONOBEHAVIOUR_METHODS

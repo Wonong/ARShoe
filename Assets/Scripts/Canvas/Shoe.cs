@@ -53,6 +53,7 @@ public class Shoe
 
         ret = price.ToString("C3");
         ret = ret.Remove(ret.Length-4);
+        ret = ret.Substring(1);
 
         return ret;
     }

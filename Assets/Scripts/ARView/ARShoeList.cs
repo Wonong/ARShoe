@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ARShoeList : MonoBehaviour {
@@ -18,6 +15,7 @@ public class ARShoeList : MonoBehaviour {
     List<Button> shoeButtonList;
     Button shoeButton;
     List<Shoe> shoesList;
+    List<GameObject> shoeCheckImageList = new List<GameObject>();
     float shoeImageWidth = 300f;
     float shoeImageSpace = 60f;
     float scrollContentsWidth;
@@ -31,6 +29,14 @@ public class ARShoeList : MonoBehaviour {
         {
             GameObject shoesImage = Instantiate(contentPrefab);
             shoesImage.transform.SetParent(contents.transform);
+            GameObject checkImage = shoesImage.transform.GetChild(0).gameObject;
+            shoeCheckImageList.Add(checkImage);
+            if (shoesList[i].id == CurrentCustomShoe.currentShoeId) {
+                checkImage.SetActive(true);
+            }
+            else {
+                checkImage.SetActive(false);
+            }
         }
 
         shoeRawImageList = new List<RawImage>(contents.GetComponentsInChildren<RawImage>());
@@ -41,8 +47,9 @@ public class ARShoeList : MonoBehaviour {
             ShoeAR shoeAR = shoeButtonList[i].gameObject.GetComponent<ShoeAR>();
             shoeAR.id = shoesList[i].id;
             shoeAR.link = shoesList[i].link;
+            shoeAR.shoeCheckImage = shoeCheckImageList[i];
             shoeRawImageList[i].texture = Resources.Load<Texture>(shoesList[i].imgPath);
-            shoeButtonList[i].onClick.AddListener(delegate { ClickShoeImage(shoeAR.id); });
+            shoeButtonList[i].onClick.AddListener(delegate { ClickShoeImage(shoeAR); });
         }
     }
 
@@ -60,49 +67,57 @@ public class ARShoeList : MonoBehaviour {
         }
     }
 
-    private void ClickShoeImage(int id)
+    private void ClickShoeImage(ShoeAR shoeAR)
     {
-        if (id != CurrentCustomShoe.currentShoeId)
+        if (shoeAR.id != CurrentCustomShoe.currentShoeId)
         {
-            Vector3 shoePosition = shoeController.shoes.transform.position;
-            Quaternion shoeRotation = shoeController.shoes.transform.rotation;
-            Transform shoeParent = shoeController.shoes.transform.parent;
-
             if (indicatorParent != null)
             {
                 indicators.transform.SetParent(indicatorParent.transform);
             }
+
+            Transform shoeParent = shoeController.shoes.transform.parent;
             Vector3 position = shoeController.shoes.transform.localPosition;
             Quaternion rotation = shoeController.shoes.transform.localRotation;
             Vector3 scale = shoeController.shoes.transform.localScale;
+            bool previousActive = shoeController.shoes.activeSelf;
 
             Destroy(shoeController.shoes);
-            CurrentCustomShoe.SetCurrentCustomShoe(id);
+
+            CurrentCustomShoe.SetCurrentCustomShoe(shoeAR.id);
             shoeController.CreateShoe();
             shoeController.InitShoe();
+
             if (indicatorParent != null)
             {
-                shoeController.IsPlaced = true;
                 indicators.transform.SetParent(shoeController.shoes.transform);
+                indicators.transform.localScale = new Vector3(1, 1, 1);
                 indicators.transform.localPosition = new Vector3(0, 0, 0);
                 indicators.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 indicators.SetActive(!shoeController.IsPlaced);
                 shoeController.shoes.transform.SetParent(shoeParent);
-                shoeController.shoes.transform.position = shoePosition;
-                shoeController.shoes.transform.rotation = shoeRotation;
-                shoeController.shoes.SetActive(true);
+                shoeController.shoes.transform.localPosition = position;
+                shoeController.shoes.transform.localRotation = rotation;
+                shoeController.shoes.SetActive(previousActive);
             }
             else 
             {
-                shoeController.shoes.SetActive(true);
                 shoeController.shoes.transform.localPosition = position;
                 shoeController.shoes.transform.localRotation = rotation;
                 shoeController.shoes.transform.localScale = scale;
+                shoeController.shoes.SetActive(previousActive);
             }
             groundPlaneUI.CheckCustomizingOK();
 
+            // Set Check Image.
+            foreach (GameObject shoeCheckImage in shoeCheckImageList)
+            {
+                shoeCheckImage.SetActive(false);
+            }
+            shoeAR.shoeCheckImage.SetActive(true);
+
             // customzie menu 초기화
-            UIManager.Instance.customizePanel.RefreshCustomizeMenu(id);
+            UIManager.Instance.customizePanel.RefreshCustomizeMenu(shoeAR.id);
         }
     }
 }

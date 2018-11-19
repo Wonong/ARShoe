@@ -27,7 +27,7 @@ public class GroundPlaneUI : MonoBehaviour
     public RectTransform m_ShoeListRectTransform;
     public RectTransform m_TopMidToolbarRectTransform;
 
-    public ShopPanel shopPanel;
+    public ShopPanelAR shopPanel;
 
     public static String leftRightName;
     #endregion // PUBLIC_MEMBERS
@@ -370,8 +370,11 @@ public class GroundPlaneUI : MonoBehaviour
     }
 
     void ClickBuyButton() {
-        UIManager.Instance.SetShopUrl(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link);
-        UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
+        shopPanel.url = CurrentCustomShoe.currentShoeInfo.link;
+        shopPanel.gameObject.SetActive(true);
+
+        //UIManager.Instance.SetShopUrl(JSONHandler.GetShoeById(CurrentCustomShoe.currentShoeId).link);
+        //UIManager.Instance.navigationView.Push(UIManager.Instance.shopPanel);
     }
 
     public void SetShoeMovable()

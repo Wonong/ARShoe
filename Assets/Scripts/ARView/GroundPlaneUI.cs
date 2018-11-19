@@ -27,6 +27,8 @@ public class GroundPlaneUI : MonoBehaviour
     public RectTransform m_ShoeListRectTransform;
     public RectTransform m_TopMidToolbarRectTransform;
 
+    public ShopPanel shopPanel;
+
     public static String leftRightName;
     #endregion // PUBLIC_MEMBERS
 
@@ -173,9 +175,6 @@ public class GroundPlaneUI : MonoBehaviour
                     break;
                 case 2:
                     Destroy(GameObject.Find("TransparentPrefab2(Clone)"));
-                    break;
-                case 4:
-                    Destroy(GameObject.Find("TransparentPrefab4(Clone)"));
                     break;
             }
         }
@@ -329,9 +328,6 @@ public class GroundPlaneUI : MonoBehaviour
                     break;
                 case 2:
                     Destroy(GameObject.Find("TransparentPrefab2(Clone)"));
-                    break;
-                case 4:
-                    Destroy(GameObject.Find("TransparentPrefab4(Clone)"));
                     break;
             }
             SceneChanger.ChangeToWatchingShoes();

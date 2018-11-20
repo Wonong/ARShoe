@@ -170,14 +170,20 @@ public class GroundPlaneUI : MonoBehaviour
         else 
         {
             switch(CurrentCustomShoe.currentShoeId) {
-                case 1:
+                case 1: // Nike
                     Destroy(GameObject.Find("TransparentPrefab(Clone)"));
                     break;
-                case 2:
+                case 2: // Bello Black
                     Destroy(GameObject.Find("TransparentPrefab2(Clone)"));
                     break;
-                case 4:
+                case 3: // Bello white
+                    Destroy(GameObject.Find("TransparentPrefab3(Clone)"));
+                    break;
+                case 4: // Reebok
                     Destroy(GameObject.Find("TransparentPrefab4(Clone)"));
+                    break;
+                case 5: // FILA
+                    Destroy(GameObject.Find("TransparentPrefab5(Clone)"));
                     break;
             }
         }
@@ -326,14 +332,20 @@ public class GroundPlaneUI : MonoBehaviour
         {
             switch (CurrentCustomShoe.currentShoeId)
             {
-                case 1:
+                case 1: // Nike
                     Destroy(GameObject.Find("TransparentPrefab(Clone)"));
                     break;
-                case 2:
+                case 2: // Bello Black
                     Destroy(GameObject.Find("TransparentPrefab2(Clone)"));
                     break;
-                case 4:
+                case 3: // Bello white
+                    Destroy(GameObject.Find("TransparentPrefab3(Clone)"));
+                    break;
+                case 4: // Reebok
                     Destroy(GameObject.Find("TransparentPrefab4(Clone)"));
+                    break;
+                case 5: // FILA
+                    Destroy(GameObject.Find("TransparentPrefab5(Clone)"));
                     break;
             }
             SceneChanger.ChangeToWatchingShoes();

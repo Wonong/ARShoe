@@ -78,8 +78,14 @@ public class ShoeController : MonoBehaviour {
                 case 2:
                     Instantiate(Resources.Load<GameObject>("Prefabs/AttachingAR/TransparentPrefab2")).transform.SetParent(shoes.transform);
                     break;
+                case 3:
+                    Instantiate(Resources.Load<GameObject>("Prefabs/AttachingAR/TransparentPrefab3")).transform.SetParent(shoes.transform);
+                    break;
                 case 4:
                     Instantiate(Resources.Load<GameObject>("Prefabs/AttachingAR/TransparentPrefab4")).transform.SetParent(shoes.transform);
+                    break;
+                case 5:
+                    Instantiate(Resources.Load<GameObject>("Prefabs/AttachingAR/TransparentPrefab5")).transform.SetParent(shoes.transform);
                     break;
             }
         }

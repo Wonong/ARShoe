@@ -31,7 +31,7 @@ public class DetectorController : MonoBehaviour
     //public Scalar upperHSV { get; set; } = new Scalar(179, 255, 255);
     public Scalar lowerHSV { get; set; } = new Scalar(135, 30, 140);
     public Scalar upperHSV { get; set; } = new Scalar(218, 100, 235);
-    public float m_ForwardDistance { get; set; } = 0;
+    public float m_ForwardDistance { get; set; } = 0.01f;
     public float m_CameraShoeDistance { get; set; } = -0.05f;
     public float m_RepeatRate { get; set; } = 0.05f;
     public Boolean m_IsRepeating { get; set; } = false;

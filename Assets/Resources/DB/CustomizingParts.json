@@ -1,1 +1,11 @@
-[{"id":"1","name":"Lace","objName":"lace_l","materialIdx":"0","createdAt":"2018-10-02 12:20:12","updatedAt":"2018-10-02 12:20:12","shoes_id":"1"}, {"id":"2","name":"Shoe Mesh","objName":"shoe_l","materialIdx":"1","createdAt":"2018-10-02 12:20:12","updatedAt":"2018-10-02 12:20:12","shoes_id":"1"}, {"id":"3","name":"Shoe Fabric","objName":"shoe_l","materialIdx":"2","createdAt":"2018-10-02 12:20:12","updatedAt":"2018-10-02 12:20:12","shoes_id":"1"}, {"id":"4","name":"Sole","objName":"sole_l","materialIdx":"3","createdAt":"2018-10-02 12:20:12","updatedAt":"2018-10-02 12:20:12","shoes_id":"1"}]
+[
+    {
+        "id":"",
+        "name":"",
+        "objName":"",
+        "materialIdx":"",
+        "createdAt":"",
+        "updatedAt":"",
+        "shoes_id":""
+    }
+]
